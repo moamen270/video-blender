@@ -1,6 +1,6 @@
 {
  "fps": 24,
- "frames": 864,
+ "frames": 816,
  "voice": "bm_george",
  "sfx": [
   {
@@ -344,11 +344,6 @@
    "gain": 0.35
   },
   {
-   "frame": 720,
-   "sfx": "chime",
-   "gain": 0.8
-  },
-  {
    "frame": 726,
    "sfx": "step",
    "gain": 0.35
@@ -362,6 +357,11 @@
    "frame": 738,
    "sfx": "step",
    "gain": 0.35
+  },
+  {
+   "frame": 744,
+   "sfx": "chime",
+   "gain": 0.8
   }
  ],
  "lines": [
@@ -390,7 +390,7 @@
    "text": "Mission... accomplished?"
   },
   {
-   "frame": 712,
+   "frame": 716,
    "text": "Love hurts."
   }
  ],

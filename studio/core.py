@@ -388,7 +388,7 @@ def render_settings(*, width=1080, height=1920, frame_end=240, quality="preview"
     scene = bpy.context.scene
     r = scene.render
     scale = {"draft": 25, "preview": 50, "final": 100}[quality]
-    samples = {"draft": 8, "preview": 16, "final": 64}[quality]
+    samples = {"draft": 8, "preview": 16, "final": 32}[quality]
     r.resolution_x, r.resolution_y = width, height
     r.resolution_percentage = scale
     r.fps = FPS

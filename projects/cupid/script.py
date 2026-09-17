@@ -24,7 +24,7 @@ from mathutils import Vector
 from studio import core as C, characters as CH, props as P
 
 FPS = 24
-FRAME_END = 864  # 36 s
+FRAME_END = 816  # 34 s
 
 TITLE = "Cupid Had One Job"
 VOICE = "bm_george"  # Kokoro storybook narrator
@@ -52,7 +52,7 @@ F_CHASE0, F_CHASE1 = 560, 620
 # Beat F: flee, end card           590-864
 F_PIP_SCARED, F_PIP_TURN, F_PIP_RUN0, F_PIP_RUN1 = 596, 616, 624, 700
 F_BRUNO_RUN1 = 740
-F_END_CARD = 720
+F_END_CARD = 744
 
 PIP_X, BRUNO_X = -1.9, 2.0
 TREE_HIT = (4.6, 1.4, 1.9)
@@ -235,8 +235,8 @@ def build() -> None:
     sfx(F_ARROW1_LAND, "step", 0.4)
     CH.squash(bru, F_HIT1, depth=0.08, recover=8)
 
-    # Bruno smug
-    C.cut(F_SMUG, cam_bru)
+    # Bruno smug (camera is already on him for the impact)
+    C.cut(F_HIT1 - 3, cam_bru)
     CH.mouth(bru, F_SMUG, shape="smile")
     CH.eyes(bru, F_SMUG, look=(-0.6, 0.2))
     CH.head_turn(bru, F_SMUG, roll=0)
@@ -439,7 +439,7 @@ def build() -> None:
     spawn_hearts(bru["head"], F_CHASE1, F_BRUNO_RUN1 - 30, every=10, rise=1.4, col=fx_col, tag="b")
     for f in range(F_PIP_RUN0, F_BRUNO_RUN1, 6):
         sfx(f, "step", 0.35)
-    say(712, "Love hurts.")
+    say(716, "Love hurts.")
 
     # end card
     C.cut(F_END_CARD - 4, cam_end)
