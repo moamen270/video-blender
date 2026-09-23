@@ -61,9 +61,445 @@
    "frame": 92,
    "sfx": "step",
    "gain": 0.35
+  },
+  {
+   "frame": 106,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 106,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 110,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 110,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 114,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 114,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 122,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 122,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 122,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 128,
+   "sfx": "sword_clash",
+   "gain": 0.9
+  },
+  {
+   "frame": 128,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 128,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 142,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 142,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 156,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 156,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 157,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 162,
+   "sfx": "sword_clash",
+   "gain": 0.9
+  },
+  {
+   "frame": 162,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 162,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 176,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 176,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 176,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 176,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 207,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 207,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 212,
+   "sfx": "sword_clash",
+   "gain": 0.9
+  },
+  {
+   "frame": 212,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 212,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 226,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 226,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 230,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 230,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 236,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 236,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 238,
+   "sfx": "swoosh",
+   "gain": 0.6
+  },
+  {
+   "frame": 238,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 238,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 248,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 248,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 250,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 250,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 258,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 258,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 266,
+   "sfx": "sword_clash",
+   "gain": 0.9
+  },
+  {
+   "frame": 266,
+   "sfx": "boom",
+   "gain": 0.5
+  },
+  {
+   "frame": 266,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 266,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 266,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 282,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 282,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 282,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 282,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 314,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 314,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 314,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 316,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 320,
+   "sfx": "sword_clash",
+   "gain": 0.9
+  },
+  {
+   "frame": 320,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 320,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 332,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 334,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 334,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 340,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 340,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 340,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 346,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 346,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 348,
+   "sfx": "swoosh",
+   "gain": 0.6
+  },
+  {
+   "frame": 348,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 348,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 372,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 372,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 372,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 372,
+   "sfx": "step",
+   "gain": 0.35
   }
  ],
- "contacts": [],
+ "contacts": [
+  {
+   "id": "C1",
+   "frame": 128,
+   "kind": "clash",
+   "point": [
+    -0.85,
+    -0.0,
+    1.55
+   ],
+   "attacker": "warlord",
+   "defender": "ronin"
+  },
+  {
+   "id": "C2",
+   "frame": 162,
+   "kind": "clash",
+   "point": [
+    0.1,
+    -0.0,
+    1.35
+   ],
+   "attacker": "ronin",
+   "defender": "warlord"
+  },
+  {
+   "id": "C3",
+   "frame": 212,
+   "kind": "clash",
+   "point": [
+    0.2,
+    -0.0,
+    1.55
+   ],
+   "attacker": "ronin",
+   "defender": "warlord"
+  },
+  {
+   "id": "C4",
+   "frame": 266,
+   "kind": "clash",
+   "point": [
+    0.15,
+    -0.0,
+    1.25
+   ],
+   "attacker": "ronin",
+   "defender": "warlord"
+  },
+  {
+   "id": "C5",
+   "frame": 320,
+   "kind": "clash",
+   "point": [
+    -0.7,
+    -0.0,
+    1.45
+   ],
+   "attacker": "warlord",
+   "defender": "ronin"
+  }
+ ],
  "overlays": [
   {
    "kind": "text",
