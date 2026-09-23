@@ -60,6 +60,15 @@ POSES: dict[str, Pose] = {
         two_hands=False,
         feet=((0.14, 0.12), (-0.14, -0.12)),
     ),
+    "draw_mid": Pose(
+        hips=(0, 0, -0.03),
+        lean=5,
+        twist=-15,
+        grip=(0.30, 0.45, 1.20),
+        blade=(5, -60, 0),
+        two_hands=False,
+        feet=((0.14, 0.12), (-0.14, -0.12)),
+    ),
     "chudan": Pose(
         hips=(0, 0, -0.08),
         lean=8,

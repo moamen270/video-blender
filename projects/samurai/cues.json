@@ -1,0 +1,114 @@
+{
+ "fps": 24,
+ "frames": 672,
+ "music": {
+  "file": "F:/PoCs/video-builder/assets/music/japan-duel.wav",
+  "gain": 0.22,
+  "cut_frame": 400,
+  "resume_frame": 0,
+  "end_frame": 600
+ },
+ "lines": [
+  {
+   "id": "honor",
+   "frame": 536,
+   "text": "You fought with honor.",
+   "engine": "chatterbox",
+   "voiceRef": "F:/PoCs/video-builder/assets/voices/lewis.wav",
+   "emotion": 0.4,
+   "speed": 0.9
+  },
+  {
+   "id": "cta",
+   "frame": 606,
+   "text": "Follow Dummy Sticky for more.",
+   "engine": "kokoro",
+   "voice": "am_michael"
+  }
+ ],
+ "sfx": [
+  {
+   "frame": 9,
+   "sfx": "whoosh",
+   "gain": 0.3
+  },
+  {
+   "frame": 63,
+   "sfx": "sword_draw",
+   "gain": 0.75
+  },
+  {
+   "frame": 74,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 74,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 81,
+   "sfx": "sword_draw",
+   "gain": 0.75
+  },
+  {
+   "frame": 92,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 92,
+   "sfx": "step",
+   "gain": 0.35
+  }
+ ],
+ "contacts": [],
+ "overlays": [
+  {
+   "kind": "text",
+   "text": "Two blades. One honor.",
+   "from": 3,
+   "to": 56,
+   "y": 0.18,
+   "size": 86
+  },
+  {
+   "kind": "fill",
+   "color": "white",
+   "from": 404,
+   "to": 405
+  },
+  {
+   "kind": "fill",
+   "color": "black",
+   "from": 592,
+   "to": 672
+  },
+  {
+   "kind": "text",
+   "text": "Follow Dummy Sticky for more.",
+   "from": 606,
+   "to": 672,
+   "y": 0.45,
+   "size": 70
+  },
+  {
+   "kind": "text",
+   "text": "@DummySticky",
+   "from": 612,
+   "to": 672,
+   "y": 0.53,
+   "size": 56
+  },
+  {
+   "kind": "text",
+   "text": "@DummySticky",
+   "from": 25,
+   "to": 591,
+   "y": 0.95,
+   "size": 34,
+   "alpha": 0.6
+  }
+ ]
+}
