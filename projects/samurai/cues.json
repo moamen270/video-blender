@@ -2,8 +2,9 @@
  "fps": 24,
  "frames": 672,
  "music": {
-  "file": "F:/PoCs/video-builder/assets/music/japan-duel.wav",
-  "gain": 0.22,
+  "file": "F:/PoCs/blender-video/assets/library/music/Asian Drums.mp3",
+  "start_s": 50,
+  "gain": 0.7,
   "cut_frame": 400,
   "resume_frame": 0,
   "end_frame": 600
@@ -284,13 +285,8 @@
   },
   {
    "frame": 266,
-   "sfx": "sword_clash",
-   "gain": 0.9
-  },
-  {
-   "frame": 266,
-   "sfx": "boom",
-   "gain": 0.5
+   "sfx": "big_clash",
+   "gain": 1.0
   },
   {
    "frame": 266,
@@ -438,6 +434,11 @@
    "gain": 0.35
   },
   {
+   "frame": 386,
+   "sfx": "cloth",
+   "gain": 1.0
+  },
+  {
    "frame": 389,
    "sfx": "step",
    "gain": 0.35
@@ -556,6 +557,11 @@
    "frame": 410,
    "sfx": "step",
    "gain": 0.35
+  },
+  {
+   "frame": 482,
+   "sfx": "cloth",
+   "gain": 1.0
   },
   {
    "frame": 486,

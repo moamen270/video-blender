@@ -6,3 +6,4 @@ Required credit (put in the video description):
 Licensed under Creative Commons: By Attribution 4.0 License
 http://creativecommons.org/licenses/by/4.0/
 Files: Mountain Emperor.mp3, Asian Drums.mp3, Big Mojo.mp3 — downloaded 2026-09-24 from incompetech.com/music/royalty-free/mp3-royaltyfree/
+Added 2026-09-24: "Mystery Sax", "Hidden Agenda" (Kevin MacLeod, CC BY 4.0, same credit format).
