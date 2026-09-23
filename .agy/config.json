@@ -1,0 +1,3 @@
+{
+  "ignore": ["output", "assets/library", "projects/*/cues.json", "**/*.blend1"]
+}
