@@ -4,13 +4,14 @@
 
 Reads projects/<project>/cues.json (written by the scene build) so audio timing always
 matches the animation frames. Produces in --out:
-    voice/<id>.wav   Kokoro narration (via video-builder's vb-audio)
+    voice/<id>.wav   narration
     mix.wav          full 48 kHz mix
     final.mp4        video.mp4 + mix.wav
 """
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 import math
 import os
@@ -22,10 +23,12 @@ import soundfile as sf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VB_PY = "F:/PoCs/video-builder/py"
+VB_CHATTERBOX_PY = "F:/PoCs/video-builder/py-chatterbox"
 FFMPEG = ("C:/Users/mmoam/AppData/Local/Microsoft/WinGet/Packages/"
           "Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe")
 SR = 48000
 SFX_DIR = os.path.join(ROOT, "assets", "sfx")
+VB_SFX_DIR = "F:/PoCs/video-builder/assets/sfx"
 MUSIC_DIR = os.path.join(ROOT, "assets", "music")
 
 
@@ -121,10 +124,14 @@ def load_wav(path: str) -> np.ndarray:
 def sfx_clip(name: str) -> np.ndarray:
     path = os.path.join(SFX_DIR, f"{name}.wav")
     if not os.path.exists(path):
-        if name not in SYNTH:
-            raise FileNotFoundError(f"no sfx '{name}' in assets/sfx and no synth for it")
-        os.makedirs(SFX_DIR, exist_ok=True)
-        sf.write(path, SYNTH[name]().astype(np.float32), SR)
+        vb_path = os.path.join(VB_SFX_DIR, f"{name}.wav")
+        if os.path.exists(vb_path):
+            path = vb_path
+        else:
+            if name not in SYNTH:
+                raise FileNotFoundError(f"no sfx '{name}' in assets/sfx or {VB_SFX_DIR} and no synth for it")
+            os.makedirs(SFX_DIR, exist_ok=True)
+            sf.write(path, SYNTH[name]().astype(np.float32), SR)
     clip = load_wav(path)
     if name == "laugh":  # Bark clip is 6 s; keep ~2.4 s with a fade
         keep = int(SR * 2.4)
@@ -134,15 +141,49 @@ def sfx_clip(name: str) -> np.ndarray:
 
 def narrate(lines: list[dict], voice: str, out_dir: str) -> dict[str, np.ndarray]:
     os.makedirs(out_dir, exist_ok=True)
-    req = {"voice": voice, "speed": 1.0,
-           "scenes": [{"id": f"l{i}", "speech": l["text"], "pauseAfter": 0.0} for i, l in enumerate(lines)]}
+    scenes = []
+    ids = []
+    for i, l in enumerate(lines):
+        lid = l.get("id", f"l{i}")
+        ids.append(lid)
+        scenes.append({"id": lid, "speech": l["text"], "pauseAfter": 0.0})
+    req = {"voice": voice, "speed": 1.0, "scenes": scenes}
     req_path = os.path.join(out_dir, "request.json")
     with open(req_path, "w", encoding="utf-8") as fh:
         json.dump(req, fh)
     align = os.path.join(out_dir, "align.json")
     subprocess.run(["uv", "run", "vb-audio", "synth", "--request", req_path, "--out-dir", out_dir, "--out", align],
                    cwd=VB_PY, check=True)
-    return {f"l{i}": load_wav(os.path.join(out_dir, f"l{i}.wav")) for i in range(len(lines))}
+    return {lid: load_wav(os.path.join(out_dir, f"{lid}.wav")) for lid in ids}
+
+
+def chatterbox(lines: list[dict], out_dir: str) -> dict[str, np.ndarray]:
+    os.makedirs(out_dir, exist_ok=True)
+    scenes = []
+    ids = []
+    for i, l in enumerate(lines):
+        lid = l.get("id", f"l{i}")
+        ids.append(lid)
+        scenes.append({
+            "id": lid,
+            "speech": l["text"],
+            "pauseAfter": float(l.get("pauseAfter", 0.0)),
+            "speed": float(l.get("speed", 1.0)),
+            "voiceRef": l.get("voiceRef", None),
+            "emotion": float(l.get("emotion", 0.5)),
+            "seed": int(l.get("seed", 0)),
+        })
+    req = {"scenes": scenes}
+    req_path = os.path.join(out_dir, "request.json")
+    with open(req_path, "w", encoding="utf-8") as fh:
+        json.dump(req, fh)
+    res_path = os.path.join(out_dir, "chatterbox.json")
+    subprocess.run(
+        ["uv", "run", "vb-chatterbox", "synth", "--request", req_path, "--out-dir", out_dir, "--out", res_path],
+        cwd=VB_CHATTERBOX_PY,
+        check=True,
+    )
+    return {lid: load_wav(os.path.join(out_dir, f"{lid}.wav")) for lid in ids}
 
 
 def place(mix: np.ndarray, clip: np.ndarray, at_sec: float, gain: float) -> None:
@@ -170,38 +211,178 @@ def main() -> None:
     seconds = frames / fps
     mix = np.zeros(int(SR * seconds) + SR, dtype=np.float64)
 
-    # music bed with tail fade
-    music_path = os.path.join(MUSIC_DIR, f"{args.project}_loop.wav")
-    if not os.path.exists(music_path):
-        os.makedirs(MUSIC_DIR, exist_ok=True)
-        sf.write(music_path, synth_music(seconds + 2).astype(np.float32), SR)
-    music = load_wav(music_path)[:len(mix)]
-    fade = np.ones(len(music))
-    tail = int(SR * 2.5)
-    fade[-tail:] = np.linspace(1, 0, tail)
-    place(mix, music * fade, 0.0, cues["music"]["gain"])
+    lines = cues.get("lines", [])
+    for i, l in enumerate(lines):
+        if "id" not in l:
+            l["id"] = f"l{i}"
 
-    for c in cues["sfx"]:
+    voices: dict[str, np.ndarray] = {}
+    engines_used: set[str] = set()
+
+    if not args.no_voice and lines:
+        kokoro_by_voice: dict[str, list[dict]] = collections.defaultdict(list)
+        chatterbox_lines: list[dict] = []
+        for l in lines:
+            engine = l.get("engine", "kokoro")
+            engines_used.add(engine)
+            if engine == "chatterbox":
+                chatterbox_lines.append(l)
+            else:
+                voice = l.get("voice", cues.get("voice", "bm_george"))
+                kokoro_by_voice[voice].append(l)
+
+        for voice, v_lines in kokoro_by_voice.items():
+            v_out = os.path.join(out, "voice", voice)
+            voices.update(narrate(v_lines, voice, v_out))
+
+        if chatterbox_lines:
+            cb_out = os.path.join(out, "voice", "chatterbox")
+            voices.update(chatterbox(chatterbox_lines, cb_out))
+
+    # Ducking
+    duck = np.ones(len(mix))
+    if voices:
+        for l in lines:
+            lid = l["id"]
+            if lid in voices:
+                clip = voices[lid]
+                s = int(l["frame"] / fps * SR)
+                e = min(len(mix), s + len(clip))
+                if e > s:
+                    duck[s:e] = 0.35
+        k = int(0.03 * SR)
+        duck = np.convolve(duck, np.ones(k) / k, mode="same")
+
+    # Music bed
+    music_cfg = cues.get("music", {})
+    music_file = music_cfg.get("file")
+    music_gain = music_cfg.get("gain", 1.0)
+
+    if music_file and os.path.exists(music_file):
+        raw_music = load_wav(music_file)
+        tiles = math.ceil(len(mix) / len(raw_music)) if len(raw_music) > 0 else 1
+        music_clip = np.tile(raw_music, tiles)[:len(mix)]
+        env = np.ones(len(mix), dtype=np.float64)
+
+        cut = music_cfg.get("cut_frame")
+        if cut is not None and cut > 0:
+            c = int(cut / fps * SR)
+            ramp = int(6 / fps * SR)
+            c_start = max(0, c - ramp)
+            ramp_len = c - c_start
+            if ramp_len > 0:
+                env[c_start:c] = np.linspace(1, 0, ramp)[-ramp_len:]
+            env[c:] = 0.0
+
+            resume = music_cfg.get("resume_frame", 0)
+            if resume > cut:
+                r = int(resume / fps * SR)
+                r_end = min(len(mix), r + ramp)
+                ramp_r_len = r_end - r
+                if ramp_r_len > 0:
+                    env[r:r_end] = np.linspace(0, 1, ramp)[:ramp_r_len]
+                if r + ramp < len(mix):
+                    env[r + ramp:] = 1.0
+
+        end = music_cfg.get("end_frame")
+        if end is not None and end > 0:
+            e = int(end / fps * SR)
+            e = min(e, len(mix))
+            e_start = max(0, e - SR)
+            if e > e_start:
+                env[e_start:e] *= np.linspace(1, 0, e - e_start)
+            if e < len(mix):
+                env[e:] = 0.0
+    else:
+        music_path = os.path.join(MUSIC_DIR, f"{args.project}_loop.wav")
+        if not os.path.exists(music_path):
+            os.makedirs(MUSIC_DIR, exist_ok=True)
+            sf.write(music_path, synth_music(seconds + 2).astype(np.float32), SR)
+        raw_music = load_wav(music_path)
+        tiles = math.ceil(len(mix) / len(raw_music)) if len(raw_music) > 0 else 1
+        music_clip = np.tile(raw_music, tiles)[:len(mix)]
+        env = np.ones(len(mix), dtype=np.float64)
+        tail = int(SR * 2.5)
+        tail = min(tail, len(env))
+        if tail > 0:
+            env[-tail:] = np.linspace(1, 0, tail)
+
+    place(mix, music_clip * env * duck, 0.0, music_gain)
+
+    # SFX
+    for c in cues.get("sfx", []):
         place(mix, sfx_clip(c["sfx"]), c["frame"] / fps, c.get("gain", 1.0) * 0.8)
 
-    if not args.no_voice and cues["lines"]:
-        voices = narrate(cues["lines"], cues["voice"], os.path.join(out, "voice"))
-        for i, l in enumerate(cues["lines"]):
-            place(mix, voices[f"l{i}"], l["frame"] / fps, 1.0)
+    # Voices
+    for l in lines:
+        lid = l["id"]
+        if lid in voices:
+            place(mix, voices[lid], l["frame"] / fps, 1.0)
 
     mix = mix[:int(SR * seconds)]
     peak = np.abs(mix).max() or 1.0
     mix = mix / peak * 0.89
     mix_path = os.path.join(out, "mix.wav")
     sf.write(mix_path, mix.astype(np.float32), SR)
-    print(f"[audio] mix.wav {seconds:.1f}s, {len(cues['sfx'])} sfx, {len(cues['lines'])} lines", flush=True)
+
+    overlays = cues.get("overlays", [])
+    if engines_used:
+        eng_str = ", ".join(sorted(engines_used))
+    elif lines:
+        eng_str = ", ".join(sorted({l.get("engine", "kokoro") for l in lines}))
+    else:
+        eng_str = "none"
+    print(f"[audio] mix.wav {seconds:.1f}s, {len(cues.get('sfx', []))} sfx, {len(lines)} lines ({eng_str}), {len(overlays)} overlays", flush=True)
 
     if args.no_mux:
         return
     video = os.path.join(out, "video.mp4")
     final = os.path.join(out, "final.mp4")
-    subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-i", mix_path, "-c:v", "copy",
-                    "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final], check=True)
+
+    if not overlays:
+        subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-i", mix_path, "-c:v", "copy",
+                        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final], check=True)
+    else:
+        FFPROBE = FFMPEG.replace("ffmpeg.exe", "ffprobe.exe")
+        res = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-show_entries",
+                              "stream=height", "-of", "csv=p=0", video],
+                             capture_output=True, text=True, check=True)
+        H = int(res.stdout.strip())
+        filters = []
+        for o in overlays:
+            kind = o.get("kind")
+            a = o["from"] - 1
+            b = o["to"] - 1
+            if kind == "fill":
+                color = o["color"]
+                filters.append(f"drawbox=x=0:y=0:w=iw:h=ih:color={color}@1:t=fill:enable='between(n,{a},{b})'")
+            elif kind == "text":
+                t = o["text"]
+                t = t.replace("\\", "\\\\")
+                t = t.replace(":", r"\:")
+                t = t.replace("'", "’")
+                t = t.replace("%", r"\%")
+                size_px = round(o["size"] * H / 1920)
+                bw = max(2, round(6 * H / 1920))
+                alpha = o.get("alpha", 1)
+                y = o["y"]
+                fontfile_str = r"C\:/Windows/Fonts/ariblk.ttf"
+                filters.append(
+                    f"drawtext=fontfile='{fontfile_str}':text='{t}':fontsize={size_px}:fontcolor=white@{alpha}:"
+                    f"borderw={bw}:bordercolor=black:x=(w-text_w)/2:y=h*{y}-text_h/2:enable='between(n,{a},{b})'"
+                )
+        script = os.path.join(out, "overlays.txt")
+        with open(script, "w", encoding="utf-8") as fh:
+            fh.write(",".join(filters))
+        subprocess.run([
+            FFMPEG, "-y", "-loglevel", "error", "-i", video, "-i", mix_path,
+            "-/vf", script,
+            "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p",
+            "-af", "loudnorm=I=-14:TP=-1:LRA=11",
+            "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+            "-shortest", "-movflags", "+faststart", final
+        ], check=True)
+
     print(f"[audio] -> {final}", flush=True)
 
 

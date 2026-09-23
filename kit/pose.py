@@ -18,6 +18,7 @@ SIDE_SIGN: int = -1
 LEAN_AXIS: str = "X"
 TWIST_AXIS: str = "Y"
 SIDE_AXIS: str = "Z"
+LEFT_REACH: float = 0.50
 
 
 @dataclass
@@ -233,6 +234,9 @@ def apply_pose(
 
     q = blade_quat(*pose.blade)
     d = q @ Vector((0.0, 1.0, 0.0))
+    grip_l = Vector(pose.grip) - d * 0.14
+    shoulder_l = Vector((-0.20, 0.0, 1.46)) + Vector(pose.hips)
+    reach_l = (grip_l - shoulder_l).length
     sword_pb = arm.pose.bones["sword"]
     sword_pb.location = Vector(pose.grip) - d * 0.20
     sword_pb.rotation_quaternion = q
@@ -253,7 +257,9 @@ def apply_pose(
         0.0,
     )
 
-    arm.pose.bones["forearm.L"].constraints["IK"].influence = 1.0 if pose.two_hands else 0.0
+    arm.pose.bones["forearm.L"].constraints["IK"].influence = (
+        1.0 if (pose.two_hands and reach_l <= LEFT_REACH) else 0.0
+    )
 
 
 def key_pose(
@@ -325,21 +331,23 @@ def auto_steps(
             xb = fc_x.evaluate(fb)
             yb = fc_y.evaluate(fb)
 
-            h_dist = math.hypot(xb - xa, yb - ya)
-            if h_dist > 0.05:
+            dist = math.hypot(xb - xa, yb - ya)
+            if dist > 0.005:
+                lift = min(step_height, 0.03 + 0.25 * dist)
                 mid = round((fa + fb) / 2)
                 mid_x = (xa + xb) / 2.0
                 mid_y = (ya + yb) / 2.0
 
                 fc_x.keyframe_points.insert(mid, mid_x)
                 fc_y.keyframe_points.insert(mid, mid_y)
-                fc_z.keyframe_points.insert(mid, step_height)
+                fc_z.keyframe_points.insert(mid, lift)
 
                 changed_curves.add(fc_x)
                 changed_curves.add(fc_y)
                 changed_curves.add(fc_z)
 
-                cues["sfx"].append({"frame": fb, "sfx": "step", "gain": 0.35})
+                if dist > 0.05:
+                    cues["sfx"].append({"frame": fb, "sfx": "step", "gain": 0.35})
             else:
                 for fc in (fc_x, fc_y, fc_z):
                     for kp in fc.keyframe_points:
