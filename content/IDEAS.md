@@ -91,7 +91,52 @@ So the first slot uses the samurai kit; famous-character episodes start when the
 | Fri 30 Oct | #11 Dracula's First Night Shift | Halloween eve |
 | Nov | #8, #10, #14, #17 (around 20 Nov, verify), #19 | then re-plan from the analytics |
 
-## 5. Scripts written
+## 5. Egypt & MENA (added 2026-09-24 after the owner asked — the first research was global/English only)
+
+### What the regional research says
+| finding | trust | consequence |
+|---|---|---|
+| Egyptian Arabic is the comedy dialect of the whole Arab world; viewers prefer dialect over MSA or English for comedy | high | an Egyptian-Arabic version is the way into MENA |
+| Egypt prosecutes creators under the 2018 anti-cybercrime law ("family values", "public morals") | high | MENA versions stay strictly family-safe: no politics, religion, dating, alcohol, national/military symbols, real officials |
+| Shorts RPM in Egypt/MENA is a fraction of US/EU; TikTok's Creator Rewards is likely not open in Egypt | medium (figures uncertain) | English keeps the revenue; Arabic builds the regional audience |
+| Everyday Egyptian life is the strongest local comedy: the Egyptian mom (and her flying slipper), school and exams, microbus rides, traffic, "is it winter yet?", football derby banter | high | universal-but-local themes that also read abroad |
+| Timely (verify dates): Al Ahly–Zamalek derby (listed 11 Oct), EA FC 27 (listed 25 Sep), Riyadh Season opening (Oct), WWE Crown Jewel Riyadh (listed 7 Nov); PUBG Mobile / Free Fire dominate mobile gaming; anime (Black Clover, Apothecary Diaries) is big in MENA | medium | timed local episodes |
+| Egyptian-Arabic TTS: an Egyptian XTTS-v2 fine-tune ("NileTTS") exists but XTTS's licence (CPML) is non-commercial; Chatterbox Multilingual (MIT) speaks Arabic but its Egyptian accent is untested | medium | needs our own test before we commit (see below) |
+| Not used: storylines about real people (Salah, coaches, actors, Turki Alalshikh) and the unverified "Salah to Galatasaray" claim | — | we parody characters, not real people |
+
+### Language strategy — recommendation: one render, two languages
+Our pipeline renders the picture once and adds voices, captions and on-screen text afterwards (post step), so an
+Arabic version costs only voices + captions — no re-animation. Proposal:
+- **English** stays on Dummy Sticky (global reach, higher revenue).
+- **Egyptian Arabic** version of the same episodes on a second channel (separate channels keep each audience's
+  feed and the algorithm's language signal clean; revisit YouTube multi-language audio if it becomes available for Shorts).
+- Scripts become **visual-first**: the gag must work with the sound off; lines are short and written in both
+  languages by me (Egyptian lines written as Egyptians speak, not translated MSA).
+- Gate: a 1–2 day Egyptian-Arabic TTS test (Chatterbox Multilingual with Egyptian reference voices vs alternatives,
+  licence checked), logged as an experiment in the audios research repo. If no voice passes, Arabic ships as
+  captions-only visual cuts first.
+
+### New flagship idea — our own character: **Mama vs the Villains** (ماما ضد الأشرار)
+A recurring original character — an Egyptian mom — who defeats famous villains with household authority and
+the legendary flying slipper. Why: our own IP (the brand grows, not someone else's), instantly relatable across
+MENA and still understood globally (every country has a strict mom), famous guests give reach, one cheap set
+(living room), and the slipper throw is exactly what our projectile/contact system already does.
+
+### MENA-flavoured ideas (31–40)
+| # | series | title / hook | logline | tie-in | cost | IP |
+|---|---|---|---|---|---|---|
+| 31 ★ | Mama vs the Villains | **Home by Eleven** | Batman: "I am the night." Mama: "You are home by eleven." He is. | evergreen | L | M |
+| 32 ★ | Mama vs the Villains | **The Slipper Has Range** | Vader force-chokes the TV remote; Mama's slipper crosses the room — Vader bows | evergreen | L | M |
+| 33 | Mama vs the Villains | **Perfectly Balanced Dinner** | Thanos tries to snap away half the vegetables; Mama doubles the portion | evergreen | L | M |
+| 34 ★ | Standoff | **Derby Day** | The red warlord and the white ronin — whose penalty was it? They check "VAR": a cat watching a TV | Ahly–Zamalek derby (verify date) | **L (assets exist)** | L |
+| 35 | Standoff | **Is It Winter Yet?** | Two duellists in 32 °C October: one in a heavy coat and scarf, refusing to admit it | Oct–Nov weather | L (assets exist) | L |
+| 36 | Heroes Off | **The Microbus** | Vader boards a microbus; passengers pass the fare forward to him, he passes it back, forever | evergreen | M | M |
+| 37 | Heroes Off | **Back to School Geometry** | Wolverine helps his kid with a compass and ruler — everything ends up in three pieces | back to school | L | M |
+| 38 | Villains | **Perfect Pack** | Thanos opens FC packs: "Perfectly balanced." Every player is rated 62 | EA FC release | L | M |
+| 39 | Villains | **Revive Me** | Four famous villains in a mobile battle-royale squad; nobody will revive the Joker | PUBG culture | M | M |
+| 40 | Casting Call | **Casting Call: Egyptian Mom** | The Shapeshifter must play an Egyptian mom; the director's real mom calls mid-audition | evergreen | L | L |
+
+## 6. Scripts written
 - `scripts/01-duel-that-never-started.md` — full script (recommended first upload)
 - `scripts/02-unexpected-item.md` — full script
 - `scripts/03-for-me-it-was-tuesday.md` — full script
