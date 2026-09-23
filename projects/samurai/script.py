@@ -38,6 +38,15 @@ F_DRAW_R_MID = 85
 F_DRAW_R1 = 92
 F_SCENE3 = 97
 F_SCENE6 = 385
+F_SCENE7 = 445
+F_SCENE8 = 517
+F_C6 = 404
+F_SPLIT = 462
+F_KNEEL = 486
+F_FALL = 500
+F_SHEATH0 = 560
+F_SHEATH_MID = 578
+F_SHEATH1 = 590
 
 
 def new_cues() -> dict:
@@ -93,10 +102,16 @@ def pose_with(name: str, **changes) -> P.Pose:
     return dataclasses.replace(P.POSES[name], **changes)
 
 
+IAI_WINDUP = dataclasses.replace(P.POSES['chudan'], grip=(-0.25,0.30,1.25), blade=(10,-110,0), twist=-25)
+FALLEN = dataclasses.replace(P.POSES['kneel'], hips=(0,0.30,-0.80), lean=80)
+
+
 RONIN_KEYS = [
  (97,'chudan',0,0.0,'BEZIER'), (110,'chudan',0,0.25,'BEZIER'), (122,'block_high',0,0.25,'BEZIER'), (128,'C1',0,0.25,'BEZIER'), (131,'C1',0,0.25,'BEZIER'), (142,'chudan',0,0.25,'BEZIER'), (150,'chudan',0,0.30,'BEZIER'), (156,'slash_windup',0,0.35,'LINEAR'), (162,'C2',0,0.55,'BEZIER'), (165,'C2',0,0.55,'BEZIER'), (176,'chudan',0,0.30,'BEZIER'), (193,'chudan',0,0.30,'BEZIER'), (207,'jodan',0,0.35,'LINEAR'), (212,'C3',0,0.65,'BEZIER'), (215,'C3',0,0.65,'BEZIER'), (226,'chudan',0,0.40,'BEZIER'), (228,'chudan',0,0.40,'BEZIER'), (236,'dodge_side',-0.35,0.40,'BEZIER'), (240,'dodge_side',-0.35,0.40,'BEZIER'), (248,'chudan',0,0.40,'BEZIER'), (258,'slash_windup',0,0.45,'LINEAR'), (266,'C4',0,0.70,'BEZIER'), (269,'C4',0,0.70,'BEZIER'), (282,'chudan',0,0.40,'BEZIER'), (301,'chudan',0,0.40,'BEZIER'), (316,'parry',0,0.40,'BEZIER'), (320,'C5',0,0.40,'BEZIER'), (323,'C5',0,0.40,'BEZIER'), (332,'chudan',0,0.40,'BEZIER'), (340,'thrust_windup',0,0.35,'LINEAR'), (348,'thrust_hit',0,0.75,'BEZIER'), (352,'thrust_hit',0,0.75,'BEZIER'), (372,'chudan',0,0.0,'BEZIER'), (384,'chudan',0,0.0,'BEZIER')]
 WARLORD_KEYS = [
- (97,'chudan',0,0.0,'BEZIER'), (106,'chudan',0,0.55,'BEZIER'), (114,'chudan',0,1.10,'BEZIER'), (122,'jodan',0,1.20,'LINEAR'), (128,'C1',0,1.25,'BEZIER'), (131,'C1',0,1.25,'BEZIER'), (142,'chudan',0,1.00,'BEZIER'), (157,'parry',0,1.00,'BEZIER'), (162,'C2',0,1.00,'BEZIER'), (165,'C2',0,1.00,'BEZIER'), (176,'chudan',0,0.90,'BEZIER'), (193,'chudan',0,0.90,'BEZIER'), (207,'block_high',0,0.90,'BEZIER'), (212,'C3',0,0.90,'BEZIER'), (215,'C3',0,0.90,'BEZIER'), (222,'chudan',0,0.90,'BEZIER'), (230,'thrust_windup',0,0.85,'LINEAR'), (238,'thrust_hit',0,1.35,'BEZIER'), (242,'thrust_hit',0,1.35,'BEZIER'), (250,'chudan',0,1.00,'BEZIER'), (260,'block_mid',0,1.00,'BEZIER'), (266,'C4',0,0.95,'BEZIER'), (269,'C4',0,0.95,'BEZIER'), (282,'chudan',0,0.80,'BEZIER'), (301,'chudan',0,0.80,'BEZIER'), (314,'jodan',0,0.90,'LINEAR'), (320,'C5',0,1.25,'BEZIER'), (323,'C5',0,1.25,'BEZIER'), (334,'stagger',0,1.00,'BEZIER'), (346,'dodge_back',0,0.70,'BEZIER'), (350,'dodge_back',0,0.70,'BEZIER'), (372,'chudan',0,0.0,'BEZIER'), (384,'chudan',0,0.0,'BEZIER')]
+ (97,'chudan',0,0.0,'BEZIER'), (106,'chudan',0,0.55,'BEZIER'), (114,'chudan',0,1.10,'BEZIER'), (122,'jodan',0,1.20,'LINEAR'), (128,'C1',0,1.25,'BEZIER'), (131,'C1',0,1.25,'BEZIER'), (142,'chudan',0,1.00,'BEZIER'), (157,'parry',0,1.00,'BEZIER'), (162,'C2',0,1.00,'BEZIER'), (165,'C2',0,1.00,'BEZIER'), (176,'chudan',0,0.90,'BEZIER'), (193,'chudan',0,0.90,'BEZIER'), (207,'block_high',0,0.90,'BEZIER'), (212,'C3',0,0.90,'BEZIER'), (215,'C3',0,0.90,'BEZIER'), (222,'chudan',0,0.90,'BEZIER'), (230,'thrust_windup',0,0.85,'LINEAR'), (238,'thrust_hit',0,1.35,'BEZIER'), (242,'thrust_hit',0,1.35,'BEZIER'), (250,'chudan',0,1.00,'BEZIER'), (260,'block_mid',0,1.00,'BEZIER'), (266,'C4',0,0.95,'BEZIER'), (269,'C4',0,0.95,'BEZIER'), (282,'chudan',0,0.80,'BEZIER'), (301,'chudan',0,0.80,'BEZIER'), (314,'jodan',0,0.90,'LINEAR'), (320,'C5',0,1.25,'BEZIER'), (323,'C5',0,1.25,'BEZIER'), (334,'stagger',0,1.00,'BEZIER'), (346,'dodge_back',0,0.50,'BEZIER'), (350,'dodge_back',0,0.50,'BEZIER'), (372,'chudan',0,0.0,'BEZIER'), (384,'chudan',0,0.0,'BEZIER')]
+RONIN_KEYS_2 = [(385,'chudan',0,0.0,'BEZIER'), (398,'IAI_WINDUP',-0.35,1.10,'LINEAR'), (404,'C6',-0.35,1.55,'BEZIER'), (410,'iai_follow',-0.35,2.30,'BEZIER'), (530,'iai_follow',-0.35,2.30,'BEZIER'), (545,'chudan',-0.35,2.30,'BEZIER'), (560,'chudan',-0.35,2.30,'LINEAR'), (578,'draw_mid',-0.35,2.30,'LINEAR'), (590,'sheathed',-0.35,2.30,'BEZIER'), (672,'sheathed',-0.35,2.30,'BEZIER')]
+WARLORD_KEYS_2 = [(385,'chudan',0,0.0,'BEZIER'), (396,'jodan',-0.35,0.90,'LINEAR'), (404,'overhead_hit',-0.35,1.45,'BEZIER'), (410,'overhead_hit',-0.35,2.20,'BEZIER'), (468,'overhead_hit',-0.35,2.20,'BEZIER'), (486,'kneel',-0.35,2.20,'BEZIER'), (494,'kneel',-0.35,2.20,'LINEAR'), (500,'FALLEN',-0.35,2.20,'BEZIER'), (672,'FALLEN',-0.35,2.20,'BEZIER')]
 CLASHES = {  # id: (frame, attacker, defender, attacker_pose, attacker_blade, defender_pose, defender_blade, height, big, windup_frame)
  'C1': (128, 'warlord', 'ronin', 'overhead_hit', (20,0,0), 'block_high', (10,-80,0), 1.55, False, 122),
  'C2': (162, 'ronin', 'warlord', 'slash_hit', (10,-40,0), 'parry', (45,-60,0), 1.35, False, 156),
@@ -172,6 +187,12 @@ def play_keys(arm, name, table, solved):
         if pose_name in CLASHES:
             side = "att" if CLASHES[pose_name][1] == name else "dfn"
             pose = solved[(pose_name, side)]
+        elif pose_name == "C6":
+            pose = solved[("C6", "att")]
+        elif pose_name == "IAI_WINDUP":
+            pose = IAI_WINDUP
+        elif pose_name == "FALLEN":
+            pose = FALLEN
         else:
             pose = P.POSES[pose_name]
         P.key_pose(arm, pose, f, mover=(mx, my), interp=interp)
@@ -223,9 +244,43 @@ def scenes_1_2(ronin: Object, warlord: Object, cues: dict) -> None:
     sfx(cues, F_DRAW_R0 + 1, "sword_draw", 0.75)
 
 
-def hold_rest(ronin: Object, warlord: Object) -> None:
-    P.hold(ronin, P.POSES["chudan"], F_SCENE6, FRAME_END, mover=(0, 0.0))
-    P.hold(warlord, P.POSES["chudan"], F_SCENE6, FRAME_END, mover=(0, 0.0))
+def scenes_6_9(ronin: Object, warlord: Object, cues: dict) -> None:
+    play_keys(warlord, "warlord", WARLORD_KEYS_2, {})
+
+    scene = bpy.context.scene
+    scene.frame_set(F_C6)
+    target = warlord.matrix_world @ warlord.pose.bones["head"].head + Vector((0, 0, 0.12))
+    pose_follow = P.POSES["iai_follow"]
+    grip = P.sword_through(P.to_local(ronin, target) - Vector((-0.35, 1.55, 0)), pose_follow.blade, 0.80)
+    c6_pose = dataclasses.replace(pose_follow, grip=grip)
+    try:
+        P.reach_ok(ronin, c6_pose)
+    except ValueError as e:
+        print(f"[reach] C6 att: {e}", flush=True)
+
+    play_keys(ronin, "ronin", RONIN_KEYS_2, {("C6", "att"): c6_pose})
+
+    cues["contacts"].append({
+        "id": "C6",
+        "frame": F_C6,
+        "kind": "hit",
+        "point": [round(target.x, 4), round(target.y, 4), round(target.z, 4)],
+        "attacker": "ronin",
+        "defender": "warlord",
+    })
+
+    sfx(cues, 398, "sword_swing", 0.6)
+    sfx(cues, F_C6, "slash", 1.0)
+    sfx(cues, F_KNEEL, "armor_clank", 0.5)
+    sfx(cues, F_FALL, "thud", 0.9)
+    sfx(cues, F_SHEATH1, "click", 0.8)
+    sfx(cues, F_SHEATH_MID, "sword_draw", 0.4)
+
+    fx.smear(ronin, 398, F_C6, "C6")
+    fx.helmet_split(warlord, F_SPLIT)
+    scene.frame_set(F_FALL)
+    chest = warlord.matrix_world @ warlord.pose.bones["chest"].head
+    fx.dust(Vector((chest.x, chest.y, 0.02)), F_FALL)
 
 
 def cameras(ronin: Object, warlord: Object) -> dict[str, Object]:
@@ -239,6 +294,9 @@ def cameras(ronin: Object, warlord: Object) -> dict[str, Object]:
     cam_side = C.camera("cam_side", (0, -5.0, 1.1), (0, 0, 1.5), lens=32)
     cam_ots_ronin = C.camera("cam_ots_ronin", (-3.6, -1.6, 2.0), (0.4, 0, 1.2), lens=35)
     cam_ots_warlord = C.camera("cam_ots_warlord", (3.4, 1.6, 2.0), (-0.4, 0, 1.2), lens=35)
+    cam_low = C.camera("cam_low", (0, -6.5, 0.35), (0, 0, 1.1), lens=28)
+    cam_fall = C.camera('cam_fall', (-2.9,-1.95,1.2), (-0.7,-0.35,1.0), lens=35)
+    cam_honor = C.camera('cam_honor', (2.6,0.05,1.25), (0.8,0.35,1.45), lens=40)
 
     scene = bpy.context.scene
     for f in range(97, 385, 3):
@@ -260,7 +318,9 @@ def cameras(ronin: Object, warlord: Object) -> dict[str, Object]:
     C.cut(193, cam_ots_ronin)
     C.cut(214, cam_ots_warlord)
     C.cut(266, cam_side)
-    C.cut(F_SCENE6, cam_two)
+    C.cut(F_SCENE6, cam_low)
+    C.cut(F_SCENE7, cam_fall)
+    C.cut(F_SCENE8, cam_honor)
 
     return {
         "cam_eyes": cam_eyes,
@@ -270,6 +330,9 @@ def cameras(ronin: Object, warlord: Object) -> dict[str, Object]:
         "cam_side": cam_side,
         "cam_ots_ronin": cam_ots_ronin,
         "cam_ots_warlord": cam_ots_warlord,
+        "cam_low": cam_low,
+        "cam_fall": cam_fall,
+        "cam_honor": cam_honor,
     }
 
 
@@ -282,7 +345,7 @@ def build() -> None:
     cues = new_cues()
     scenes_1_2(ronin, warlord, cues)
     scenes_3_5(ronin, warlord, cues)
-    hold_rest(ronin, warlord)
+    scenes_6_9(ronin, warlord, cues)
     for arm in (ronin, warlord):
         P.auto_steps(arm, cues)
     cams = cameras(ronin, warlord)

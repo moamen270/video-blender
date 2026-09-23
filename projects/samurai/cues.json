@@ -436,6 +436,126 @@
    "frame": 372,
    "sfx": "step",
    "gain": 0.35
+  },
+  {
+   "frame": 396,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 396,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 398,
+   "sfx": "sword_swing",
+   "gain": 0.6
+  },
+  {
+   "frame": 398,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 398,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 404,
+   "sfx": "slash",
+   "gain": 1.0
+  },
+  {
+   "frame": 404,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 404,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 404,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 404,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 410,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 410,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 410,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 410,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 486,
+   "sfx": "armor_clank",
+   "gain": 0.5
+  },
+  {
+   "frame": 486,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 486,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 500,
+   "sfx": "thud",
+   "gain": 0.9
+  },
+  {
+   "frame": 545,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 545,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 578,
+   "sfx": "sword_draw",
+   "gain": 0.4
+  },
+  {
+   "frame": 578,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 578,
+   "sfx": "step",
+   "gain": 0.35
+  },
+  {
+   "frame": 590,
+   "sfx": "click",
+   "gain": 0.8
   }
  ],
  "contacts": [
@@ -498,6 +618,18 @@
    ],
    "attacker": "warlord",
    "defender": "ronin"
+  },
+  {
+   "id": "C6",
+   "frame": 404,
+   "kind": "hit",
+   "point": [
+    -0.2563,
+    -0.35,
+    1.4739
+   ],
+   "attacker": "ronin",
+   "defender": "warlord"
   }
  ],
  "overlays": [
