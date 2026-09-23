@@ -123,10 +123,18 @@ For each: **Standard** (what the viewer should get) · **Build** (what we make, 
 
 ### 6. Voices
 - **Standard:** each character has a distinct voice that fits the personality (pitch, pace, timbre,
-  attitude); controlled acting, not monotone; the same voice every episode; never a cloned real actor.
+  attitude); controlled acting, not monotone; the same voice every episode.
 - **Build:** a **voice casting sheet** per character (engine, reference clip, emotion range, speed, FX);
-  Chatterbox with ASR read-back and retakes (exists in video-builder); references that are license-clean
-  (Kokoro voices as clone sources, own recordings, or public-domain readings — no actor clips).
+  Chatterbox with ASR read-back and retakes (exists in video-builder).
+- **Voice policy (owner decision 2026-09-24):** cloning is allowed when a character needs it. For a parody
+  of a movie/game character we may clone a reference that fits the character (the original performance or
+  a different voice with the right personality), always **modified** so it is not the exact voice (pitch,
+  timbre, FX), and always in an obviously comedic cartoon context — making fun of the character, never
+  presenting the actor as saying or endorsing anything. Original cast members get custom voices built the
+  same way (pick a reference that matches the personality, clone, modify).
+- **Upload hygiene for cloned voices:** the description frames it as parody / voice impression; turn on the
+  platform's AI/altered-content label where it applies; keep the voice swappable per character so a
+  complaint costs one re-voice, not a remake.
 - **Auto-check:** ASR read-back equals the text; measured pitch inside the character's range; loudness.
 - **Now:** Chatterbox + Kokoro wired; the Chatterbox trial decision (D13) is due 2026-09-26.
 
@@ -175,9 +183,9 @@ For each: **Standard** (what the viewer should get) · **Build** (what we make, 
 - **Series & cast:** recurring characters in fixed formats (e.g. *serious warrior vs trivial chore*;
   *villains at a mundane job*; *a tense standoff interrupted by petty etiquette*; the *Shapeshifter
   audition*). Same cast, sets and voices → faster episodes and followers who come back.
-- **Famous characters (policy):** the views upside is real, but so are manual IP claims and monetisation
-  limits. Use **parody archetypes** (a bat-cowled vigilante who is clearly not Batman) and never clone a
-  real actor's voice; grow our own recurring cast alongside.
+- **Famous characters (policy):** we make comedy parodies of movie and game characters; the views upside is
+  real, and so are manual IP claims and monetisation limits, so the comedy/parody framing is kept clear in
+  every video and description. Voices follow the voice policy in §3.6. Grow our own recurring cast alongside.
 - **Variation (anti "template fatigue"):** the risk of reusable blocks is that every episode looks the
   same. Every block takes variation parameters (timing offsets, lens choice, move variants, colour grade),
   and each series rotates sets and shot patterns.
@@ -234,7 +242,8 @@ nothing uses. Phases 1 and 3 are cheap and hit the top of the ranking; phase 2 i
 
 ## 6. Rules that never change
 - Free, local, no logins; every asset has a licence entry (`assets/library/LICENSES.md`).
-- No synthesized audio. No cloned real-actor voices. Credits go into every upload that needs them.
+- No synthesized audio. Cloned voices only per the voice policy (§3.6): modified, parody context, labelled.
+  Credits go into every upload that needs them.
 - Every render is a new `output/vN`; nothing is overwritten.
 - A contact, a camera framing or a sound is only "done" when an automatic check has verified it.
 - Gemini writes the code from literal specs; Claude plans, runs, reviews; the owner approves.
