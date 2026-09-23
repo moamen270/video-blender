@@ -1,0 +1,18 @@
+{
+ "_license": "see assets/library/LICENSES.md; every file here is CC0",
+ "target_rms_db": -20,
+ "sounds": {
+  "sword_clash": {"gain": 0.9, "files": ["assets/library/oga/starninjas/sword_clash.1.ogg", "assets/library/oga/starninjas/sword_clash.2.ogg", "assets/library/oga/starninjas/sword_clash.4.ogg", "assets/library/oga/starninjas/sword_clash.5.ogg", "assets/library/oga/starninjas/sword_clash.7.ogg", "assets/library/oga/starninjas/sword_clash.9.ogg", "assets/library/oga/starninjas/sword_clash.10.ogg"]},
+  "big_clash": {"gain": 1.0, "files": ["assets/library/oga/starninjas/sword_clash.3.ogg"]},
+  "sword_swing": {"gain": 0.55, "files": ["assets/library/oga/starninjas/sword - StarNinjas/sword.1.ogg", "assets/library/oga/starninjas/sword - StarNinjas/sword.3.ogg", "assets/library/oga/starninjas/sword - StarNinjas/sword.4.ogg", "assets/library/oga/starninjas/sword - StarNinjas/sword.6.ogg", "assets/library/oga/starninjas/sword - StarNinjas/sword.7.ogg", "assets/library/oga/swishes/swishes/swish-3.wav", "assets/library/oga/swishes/swishes/swish-7.wav", "assets/library/oga/swishes/swishes/swish-9.wav"]},
+  "slash": {"gain": 1.0, "files": ["assets/library/oga/starninjas/sword - StarNinjas/sword.9.ogg"]},
+  "swoosh": {"gain": 0.6, "files": ["assets/library/oga/starninjas/sword - StarNinjas/sword.2.ogg", "assets/library/oga/starninjas/sword - StarNinjas/sword.5.ogg"]},
+  "sword_draw": {"gain": 0.7, "files": ["assets/library/kenney/kenney_rpg-audio/Audio/drawKnife3.ogg", "assets/library/kenney/kenney_rpg-audio/Audio/drawKnife2.ogg"]},
+  "click": {"gain": 0.6, "files": ["assets/library/kenney/kenney_rpg-audio/Audio/metalLatch.ogg"]},
+  "armor_clank": {"gain": 0.6, "files": ["assets/library/kenney/kenney_impact-sounds/Audio/impactMetal_heavy_001.ogg"]},
+  "thud": {"gain": 0.9, "files": ["assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_002.ogg"]},
+  "step": {"gain": 0.25, "files": ["assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_000.ogg", "assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_001.ogg", "assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_002.ogg", "assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_003.ogg", "assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_004.ogg"]},
+  "whoosh": {"gain": 0.4, "files": ["assets/library/kenney/kenney_rpg-audio/Audio/cloth1.ogg"]},
+  "cloth": {"gain": 0.35, "files": ["assets/library/kenney/kenney_rpg-audio/Audio/cloth1.ogg", "assets/library/kenney/kenney_rpg-audio/Audio/clothBelt.ogg"]}
+ }
+}

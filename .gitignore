@@ -2,3 +2,10 @@ output/
 __pycache__/
 *.pyc
 *.blend1
+
+# downloaded audio packs (licences tracked in assets/library/LICENSES.md)
+assets/library/*
+!assets/library/LICENSES.md
+!assets/library/music/
+assets/library/music/*
+!assets/library/music/LICENSES.md

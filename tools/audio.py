@@ -27,89 +27,27 @@ VB_CHATTERBOX_PY = "F:/PoCs/video-builder/py-chatterbox"
 FFMPEG = ("C:/Users/mmoam/AppData/Local/Microsoft/WinGet/Packages/"
           "Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe")
 SR = 48000
-SFX_DIR = os.path.join(ROOT, "assets", "sfx")
-VB_SFX_DIR = "F:/PoCs/video-builder/assets/sfx"
-MUSIC_DIR = os.path.join(ROOT, "assets", "music")
+SFX_BANK_PATH = os.path.join(ROOT, "assets", "sfx_bank.json")
+with open(SFX_BANK_PATH, "r", encoding="utf-8") as _fh:
+    BANK = json.load(_fh)
 
+ALIASES = {
+    "boom": "big_clash",
+}
 
-# --------------------------------------------------------------------------- synth helpers
-
-def _env(n: int, attack: float, decay: float) -> np.ndarray:
-    t = np.arange(n) / SR
-    a = np.clip(t / max(attack, 1e-4), 0, 1)
-    return a * np.exp(-t / decay)
-
-
-def synth_twang() -> np.ndarray:
-    n = int(SR * 0.45)
-    t = np.arange(n) / SR
-    f = 140 * np.exp(-t * 6) + 90
-    tone = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.002, 0.12)
-    tone += 0.35 * np.sin(2 * np.pi * np.cumsum(f * 2.02) / SR) * _env(n, 0.002, 0.08)
-    noise = np.random.default_rng(1).normal(0, 1, n) * _env(n, 0.001, 0.02) * 0.4
-    return 0.8 * (tone + noise)
-
-
-def synth_bonk() -> np.ndarray:
-    n = int(SR * 0.7)
-    t = np.arange(n) / SR
-    f = 420 * np.exp(-t * 18) + 160
-    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.001, 0.18)
-    ring = sum(np.sin(2 * np.pi * (fr * t)) * _env(n, 0.001, 0.25) * g
-               for fr, g in ((1230, 0.25), (1870, 0.15), (2740, 0.08)))
-    return 0.9 * (body + ring)
-
-
-def synth_step() -> np.ndarray:
-    n = int(SR * 0.12)
-    rng = np.random.default_rng(7)
-    noise = rng.normal(0, 1, n)
-    # crude low-pass by moving average for a soft grass thump
-    k = 24
-    noise = np.convolve(noise, np.ones(k) / k, mode="same")
-    return 1.6 * noise * _env(n, 0.002, 0.03)
-
-
-def synth_boing() -> np.ndarray:
-    n = int(SR * 0.5)
-    t = np.arange(n) / SR
-    f = 300 + 180 * np.sin(2 * np.pi * 9 * t) * np.exp(-t * 3) + 200 * np.exp(-t * 4)
-    return 0.7 * np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.005, 0.2)
-
-
-def synth_music(seconds: float, bpm: float = 118) -> np.ndarray:
-    """A light plucked arpeggio loop (C  G  Am  F), stereo-safe mono."""
-    beat = 60 / bpm
-    step = beat / 2
-    chords = [(261.63, 329.63, 392.0), (196.0, 246.94, 293.66), (220.0, 261.63, 329.63), (174.61, 220.0, 261.63)]
-    n = int(SR * seconds)
-    out = np.zeros(n)
-    i, t0 = 0, 0.0
-    while t0 < seconds:
-        chord = chords[(i // 8) % 4]
-        note = chord[[0, 1, 2, 1][i % 4]] * (2 if i % 8 in (5, 6) else 1)
-        ln = int(SR * step * 1.6)
-        s = int(t0 * SR)
-        ln = min(ln, n - s)
-        if ln <= 0:
-            break
-        t = np.arange(ln) / SR
-        pluck = (np.sin(2 * np.pi * note * t) + 0.3 * np.sin(2 * np.pi * note * 2 * t)) * np.exp(-t * 7)
-        out[s:s + ln] += pluck * 0.5
-        if i % 8 == 0:  # soft bass on the bar
-            bl = int(SR * beat * 1.5)
-            bl = min(bl, n - s)
-            tb = np.arange(bl) / SR
-            out[s:s + bl] += np.sin(2 * np.pi * chord[0] / 2 * tb) * np.exp(-tb * 3) * 0.4
-        i += 1
-        t0 += step
-    return out
-
-
-SYNTH = {"twang": synth_twang, "bonk": synth_bonk, "step": synth_step, "boing": synth_boing}
+_SFX_CACHE: dict[str, np.ndarray] = {}
 
 
 # --------------------------------------------------------------------------- io
+
+def load_audio(path: str) -> np.ndarray:
+    res = subprocess.run(
+        [FFMPEG, "-v", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"],
+        capture_output=True,
+        check=True,
+    )
+    return np.frombuffer(res.stdout, dtype=np.float32)
+
 
 def load_wav(path: str) -> np.ndarray:
     data, sr = sf.read(path, dtype="float32", always_2d=True)
@@ -121,22 +59,35 @@ def load_wav(path: str) -> np.ndarray:
     return mono
 
 
-def sfx_clip(name: str) -> np.ndarray:
-    path = os.path.join(SFX_DIR, f"{name}.wav")
-    if not os.path.exists(path):
-        vb_path = os.path.join(VB_SFX_DIR, f"{name}.wav")
-        if os.path.exists(vb_path):
-            path = vb_path
-        else:
-            if name not in SYNTH:
-                raise FileNotFoundError(f"no sfx '{name}' in assets/sfx or {VB_SFX_DIR} and no synth for it")
-            os.makedirs(SFX_DIR, exist_ok=True)
-            sf.write(path, SYNTH[name]().astype(np.float32), SR)
-    clip = load_wav(path)
-    if name == "laugh":  # Bark clip is 6 s; keep ~2.4 s with a fade
-        keep = int(SR * 2.4)
-        clip = clip[:keep] * np.concatenate([np.ones(keep - SR // 2), np.linspace(1, 0, SR // 2)])[:len(clip[:keep])]
-    return clip
+def sfx_clip(name: str, occurrence: int = 0) -> np.ndarray:
+    lookup_name = ALIASES.get(name, name)
+    if lookup_name not in BANK["sounds"]:
+        raise KeyError(f"sfx '{name}' is not in assets/sfx_bank.json (synthesis is disabled)")
+    files = BANK["sounds"][lookup_name]["files"]
+    rel_path = files[occurrence % len(files)]
+    if rel_path in _SFX_CACHE:
+        return _SFX_CACHE[rel_path]
+
+    full_path = os.path.join(ROOT, rel_path)
+    data = load_audio(full_path)
+
+    above = np.where(np.abs(data) > 0.02)[0]
+    if len(above) > 0:
+        data = data[above[0]:]
+
+    active = data[np.abs(data) > 0.01]
+    if len(active) > 0:
+        rms = np.sqrt(np.mean(active ** 2))
+        if rms > 1e-9:
+            target_rms = 10 ** (BANK.get("target_rms_db", -20) / 20)
+            data = data * (target_rms / rms)
+
+    peak = np.abs(data).max() if len(data) > 0 else 0.0
+    if peak > 0.98:
+        data = data * (0.98 / peak)
+
+    _SFX_CACHE[rel_path] = data.astype(np.float32)
+    return _SFX_CACHE[rel_path]
 
 
 def narrate(lines: list[dict], voice: str, out_dir: str) -> dict[str, np.ndarray]:
@@ -254,64 +205,83 @@ def main() -> None:
         duck = np.convolve(duck, np.ones(k) / k, mode="same")
 
     # Music bed
-    music_cfg = cues.get("music", {})
+    music_cfg = cues.get("music") or {}
     music_file = music_cfg.get("file")
     music_gain = music_cfg.get("gain", 1.0)
+    if music_file and not os.path.exists(music_file):
+        for candidate in (
+            os.path.join(ROOT, music_file),
+            os.path.join(ROOT, "projects", args.project, music_file),
+        ):
+            if os.path.exists(candidate):
+                music_file = candidate
+                break
+    if not music_file or not os.path.exists(music_file):
+        raise FileNotFoundError("music file required (synthesis is disabled)")
 
-    if music_file and os.path.exists(music_file):
-        raw_music = load_wav(music_file)
-        tiles = math.ceil(len(mix) / len(raw_music)) if len(raw_music) > 0 else 1
-        music_clip = np.tile(raw_music, tiles)[:len(mix)]
-        env = np.ones(len(mix), dtype=np.float64)
+    raw_music = load_audio(music_file)
+    start_s = music_cfg.get("start_s", 0)
+    if start_s and start_s > 0:
+        raw_music = raw_music[int(start_s * SR):]
 
-        cut = music_cfg.get("cut_frame")
-        if cut is not None and cut > 0:
-            c = int(cut / fps * SR)
-            ramp = int(6 / fps * SR)
-            c_start = max(0, c - ramp)
-            ramp_len = c - c_start
-            if ramp_len > 0:
-                env[c_start:c] = np.linspace(1, 0, ramp)[-ramp_len:]
-            env[c:] = 0.0
+    tiles = math.ceil(len(mix) / len(raw_music)) if len(raw_music) > 0 else 1
+    music_clip = np.tile(raw_music, tiles)[:len(mix)]
+    env = np.ones(len(mix), dtype=np.float64)
 
-            resume = music_cfg.get("resume_frame", 0)
-            if resume > cut:
-                r = int(resume / fps * SR)
-                r_end = min(len(mix), r + ramp)
-                ramp_r_len = r_end - r
-                if ramp_r_len > 0:
-                    env[r:r_end] = np.linspace(0, 1, ramp)[:ramp_r_len]
-                if r + ramp < len(mix):
-                    env[r + ramp:] = 1.0
+    cut = music_cfg.get("cut_frame")
+    if cut is not None and cut > 0:
+        c = int(cut / fps * SR)
+        ramp = int(6 / fps * SR)
+        c_start = max(0, c - ramp)
+        ramp_len = c - c_start
+        if ramp_len > 0:
+            env[c_start:c] = np.linspace(1, 0, ramp)[-ramp_len:]
+        env[c:] = 0.0
 
-        end = music_cfg.get("end_frame")
-        if end is not None and end > 0:
-            e = int(end / fps * SR)
-            e = min(e, len(mix))
-            e_start = max(0, e - SR)
-            if e > e_start:
-                env[e_start:e] *= np.linspace(1, 0, e - e_start)
-            if e < len(mix):
-                env[e:] = 0.0
-    else:
-        music_path = os.path.join(MUSIC_DIR, f"{args.project}_loop.wav")
-        if not os.path.exists(music_path):
-            os.makedirs(MUSIC_DIR, exist_ok=True)
-            sf.write(music_path, synth_music(seconds + 2).astype(np.float32), SR)
-        raw_music = load_wav(music_path)
-        tiles = math.ceil(len(mix) / len(raw_music)) if len(raw_music) > 0 else 1
-        music_clip = np.tile(raw_music, tiles)[:len(mix)]
-        env = np.ones(len(mix), dtype=np.float64)
-        tail = int(SR * 2.5)
-        tail = min(tail, len(env))
-        if tail > 0:
-            env[-tail:] = np.linspace(1, 0, tail)
+        resume = music_cfg.get("resume_frame", 0)
+        if resume > cut:
+            r = int(resume / fps * SR)
+            r_end = min(len(mix), r + ramp)
+            ramp_r_len = r_end - r
+            if ramp_r_len > 0:
+                env[r:r_end] = np.linspace(0, 1, ramp)[:ramp_r_len]
+            if r + ramp < len(mix):
+                env[r + ramp:] = 1.0
+
+    end = music_cfg.get("end_frame")
+    if end is not None and end > 0:
+        e = int(end / fps * SR)
+        e = min(e, len(mix))
+        e_start = max(0, e - SR)
+        if e > e_start:
+            env[e_start:e] *= np.linspace(1, 0, e - e_start)
+        if e < len(mix):
+            env[e:] = 0.0
 
     place(mix, music_clip * env * duck, 0.0, music_gain)
 
     # SFX
+    sfx_counts: dict[str, int] = collections.defaultdict(int)
+    files_used: set[str] = set()
     for c in cues.get("sfx", []):
-        place(mix, sfx_clip(c["sfx"]), c["frame"] / fps, c.get("gain", 1.0) * 0.8)
+        raw_name = c["sfx"]
+        sound_name = ALIASES.get(raw_name, raw_name)
+        if sound_name not in BANK["sounds"]:
+            raise KeyError(f"sfx '{raw_name}' is not in assets/sfx_bank.json (synthesis is disabled)")
+        entry = BANK["sounds"][sound_name]
+        files = entry["files"]
+        occ = sfx_counts[sound_name]
+        sfx_counts[sound_name] += 1
+        files_used.add(files[occ % len(files)])
+
+        entry_gain = entry.get("gain", 1.0)
+        cue_gain = c.get("gain", 1.0)
+        placement_gain = entry_gain * cue_gain
+
+        clip = sfx_clip(raw_name, occ)
+        place(mix, clip, c["frame"] / fps, placement_gain)
+
+    print(f"[audio] sfx bank: {len(BANK['sounds'])} sounds, {len(files_used)} files used", flush=True)
 
     # Voices
     for l in lines:

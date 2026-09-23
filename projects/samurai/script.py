@@ -54,8 +54,9 @@ def new_cues() -> dict:
         "fps": 24,
         "frames": 672,
         "music": {
-            "file": "F:/PoCs/video-builder/assets/music/japan-duel.wav",
-            "gain": 0.22,
+            "file": "F:/PoCs/blender-video/assets/library/music/Asian Drums.mp3",
+            "start_s": 50,
+            "gain": 0.7,
             "cut_frame": 400,
             "resume_frame": 0,
             "end_frame": 600,
@@ -167,9 +168,10 @@ def solve_clashes(arms: dict, cues) -> dict:
         solved[(cid, "dfn")] = dfn_pose
 
         fx.spark(M, frame, seed=int(cid[1]))
-        sfx(cues, frame, "sword_clash", 0.9)
         if big:
-            sfx(cues, frame, "boom", 0.5)
+            sfx(cues, frame, "big_clash", 1.0)
+        else:
+            sfx(cues, frame, "sword_clash", 0.9)
         sfx(cues, windup_frame, "sword_swing", 0.6)
         cues["contacts"].append({
             "id": cid,
@@ -269,8 +271,10 @@ def scenes_6_9(ronin: Object, warlord: Object, cues: dict) -> None:
         "defender": "warlord",
     })
 
+    sfx(cues, 386, "cloth", 1.0)
     sfx(cues, 398, "sword_swing", 0.6)
     sfx(cues, F_C6, "slash", 1.0)
+    sfx(cues, F_KNEEL - 4, "cloth", 1.0)
     sfx(cues, F_KNEEL, "armor_clank", 0.5)
     sfx(cues, F_FALL, "thud", 0.9)
     sfx(cues, F_SHEATH1, "click", 0.8)
