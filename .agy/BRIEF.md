@@ -6,7 +6,7 @@ Environment
 
 Code rules
 - Type hints, short docstrings, 4-space indent. Prints only as tagged lines, e.g. print("[rig] built", flush=True).
-- No bpy.ops except object.mode_set, wm.save_as_mainfile, render.render and the mesh.primitive_* calls inside studio/core.py. Build meshes with studio/core.py helpers or bmesh.
+- No bpy.ops except object.mode_set, wm.save_as_mainfile, render.render, import_scene.gltf (only in kit/sets.py) and the mesh.primitive_* calls inside studio/core.py. Build meshes with studio/core.py helpers or bmesh.
 - Character-local space: +X = the character's right, +Y = forward, +Z = up. Units metres; public angles in degrees.
 - Frame numbers are named constants in the project script, never magic numbers inside functions.
 

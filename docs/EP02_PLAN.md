@@ -703,3 +703,211 @@ frame differs from the next cue's frame, at that frame exactly one mouth object 
 is the cue's shape (rest shape for `"X"`); `auto_blink(face, 1, 240, [(1, "stern")])` returns ≥ 2 blinks, no two
 closer than 48 frames; render 4 face stills at the frames of cues 1, 3, 5, 7 (camera (0, 2.1, 1.5) →
 (0, 0, 1.38), lens 50, 540x960, `store_night`) to `output/tests/F3/`.
+
+
+---
+
+## 12. Checkpoint 3 — the whole episode as an animatic (tasks G1–G7)
+
+Owner (2026-09-24): voices approved (casting sheet `assets/cast/voices.json`). Goal of checkpoint 3: the full
+episode with its final timing, shots, voices, lip sync, captions, set, props and rough actions. Polish (mist,
+grade, FX detail, secondary motion) is checkpoint 4. Voices are generated: `projects/ep02/voice/manifest.json`.
+
+World conventions for this episode: the self-checkout stands at the world origin and FACES +Y (its screen faces
++Y); the customer stands in front of it at +Y and faces −Y. Kenney props are scaled ×2.4 (measured: Kenney walls
+are 1.0 tall, shelves 0.85–1.05, floor tiles 1×1).
+
+### 12.1 `kit/props.py` + `kit/checkout.py` (task G1)
+Rules: materials `kit.look.toon2(..., rim=0.0)` unless stated; outlines with `kit.qchar.outline(obj, t)`-style
+world thickness (use `kit.toon.add_outline(obj, thickness=t / obj.matrix_world.to_scale()[0])`); every prop is ONE
+mesh object (build with bmesh; text is converted with `bpy.data.meshes.new_from_object(text_obj)` and merged into the
+prop's bmesh, then the text object is deleted) so that `obj.copy()` duplicates it completely. Origins as stated.
+
+`kit/props.py`:
+1. `milk(name="milk", loc=(0, 0, 0), col=None) -> Object` — carton 0.12 × 0.12 × 0.24 (x, y, z) white `#f2f2ee`,
+   gable top: a triangular prism 0.12 wide (x), 0.12 deep, 0.05 high on top (ridge along x), a blue band
+   `#2e6fd8` 0.06 high around the carton at z 0.09–0.15 (4 thin quads 2 mm outside the faces), the word "MILK"
+   (white `#f2f2ee`, text size 0.045, extrude 0) on the +Y face of the band (convert with
+   `bpy.data.meshes.new_from_object(text_obj.evaluated_get(bpy.context.evaluated_depsgraph_get()))`). Origin at the bottom centre.
+   Outline 0.004.
+2. `batarang(name="batarang", loc=(0, 0, 0), col=None) -> Object` — the bat outline of §7.1 step 7 (mirrored,
+   32 points) scaled so its width is 0.30, as a flat polygon in the XY plane (x = width, y = the outline's z),
+   extruded 0.012 (bmesh extrude + translate), material `#1a1d26`, origin at the centre. Outline 0.003.
+3. `smoke_puff(name, center, frame, *, count=9, radius=0.9, seed=0, col=None) -> list[Object]` — `count` icospheres
+   (subdiv 2, smooth) of radius `rand(0.25, 0.45)` placed at `center + (rand(−r, r), rand(−r·0.6, r·0.6),
+   rand(0.1, 1.3))` (`random.Random(seed)`), material `toon2("smoke", "#9aa0ab", rim=0.0)`, outline 0.008. Scale keys:
+   0 at `frame − 1`, 1.15 at `frame + 3`, 1.0 at `frame + 6`, hold until `frame + 30 + i`, 0 at `frame + 42 + i`
+   (i = index); z location +0.25 between `frame` and `frame + 42`. Return the list.
+
+`kit/checkout.py` — `build_checkout(loc=(0, 0, 0), heading=0.0, col=None) -> Checkout`. Kiosk-local coordinates
+(+Y = the customer side). Everything is parented (plain object parenting) to an empty `checkout_root` at `loc`,
+rotation z = `heading` degrees. Parts (sizes x × y × z, positions = box centres):
+| part | geometry | material |
+|---|---|---|
+| `ck_body` | box 0.70 × 0.55 × 0.80 at (0, 0, 0.40) | `#3a3f4a` |
+| `ck_stripe` | box 0.72 × 0.01 × 0.10 at (0, 0.28, 0.62) | `#c8102e` |
+| `ck_scanner` | box 0.60 × 0.45 × 0.04 at (0, 0, 0.82) | `#10131a` |
+| `ck_laser` | box 0.40 × 0.012 × 0.004 at (0, 0, 0.842) | emission `#ff2a2a` strength 3 (`toon2(..., emission=3.0)`) |
+| `ck_post` | cylinder r 0.03, from (0, −0.18, 0.84) to (0, −0.18, 1.16) | `#2a2e36` |
+| `ck_monitor` | box 0.46 × 0.05 × 0.34 at (0, −0.15, 1.30), rotation x = −15° | `#2a2e36` |
+| `ck_bag_base` | box 0.60 × 0.55 × 0.78 at (−0.72, 0, 0.39) | `#3a3f4a` |
+| `ck_bag_plate` | box 0.58 × 0.50 × 0.03 at (−0.72, 0, 0.795) | `#c9ced6` |
+| `ck_bag_poles` | two cylinders r 0.012 from (−0.95/−0.49, −0.22, 0.81) to z 1.25 + a bar between their tops | `#8a8f99` |
+| `ck_bag` | box 0.34 × 0.20 × 0.30 at (−0.72, −0.18, 1.08) | `#eeeeee` |
+| `ck_lamp_pole` | cylinder r 0.012 from (0.20, −0.17, 1.47) to (0.20, −0.17, 1.62) | `#2a2e36` |
+Screen: four state planes 0.42 × 0.30, parented to `ck_monitor`, placed 0.027 in front of its +Y face (local to the
+monitor), each with an emission background (strength 1.2) and a white emission text (`C.text`, `\n` for line breaks,
+scaled uniformly so the text block is 0.36 wide or 0.22 tall, whichever is smaller), text 0.002 in front:
+| state | background | text |
+|---|---|---|
+| `scan` | `#1e5bd8` | `PLEASE\nSCAN ITEM` |
+| `error` | `#d0202a` | `UNEXPECTED ITEM\nIN BAGGING AREA` |
+| `wait` | `#e0a020` | `PLEASE WAIT\nASSISTANT COMING` |
+| `thanks` | `#1f9d55` | `THANK YOU FOR\nSHOPPING AT\nGOTHAM MART` |
+Status lamp: three spheres r 0.05 at (0.20, −0.17, 1.66): off `#40444c` (toon2), red `#ff2a2a` and green `#2aff6a`
+(emission 3).
+`screen_state(ck, frame, state)` and `lamp(ck, frame, "off"|"red"|"green")` key visibility with `C.visible` (only
+the chosen one visible from that frame). The initial call `screen_state(ck, 1, "scan")`, `lamp(ck, 1, "off")` is
+made by `build_checkout`.
+Outlines 0.006 on body, stripe, bag base, plate, monitor, bag. No outline on the laser, screens, texts, lamps.
+`@dataclass Checkout: root, parts: dict[str, Object], screens: dict[str, list[Object]], lamps: dict[str, Object],
+anchors: dict[str, Vector]` with WORLD anchors (after `view_layer.update()`):
+`scanner` = top centre of `ck_scanner` (0, 0, 0.84); `bagging` = top centre of the plate (−0.72, 0, 0.81);
+`screen` = screen centre; `screen_L` / `screen_R` = the midpoints of the monitor's left/right edges as seen by the
+customer (customer faces −Y, so the customer's LEFT is kiosk +X): `screen_L` at kiosk x = +0.23, `screen_R` at
+x = −0.23; `customer` = floor point (0, 0.62, 0); `lamp` = lamp centre.
+
+Test `tools/tests/t_props.py`: build the checkout at the origin, a milk on the scanner anchor, a batarang lying on
+the bagging plate, one smoke puff at (1.5, 0.5, 0) frame 10; assert every part exists, the anchors match the table
+(±0.005), `screen_state(ck, 20, "error")` makes only the error plane + text render-visible at frame 20; render
+540x960 stills (`store_night`, `floor`) from (1.2, 2.2, 1.4) → (−0.2, 0, 0.95) lens 40 at frames 1 and 20, plus the
+puff at frame 14 → `output/tests/G1/`.
+
+### 12.2 `kit/sets.py` + `look.toon_tex()` (task G2)
+1. `kit/look.py` — ADD `toon_tex(mat) -> Material`: converts an imported glTF material IN PLACE. Find its
+   `TEX_IMAGE` node image (if none, use the Principled Base Color value as a flat colour). New tree: Image Texture
+   (same image, `interpolation = "Closest"`) → colour C; `Diffuse (white) → ShaderToRGB → RGBToBW` = L;
+   `lit = L > 0.30` (Math GREATER_THAN), `hi = L > 0.85`; shadow colour = `C × 0.5` mixed 35 % toward `#1b2440`
+   (MixRGB/`ShaderNodeMix` RGBA with a constant colour), highlight = `C` mixed 18 % toward `#fff1d6`;
+   `col = mix(shadow, C, lit)`, `col = mix(col, highlight, hi)` → Emission (1.0) → output. No rim. Keep glass
+   materials (name contains "glass") as `toon2(name, "#9fb4c8", rim=0.0)`. Returns the material.
+2. `kit/sets.py`:
+   - `PACK = ROOT + "/assets/library/kenney/kenney_mini-market/Models/GLB format"`, `K = 2.4`.
+   - `prop(model, *, loc=(0, 0, 0), rot_z=0.0, scale=K, col=None) -> Object` — imports `<model>.glb` with
+     `bpy.ops.import_scene.gltf(filepath=...)` (this task may use that operator), parents every imported top-level
+     object to a new empty `f"set_{model}_{n}"` at `loc` / `rot_z` degrees / uniform `scale`, converts every new
+     material with `look.toon_tex` (once per material), adds an outline 0.006 (world) to every mesh, links to `col`.
+   - `gotham_mart(col=None) -> Mart` — layout (world, metres; the checkout itself is NOT built here):
+     Facing (measured 2026-09-24): an imported Kenney model faces −Y at rot_z 0 (glTF +Z forward → Blender −Y);
+     `freezers-standing` spans y 0…0.5 behind its origin; shelves are double-sided (goods on both sides).
+     floor: `floor` tiles covering x −6…6, y −3…9 (5 × 5 tiles of 2.4, tile origin = its corner or centre — measure
+     the bbox and place so they cover the range without gaps); back wall: `wall` ×5 along y = −3.0,
+     x = −4.8 … 4.8, rot_z 0; along the back wall `freezers-standing` at x = −4.8, −2.4, 2.4, 4.8, y = −2.9,
+     rot_z 180 (front faces +Y into the store); left aisle: `shelf-boxes` at x = −3.6, y = 1.2, 3.1, 5.0, rot_z 90;
+     right aisle: `shelf-bags` at x = +3.6, same y, rot_z 90; a sign "GOTHAM MART" (C.text, extrude 0.02, emission
+     `#ff3344` strength 2) centred at (0, −2.85, 2.15), scaled so it is 2.4 wide, facing +Y (rot (90, 0, 0));
+     tube light: box 1.2 × 0.08 × 0.05 at (0, 0.35, 2.6), emission `#e6f4ff` strength 4, plus an AREA light
+     (shape RECTANGLE, size 1.2 × 0.12, energy 80, colour `#dff2ff`) at (0, 0.35, 2.55) pointing down.
+   - `flicker(mart, frames: list[tuple[int, int]])` — for each `(a, b)`: the tube emission strength and the area
+     light energy are keyed ON at `a − 1`, OFF (strength 0.1 / energy 0) at `a`, ON at `b` (CONSTANT interpolation).
+   - `@dataclass Mart: root, tube, tube_light, anchors` with `anchors = {"checkout": (0, 0, 0),
+     "aisle_entry": (−2.4, 3.2, 0), "aisle_mid": (−2.4, 1.6, 0)}`.
+   Test `tools/tests/t_sets.py`: build the mart + `store_night(target=(0, 0, 1))`; assert ≥ 20 imported meshes, every
+   imported material has an Emission node and no Principled node, the shelves' heights are 1.9–2.6 m; render
+   540x960 from (3.0, 4.2, 1.7) → (−0.3, 0, 1.0) lens 28 and from (0, 5.5, 1.5) → (0, 0, 1.2) lens 24 to
+   `output/tests/G2/`.
+
+### 12.3 `kit/shots.py` — auto-framed shots (task G3)
+Vertical FOV: cameras use `sensor_fit = "VERTICAL"`, `sensor_height = 36` (`C.camera` does it), aspect 9:16.
+1. `region(target, part="full") -> tuple[Vector, Vector]` — world bbox (min, max) of a target at the current frame.
+   `target` is a `QChar` (evaluated body bbox, plus its parts), an Object (evaluated bbox incl. children), a Vector
+   (a 0.1 m cube around it) or a list of these (union). For a QChar, `part` = `"full"` (whole bbox), `"medium"`
+   (z from top − 0.62·h to top), `"close"` (top − 0.38·h to top), `"face"` (top − 0.30·h to top − 0.02·h),
+   h = bbox height.
+2. `frame(name, target, *, shot, yaw, pitch=0.0, at=None, lens=None, headroom=None, side_offset=0.0) -> Object`
+   - `shot` presets (fraction of frame HEIGHT the region fills, default lens, default headroom, QChar part):
+     `wide` (0.45, 28, 0.20, full), `full` (0.75, 35, 0.08, full), `medium` (0.80, 40, 0.06, medium),
+     `close` (0.62, 50, 0.07, close), `ecu` (0.95, 60, 0.02, face), `insert` (0.60, 50, 0.20, full),
+     `two_shot` (0.70, 35, 0.08, medium of each QChar, union).
+   - `at` (frame) → `scene.frame_set(at)` first. `yaw`: direction FROM the region centre TO the camera, degrees,
+     0 = camera on the +Y side, 90 = on the −X side (counter-clockwise seen from above); `pitch`: camera elevation,
+     positive = above looking down.
+   - Region height `rh`, `H = rh / fraction`, `d = H / (2·tan(vfov/2))`, `vfov = 2·atan(18/lens)`. Aim point =
+     region centre − up·(0.5·H − headroom·H − 0.5·rh) + right·side_offset·H (right = camera right). Camera
+     location = aim + d·(cos(pitch)·(−sin(yaw), cos(yaw), 0) + (0, 0, sin(pitch))); `C.point_at`. Also consider the
+     region's depth: add half of the region's horizontal extent along the view direction to `d`.
+   - Returns the camera (created with `C.camera(name, …, lens=lens)`).
+3. `push(cam, start, end, amount=0.12)` — keys the camera location at `start` and moved `amount × distance` toward
+   its aim point at `end` (store the aim point on the camera as custom props `aim_x/aim_y/aim_z` in `frame`).
+4. `whip(cam, frame, to_target, frames=4)` — keys the camera rotation at `frame` (current) and pointing at
+   `to_target` at `frame + frames` (location unchanged); sets `scene.render.use_motion_blur = True`.
+5. `check(cam, target, shot) -> dict` — projects the region corners with
+   `bpy_extras.object_utils.world_to_camera_view` → returns `{"top": ..., "bottom": ..., "cx": ..., "fill": ...}`
+   (normalised 0..1, y up).
+Test `tools/tests/t_shots.py`: load BaseCharacter as "a" at (0, 0, 0) and Suit_Male as "b" at (1.0, 0, 0)
+(`kit.qchar`); for every shot type (two_shot with [a, b]) at yaw 30, pitch 5: `check()` gives `fill` within ±0.06
+of the preset fraction, `top` within ±0.04 of `1 − headroom`, `cx` within 0.06 of 0.5; `push` moves the camera
+closer by 12 % ± 1 %; render one 270x480 still per shot to `output/tests/G3/`.
+
+### 12.4 `kit/motion.py` additions — hand reach and props in hand (task G4)
+1. `setup_ik(qc) -> dict[str, Object]` — for side in L, R: an empty `f"{qc.name}_ik.{side}"` (world, at the
+   current world position of the `Fist.{side}` head) and an `IK` constraint on pose bone `LowerArm.{side}`:
+   `target = empty`, `chain_count = 2`, `use_tail = True`, `influence = 0` (keyed 0 at frame 1). Returns the empties.
+2. `reach(qc, side, target, start, end, *, blend=5)` — `target` world Vector (the hand goes there). Keys the empty
+   location = target at `start − blend` and at `end` (CONSTANT interpolation between separate reaches: set the
+   interpolation of the key at `start − blend` to CONSTANT for the previous segment), and the constraint influence:
+   0 at `start − blend`, 1 at `start`, 1 at `end`, 0 at `end + blend`. (The constraint fcurves live in the armature's
+   active action together with the cape keys — that is fine.)
+3. `hold(qc, prop, side, frame) -> Object` — `scene.frame_set(frame)`; `held = prop.copy()` (same data) linked to
+   the prop's collections, `held.parent = qc.arm`, `parent_type = "BONE"`, `parent_bone = f"Fist.{side}"`,
+   `view_layer.update()`, `held.matrix_world = prop.matrix_world.copy()` (the prop stays where it was at that frame
+   and moves with the hand afterwards); visibility: `C.visible(held, 1, False)`, `C.visible(held, frame, True)`,
+   `C.visible(prop, frame, False)`. Returns `held`.
+4. `release(held, frame, *, place=None) -> Object` — `scene.frame_set(frame)`; `obj = held.copy()`, no parent,
+   `obj.matrix_world` = `held.matrix_world` (or a translation to `place` keeping the rotation); visibility swap at
+   `frame` (`obj` hidden before). Returns `obj`.
+5. `throw(obj, start, end, p0, p1, *, arc=0.25, spin=720.0)` — keys `obj` location along a parabola from `p0` at
+   `start` to `p1` at `end` (one key per frame, the apex `arc` metres above the chord) and rotation z from 0 to
+   `spin` degrees (LINEAR).
+Test `tools/tests/t_reach.py`: `load_character("BaseCharacter.blend", "hero")`, `motion.play(qc, "Idle", 1, 100)`,
+`setup_ik`; `reach(qc, "R", Vector((0.35, 0.45, 1.0)), 20, 40)`; at frame 30 the world head of `Fist.R` is within
+0.03 m of the target; at frame 1 and 50 the constraint influence is 0; a box prop at (0.35, 0.45, 1.0):
+`held = hold(qc, box, "R", 30)`; at frame 45 `held` moved with the hand (its distance to the Fist.R head is the
+same as at frame 30 ± 0.01) and `box` is hidden; `release(held, 45)` leaves a visible copy where the hand was;
+`throw(box2, 50, 60, …)` passes through the apex. Render frames 1, 30, 45 to `output/tests/G4/`.
+
+### 12.5 Word timings, captions, trimmed lines (task G5)
+1. `tools/voice.py`: store per-line word timings in the manifest: `"words": [{"w": text, "start": s, "end": e}]`
+   from `align.json` (Kokoro) or `chatterbox.json` (Chatterbox) — both have `scenes[].sceneId` and
+   `scenes[].tokens[] {text, start, end}`. Keep the previous `words` for unchanged lines.
+2. `tools/audio.py`: a cue line may have `"dur"` (seconds): the clip is cut at `dur` with a 20 ms fade-out.
+   Cue `"captions": [{"start_frame", "end_frame", "text", "hi": bool}]` are drawn as ffmpeg drawtext overlays in the
+   same filter script as the existing overlays: font `C\:/Windows/Fonts/ariblk.ttf` (Arial Black, as the existing
+   overlays), size 72 at 1080 wide (scale with the actual video width), white (`#ffd400` yellow when `hi` is true),
+   black border 5 px (scaled), centred horizontally (`x=(w-text_w)/2`), `y=0.70*h-text_h/2`, enabled
+   `between(t, start, end)` with start/end = frames / fps. (Pillow is not installed: whole-group highlight only.)
+3. `kit/captions.py` (runs inside Blender scripts, standard library only):
+   `groups(words, start_frame, fps=24, *, max_words=3, max_chars=16, keywords=()) -> list[dict]` — splits the word
+   list into groups (a group ends at max_words, when adding the next word would exceed max_chars, or after a word
+   ending in `.`, `?`, `!`, `,`); each group: `start_frame = start + round(first.start·fps)`,
+   `end_frame = start + round(last.end·fps) + 3` (but never past the next group's start), `text` = words joined by
+   spaces UPPERCASE without trailing commas, `hi` = True if any word's lower-cased, punctuation-stripped form is in `keywords`.
+Test `tools/tests/t_captions.py` (system Python via `uv run --project F:/PoCs/video-builder/py python`): the manifest
+of `projects/ep02` has `words` for every line; `groups()` on `b_vengeance` gives groups of ≤ 3 words that together
+contain all words in order; a synthetic cues file with one line `dur` 1.0 and two captions runs through the
+audio.py caption/overlay builder and produces the expected number of drawtext filters (unit-test the function that
+builds the filter script; do not render video).
+
+### 12.6 `tools/qa_episode.py` (task G7)
+System Python (uv, numpy). `python tools/qa_episode.py --out output/vN` reads `final.mp4`, `mix.wav`, `cues.json`:
+- frames: decode with ffmpeg to 90×160 gray raw; motion(f) = mean |frame f − frame f−1| (0–255).
+- audio: RMS per video frame (1/24 s) in dBFS from `mix.wav`.
+- `hook`: max motion over frames 2–12 > 1.0; audio RMS over the first 0.3 s > −40 dBFS; an overlay or caption
+  starts at frame ≤ 3.
+- `dead_time`: windows of ≥ 12 consecutive frames with motion < 0.4 AND RMS < −45 dBFS, excluding frames inside
+  `cues["beats"]` ranges `[a, b]` → list them.
+- `length`: 25–40 s.
+Writes `qa.json` `{hook: {...pass}, dead_time: [...], length: ..., pass: bool}` and prints `[qa] ...` lines.
+Arguments: `--out output/vN` (input folder) and `--report <path>` (default `<out>/qa.json`).
+Test: `--out output/v9 --report output/tests/G7/qa.json` (never write into an existing output/vN during tests).
+The check passes when the script exits 0 and the report exists.
