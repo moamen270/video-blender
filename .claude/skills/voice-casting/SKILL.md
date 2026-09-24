@@ -1,6 +1,6 @@
 ---
 name: voice-casting
-description: Cast and generate character voices for blender-video (parody clones per the owner's voice policy): find and get approval for reference clips, pick clean segments with Gemini, modify, clone with Chatterbox, choose takes, direct per sentence. Use when adding a character voice or re-voicing lines.
+description: "Cast and generate character voices for blender-video (parody clones per the owner's voice policy): find and get approval for reference clips, pick clean segments with Gemini, modify, clone with Chatterbox, choose takes, direct per sentence. Use when adding a character voice or re-voicing lines."
 ---
 
 # Voice casting

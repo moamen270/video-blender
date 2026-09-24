@@ -1,6 +1,6 @@
 ---
 name: blender-episode
-description: How to produce an episode in blender-video with the kit (voice → build → render → mix → QA → sheet), the conventions and the traps learned on EP02. Use when planning, scripting (projects/<p>/script.py) or rendering any Blender video in this repo.
+description: "How to produce an episode in blender-video with the kit (voice → build → render → mix → QA → sheet), the conventions and the traps learned on EP02. Use when planning, scripting (projects/<p>/script.py) or rendering any Blender video in this repo."
 ---
 
 # Making an episode (blender-video)
