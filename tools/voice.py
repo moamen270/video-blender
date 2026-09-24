@@ -22,6 +22,9 @@ if tools_dir not in sys.path:
 
 import audio
 
+# Chatterbox is the default engine (owner decision 2026-09-24, ends the D13 trial); Kokoro only when a line or
+# the casting sheet says engine: "kokoro" (generic voices such as machines/narrators).
+DEFAULT_ENGINE = "chatterbox"
 RHUBARB = "F:/PoCs/tools/Rhubarb-Lip-Sync-1.14.0-Windows/rhubarb.exe"
 
 
@@ -29,7 +32,7 @@ def compute_hash(line: dict) -> str:
     """Compute sha1 hash of line specification fields."""
     payload = {
         "text": line.get("text"),
-        "engine": line.get("engine", "kokoro"),
+        "engine": line.get("engine", DEFAULT_ENGINE),
         "voice": line.get("voice"),
         "voiceRef": line.get("voiceRef"),
         "emotion": line.get("emotion"),
@@ -107,7 +110,7 @@ def main() -> None:
         kokoro_by_voice: dict[str, list[dict]] = collections.defaultdict(list)
         chatterbox_lines: list[dict] = []
         for l in lines_to_synth:
-            engine = l.get("engine", "kokoro")
+            engine = l.get("engine", DEFAULT_ENGINE)
             if engine == "chatterbox":
                 chatterbox_lines.append(l)
             else:

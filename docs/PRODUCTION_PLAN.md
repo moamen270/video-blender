@@ -136,7 +136,7 @@ For each: **Standard** (what the viewer should get) · **Build** (what we make, 
   platform's AI/altered-content label where it applies; keep the voice swappable per character so a
   complaint costs one re-voice, not a remake.
 - **Auto-check:** ASR read-back equals the text; measured pitch inside the character's range; loudness.
-- **Now:** Chatterbox + Kokoro wired; the Chatterbox trial decision (D13) is due 2026-09-26.
+- **Now:** Chatterbox is the default engine (owner approved 2026-09-24, D13 closed); Kokoro only for generic voices (machines, narrators) when the casting sheet says so.
 
 ### 7. Motion, interaction, physics
 - **Standard:** anticipation → action → follow-through; contacts that really land; planted feet; loose

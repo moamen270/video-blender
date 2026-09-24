@@ -5,7 +5,23 @@ description: How to produce an episode in blender-video with the kit (voice → 
 
 # Making an episode (blender-video)
 
-Gate first: the premise/script is approved by the owner (skill `comedy-pitch`).
+Gate first: the premise/script is approved by the owner (skill `comedy-pitch`). Style direction: **3D**
+(the 2D cut-out trial, v0.2.0, was rejected). Plan and status: `docs/PRODUCTION_PLAN.md`, `docs/PLAN_STATUS.md`.
+
+## Skill map (load the one for the work at hand)
+| work | skill |
+|---|---|
+| premise, pitches | `comedy-pitch` |
+| hook, script, timing, captions, CTA | `hook-script` |
+| characters, gear, faces, turnaround | `character-build` |
+| voices (Chatterbox default), line direction | `voice-casting` |
+| acting, contacts, walking, mocap | `motion-acting` |
+| cameras, framing, cuts | `shot-design` |
+| SFX, silence, music, mix, loudness | `sound-design` |
+| effects, sets | `vfx-sets` |
+| review of every render | `episode-review` |
+| releases, upload text, analytics | `publish-release` |
+| delegating to Gemini | `agy-delegation` (read-only jobs in a scratch cwd, never the repo being edited) |
 
 ## Pipeline (all automatic)
 1. `projects/<p>/lines.json` — `{id, character, text, [speed, seed, emotion]}`; voices come from

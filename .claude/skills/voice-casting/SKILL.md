@@ -8,6 +8,14 @@ description: Cast and generate character voices for blender-video (parody clones
 Policy (owner, 2026-09-24): parody characters may clone a reference of the original performance, always
 **modified** (pitch/formant), comedy framing, AI-label on upload. One casting-sheet entry per character.
 
+**Engine: Chatterbox is the default** (owner approved 2026-09-24; `DEFAULT_ENGINE` in `tools/voice.py` and
+`tools/audio.py`). Kokoro only for generic voices (machines, narrators) with `engine: "kokoro"` in the casting entry.
+
+**Voices are part of the deliverable.** Every speaking character gets a real cast voice before a render is shown or
+published. Never present a video with placeholder TTS as progress (the Rick and Morty test shipped with Kokoro
+placeholders and the owner called it out). If casting is blocked (waiting for reference approval), say so
+first, and render only as a clearly marked motion test.
+
 ## New character voice
 1. **Find a clean source** (single speaker, no music/SFX/PA echo): game dialogue collections are best.
    Sites behind bot checks are off-limits (never bypass). Before downloading: ask the owner with filename,
@@ -17,13 +25,15 @@ Policy (owner, 2026-09-24): parody characters may clone a reference of the origi
    `media-review`) pick 6–8 clean in-character lines; join to 10–14 s, mono 24 kHz, loudnorm −20 LUFS.
 3. **Modify:** `rubberband=pitch=0.93:formant=shifted` (deeper) / `pitch=1.04:formant=shifted` (lighter);
    keep the unmodified `*_ref_orig.wav` for comparison.
-4. **Casting sheet** `assets/cast/voices.json`: engine, voiceRef, emotion (≤ 0.5 for deep voices), speed, seed,
-   notes. Generic voices (machines, narrators): Kokoro (e.g. `bf_emma`, speed 1.12 for a crisp machine).
+4. **Casting sheet** `assets/cast/voices.json`: engine (chatterbox by default), voiceRef, emotion (≤ 0.5 for deep
+   voices), speed, seed, notes. Generic voices (machines, narrators): Kokoro (e.g. `bf_emma`, speed 1.12 for a crisp machine).
 5. **Takes:** generate 2–3 seeds; keep ASR read-back ≥ 0.97 (Chatterbox prints "heard ..."); let Gemini pick the
    cleanest and confirm "different from the actor but evocative". Rewrite text that slurs ("nothing, in the
    bagging area"; ellipsis for pauses).
 
-## Directing lines
+## Directing lines (every line, not only the big ones)
+- Each line in `lines.json` carries its direction: `emotion` (Chatterbox exaggeration, 0.3 flat → 0.9 manic),
+  `speed`, and pauses (ellipsis / `pauseAfter`). Write the intent next to it in the episode log.
 - Split a line where the delivery changes ("I am vengeance. I am the night." → dramatic, higher emotion;
   "I am paying in exact change." → flat) and give each part its own emotion/speed; key matching expressions.
 - `[laugh]`/`[cough]` tags need at least one spoken word in the line.

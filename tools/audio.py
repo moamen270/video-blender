@@ -27,6 +27,9 @@ VB_CHATTERBOX_PY = "F:/PoCs/video-builder/py-chatterbox"
 FFMPEG = ("C:/Users/mmoam/AppData/Local/Microsoft/WinGet/Packages/"
           "Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe")
 SR = 48000
+# Chatterbox is the default engine (owner decision 2026-09-24, ends the D13 trial); Kokoro only when a line or
+# the casting sheet says engine: "kokoro" (generic voices such as machines/narrators).
+DEFAULT_ENGINE = "chatterbox"
 SFX_BANK_PATH = os.path.join(ROOT, "assets", "sfx_bank.json")
 VOICE_RMS_DB = -16.0  # every line is normalised to this RMS (active samples) before mixing
 with open(SFX_BANK_PATH, "r", encoding="utf-8") as _fh:
@@ -217,7 +220,7 @@ def main() -> None:
             if "wav" in l:
                 voices[lid] = load_wav(l["wav"])
                 continue
-            engine = l.get("engine", "kokoro")
+            engine = l.get("engine", DEFAULT_ENGINE)
             engines_used.add(engine)
             if engine == "chatterbox":
                 chatterbox_lines.append(l)
@@ -357,7 +360,7 @@ def main() -> None:
     if engines_used:
         eng_str = ", ".join(sorted(engines_used))
     elif lines:
-        eng_str = ", ".join(sorted({l.get("engine", "kokoro") for l in lines}))
+        eng_str = ", ".join(sorted({l.get("engine", DEFAULT_ENGINE) for l in lines}))
     else:
         eng_str = "none"
     print(f"[audio] mix.wav {seconds:.1f}s, {len(cues.get('sfx', []))} sfx, {len(lines)} lines ({eng_str}), {len(overlays)} overlays", flush=True)
