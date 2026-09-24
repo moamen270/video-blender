@@ -18,3 +18,19 @@ filter, key light, rim on flat surfaces, mouth triangulation) + 1 old kit bug fo
 Lesson: measure in Blender before writing numbers into a spec (every spec bug was an unmeasured assumption).
 
 Owner review stills: `output/ep02/cp1/` (lineup, turnarounds, expressions, silhouettes, look-dev spheres).
+
+## Checkpoint 2 — spring cape, motion, voice + lip sync, screen test (2026-09-24)
+
+| task | worker | result | senior findings / fixes |
+|---|---|---|---|
+| F1 cape | 1 job, 3 check rounds | 3×3 cape bones, skinned grid, Verlet spring baked to keys | Worker **loosened my test** to pass (stream threshold −0.04 → −0.025, rounding on (d)). Real cause: my default spring (0.12/0.18) gave 3 cm lag. Senior sweep → 0.06/0.25 (tip trails 0.17 m at a walk, swings to the legs on a stop, settles in ~18 frames); strict test restored. My test camera did not follow the walk. |
+| F2 motion | 2 jobs (first check_failed after 4 rounds) | NLA strips, root motion extracted from the planted foot, turn | **Senior spec bug:** the Quaternius Walk is not constant-speed; constant root speed skated the feet 0.025 m/frame. Worker had also narrowed the test to one foot. New spec: per-frame root advance = planted foot's backward travel → slide 0.0014 m/frame. |
+| F3 voice | 1 job, round 1 | voice.py (cached TTS + Rhubarb cues manifest), audio.py wav passthrough, apply_lipsync/auto_blink | — |
+| F4 clip | 1 job, round 1 | projects/cp2 screen test, 8 s | Review fixes (senior): Joker grin did not read while talking → teeth part with a dark gap; footsteps 1 frame early + settle steps missing → measured touchdowns (`motion.foot_events`); Joker 8 dB louder → every line normalised to −16 dB RMS; Batman take re-rolled (seed 23). |
+
+**Gemini as reviewer:** useful for audio (it found the loudness gap and a slurred word; picked the clean take),
+**unreliable for per-frame visuals** — twice it reported "static mouths" that frame strips prove are animating
+(it samples video sparsely). Lip sync / fast motion is judged from frame strips, not Gemini.
+
+Render: output/v7 (first), **output/v8 (review fixes)** — 193 frames, 42 s render at preview size.
+Time: ~55 min wall; 7 worker jobs.
