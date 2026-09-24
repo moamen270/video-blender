@@ -98,6 +98,8 @@ def outline_material() -> bpy.types.Material:
     links.new(node_emit.outputs["Emission"], node_out.inputs["Surface"])
 
     mat.use_backface_culling = True
+    # The hull encloses the object; without this it shadows the whole object (flipped normals -> culled).
+    mat.use_backface_culling_shadow = True
     mat.diffuse_color = (0.0, 0.0, 0.0, 1.0)
 
     _CACHE["outline"] = mat

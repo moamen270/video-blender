@@ -57,7 +57,8 @@ Every file contains exactly two objects and 17 actions:
   Frame ranges start at 0 (Idle 0–100, Walk 0–30, Punch 0–18, PickUp 0–30).
 
 **Native space** (the armature's own coordinates, used in this plan as "native"):
-- Height 3.269 (feet at z = 0, top of head z ≈ 3.27). The rest pose is a T-pose (arms along ±X).
+- Body height 3.147 = the bald `BaseCharacter` (feet at z = 0, top of the head skin z ≈ 3.147); hair/hats add
+  up to ≈ 0.16 (Suit_Male top 3.307). The rest pose is a T-pose (arms along ±X).
 - The character **faces −Y**. The character's **left is +X** (bones `*.L` have x > 0).
 - Head: a rounded box, native z 2.10–3.13, half-width ≈ 0.49. Its **front is flat at y = −0.492** for
   z 2.25–2.85, |x| ≤ 0.40. Bone `Head`: head (0, 0.003, 2.167) → tail (0, 0.003, 2.808).
@@ -81,7 +82,7 @@ Every file contains exactly two objects and 17 actions:
 - A character is placed and moved ONLY through its **root empty** (`<name>_root`). Root space = our usual
   character-local space: **+X = the character's right, +Y = forward, +Z = up**, metres, origin between the feet.
 - Inside the root: the armature object has `rotation_euler = (0, 0, π)` and uniform scale
-  `s = height / 3.269` (default height 1.80 → s = 0.55063). This turns native −Y (face) into root +Y and
+  `s = height / 3.147` (default height 1.80 → s = 0.57197; the same scale for every character — hair adds height). This turns native −Y (face) into root +Y and
   native +X (character's left) into root −X, so the convention above holds.
 - Convert native → world with `qc.arm.matrix_world @ Vector(native_xyz)` (call
   `bpy.context.view_layer.update()` first). Every native number in this plan is converted that way.
@@ -101,7 +102,7 @@ Every file contains exactly two objects and 17 actions:
 
 ```python
 LIB: str               # ROOT + "/assets/library/quaternius/ultimate_animated_character"
-NATIVE_HEIGHT = 3.269
+NATIVE_HEIGHT = 3.147   # bald body (BaseCharacter); hair/hats are extra
 
 @dataclass
 class QChar:
@@ -194,7 +195,7 @@ Same header as `tools/tests/t_toon.py` (ROOT on `sys.path`). Steps and assertion
 8. Belt follows the rig: evaluated world position of belt vertex 0 before/after setting
    `a.arm.pose.bones["Body"].location = (0, 0.3, 0)` + `view_layer.update()` moves > 0.1 m. Then `rest(a)`.
 9. `k = delete_faces(b, ["Hair"])`; `k > 1000`; no polygon of `b.body` has a stripped material name `Hair`.
-10. `pts = surface_points(a, [(0.0, 1.6), (0.1, 1.5)], bones=["Torso", "Abdomen"])`: every `pts[i].y` is
+10. `pts = surface_points(a, [(0.0, 1.6), (0.1, 1.5)], bones=CHEST)`: every `pts[i].y` is
     between −0.30 and −0.15.
 11. `set_action(b, "Idle", 1)`.
 12. Render one still: `look`-independent — `C.sky(C.hex_rgb("#808890"))`, `C.sun("key", energy=3.0)`,
@@ -226,13 +227,16 @@ Same header as `tools/tests/t_toon.py` (ROOT on `sys.path`). Steps and assertion
 2. `store_night(target=(0.0, 0.0, 1.0), facing_deg=0.0, *, col=None) -> dict[str, bpy.types.Object]`
    "Gotham Mart, 3 A.M." light rig. Rotate every offset below about Z by `facing_deg` and add `target`:
    - `C.sky(C.hex_rgb("#0b0f18"), 1.0)`.
-   - `key = C.sun("key", energy=2.6, angle_deg=5.0, col=col)`, colour `#e4f0ff`, placed at offset
-     (1.5, 3.0, 4.0), `C.point_at(key, target)`.
+   - `key = C.sun("key", energy=3.2, angle_deg=5.0, col=col)`, colour `#e4f0ff`, placed at offset
+     (1.86, 3.65, 2.87) (35° up, 27° to the side of the front), `C.point_at(key, target)`.
+     (Measured: toon light L ≈ 0.72·energy/π·N·L for this colour; front faces land at L ≈ 0.55–0.65.)
    - `rim = C.sun("rim", energy=3.5, angle_deg=2.0, col=col)`, colour `#8ab4ff`, offset (−2.0, −3.5, 2.0),
      `C.point_at(rim, target)`.
    - `C._set_enum(scene.view_settings, "view_transform", ["Standard"])`, `look = "None"`, exposure 0, gamma 1.
    - Return `{"key": key, "rim": rim}`.
-3. `floor(size=8.0, hex_="#2b3040", col=None) -> Object` — `C.plane("floor", size=size, mat=toon2("floor", hex_))`.
+3. `floor(size=8.0, hex_="#2b3040", col=None) -> Object` — `C.plane("floor", size=size, mat=toon2("floor", hex_, rim=0.0))`.
+   Rule: rim is for characters only; sets and props use `rim=0.0` (flat surfaces seen at a grazing angle would
+   turn completely rim-coloured).
 
 ### Test `tools/tests/t_look.py` (E2)
 - `C.reset_scene()`; `store_night(target=(0, 0, 0.6))`; `floor()`.
@@ -344,8 +348,8 @@ x *= eye_sx, z *= eye_sz. Write `matrix_basis`; if `frame` is given, key `locati
    and `set_expression(f, "neutral")`.
 6. `C.reset_scene()`; `g = load_character("Suit_Male.blend", "grinner")`;
    `build_face(g, style="grin", rest="X")`; assert 9 mouth objects (X, A–H).
-7. Stills (540x540, `store_night` lights from `kit.look`, camera `C.camera("cam", (0, 1.3, 1.40),
-   (0, 0, 1.38), lens=50)`): for the grinner: `expr_<name>.png` for all 7 expressions (mouth X), then
+7. Stills (540x540, `store_night` lights from `kit.look`, camera `C.camera("cam", (0, 1.35, 1.46),
+   (0, 0, 1.42), lens=50)`): for the grinner: `expr_<name>.png` for all 7 expressions (mouth X), then
    `mouth_<shape>.png` for X, A, B, C, D, E, F (expression neutral) → `output/tests/E3/`.
    Rebuild the hero (reset, load, build_face rest frown) and render `hero_stern.png` and `hero_D.png`.
 8. `print("[test] PASS")`.
@@ -354,7 +358,8 @@ x *= eye_sx, z *= eye_sz. Write `matrix_basis`; if `frame` is given, key `locati
 
 ## 7. `kit/cast.py` — the recurring cast (task E4)
 
-Common: `DUMMY = "#1c1d24"` (the skin of every character — our "dummy" house style: black body, white
+Common: `CHEST = ["Torso", "Abdomen", "Shoulder.L", "Shoulder.R"]` (measured: the big chest-centre
+quad is dominated by `Shoulder.L`, so a Torso/Abdomen-only filter misses it). `DUMMY = "#1c1d24"` (the skin of every character — our "dummy" house style: black body, white
 eyes). All materials via `kit.look.toon2`. Every builder follows the build order of §3 and returns the QChar.
 `CAST = {"batman": build_batman, "joker": build_joker}`.
 
@@ -367,7 +372,9 @@ eyes). All materials via `kit.look.toon2`. Every builder follows the build order
    `assign(qc, dark, bones=["Fist.L", "Fist.R"])`; `assign(qc, dark, bones=["LowerArm.L", "LowerArm.R"],
    absx_min=1.06)`; `assign(qc, dark, bones=["Foot.L", "Foot.R"])`; `assign(qc, dark,
    bones=["LowerLeg.L", "LowerLeg.R"], z_range=(-1.0, 0.40))`.
-4. Belt: `take_part(qc, "Casual_Male.blend", "Belt", "belt", gold)`.
+4. Belt: `take_part(qc, "Casual_Male.blend", "Belt", "belt", gold)`, then inflate it (it was made for Casual's
+   trousers and sits flush with the bare body): bmesh of the belt mesh, `v.co += v.normal * 0.03` for every
+   vertex (native units, normals from `bm.normal_update()`), write back.
 5. Ears: for side sign `k = +1` (native +X) and `k = −1`: native base `(k*0.27, 0.0, 2.99)`, tip
    `(k*0.31, 0.0, 3.30)`; world `b = native(base)`, `t = native(tip)`; `C.cone(f"batman_ear.{L|R}",
    r1=0.10*s, r2=0.0, depth=(t-b).length, loc=(b+t)/2, mat=dark, verts=12)`, then set
@@ -381,7 +388,7 @@ eyes). All materials via `kit.look.toon2`. Every builder follows the build order
    `use_backface_culling = False` on `dark`; a `SOLIDIFY` modifier named `"thick"` (thickness 0.012 world,
    offset 0) added BEFORE the outline; `attach_part(qc, cape, "Torso", "cape")`.
 7. Chest emblem (Torso front, centre native (0, 1.62)): oval = superellipse(0.15, 0.08, 2, k=32) points
-   → `surface_points(qc, …, bones=["Torso", "Abdomen"], offset=0.006)`; bat = the points below ×0.236
+   → `surface_points(qc, …, bones=CHEST, offset=0.006)`; bat = the points below ×0.236
    (centred on the same centre) → `surface_points(…, offset=0.012)`. Objects `batman_emblem` (gold) and
    `batman_bat` (ink), each one n-gon, both `attach_part(…, "Torso", …)`. No outline on either.
    Bat outline, right half (x, z) from the top centre; mirror it (x → −x, reverse order, skip the two
@@ -398,7 +405,7 @@ eyes). All materials via `kit.look.toon2`. Every builder follows the build order
    `Details` → `toon2("jok_tie", "#e08a1e")`; `Belt` → `toon2("jok_belt", "#2a1f3d")`;
    `Skin` → `toon2("jok_skin", DUMMY)`; `Hair` → `toon2("jok_hair", "#35b24a")`.
 3. Name tag across the chest: rounded rectangle superellipse(0.17, 0.055, 6, k=32) centred at
-   native (0.0, 1.66) → `surface_points(…, bones=["Torso", "Abdomen"], offset=0.010)` (the jacket front is
+   native (0.0, 1.66) → `surface_points(…, bones=CHEST, offset=0.010)` (the jacket front is
    at the same depth as BaseCharacter's chest); object `joker_tag`, material `toon2("tag_white", "#f2f2ee")`,
    `attach_part(…, "Torso", "tag")`. Text: `C.text("joker_tag_text", "ASSISTANT", size=0.03,
    extrude=0.0, loc=<world point of native (0, -0.5, 1.66) projected: the tag centre moved 0.004 m toward +Y>,
@@ -417,14 +424,14 @@ For each name: `C.reset_scene()`; `qc = CAST[name]()`; `store_night(target=(0, 0
 | `threeq` | (2.64, 3.77, 1.05) → (0, 0, 0.9) | 50 |
 | `side` | (4.6, 0, 1.05) → (0, 0, 0.9) | 50 |
 | `back` | (0, −4.6, 1.05) → (0, 0, 0.9) | 50 |
-| `face` | (0, 1.35, 1.42) → (0, 0, 1.36) | 50 |
+| `face` | (0, 1.40, 1.48) → (0, 0, 1.42) | 50 |
 | `sil` | as `front`, with `view_layer.material_override` = black emission, world `#ffffff`, resolution 25 % | 50 |
 Files: `<out>/<name>_<view>.png`. Then `--lineup`: one scene with both characters (Batman root at
 (−0.55, 0, 0) rot_z −12°, Joker at (0.55, 0, 0) rot_z 12°), camera (0.6, 4.2, 1.2) → (0, 0, 0.95),
 lens 40, 1080x1350 → `<out>/lineup.png`.
 
 ### Test `tools/tests/t_cast.py` (E4)
-For each builder (with `C.reset_scene()` between): heights 1.80 ± 0.02 (`height_now`); Batman has parts
+For each builder (with `C.reset_scene()` between): Batman height 1.80 ± 0.02, Joker 1.80–1.95 (hair) (`height_now`); Batman has parts
 `belt, ear.L, ear.R, cape, emblem, bat` (+ face parts); Joker has `tag`, `tag_text`; the outline material is
 the LAST slot of every outlined object; both ears are above the head top (world z > 1.70) and on opposite
 sides (x signs differ); the cape's world mean y < −0.05 (behind the character). Print `[test] PASS`.
