@@ -174,6 +174,10 @@ def main() -> None:
         kokoro_by_voice: dict[str, list[dict]] = collections.defaultdict(list)
         chatterbox_lines: list[dict] = []
         for l in lines:
+            lid = l["id"]
+            if "wav" in l:
+                voices[lid] = load_wav(l["wav"])
+                continue
             engine = l.get("engine", "kokoro")
             engines_used.add(engine)
             if engine == "chatterbox":

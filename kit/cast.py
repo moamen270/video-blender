@@ -7,6 +7,7 @@ import bmesh
 import bpy
 from mathutils import Vector
 
+import kit.cape
 from kit import face as F
 from kit import look as L
 from kit import qchar as Q
@@ -95,51 +96,8 @@ def build_batman(col: bpy.types.Collection | None = None) -> Q.QChar:
         ear.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
         Q.attach_part(qc, ear, "Head", f"ear.{side}")
 
-    num_cols = 17
-    num_rows = 10
-    cape_origin_world = Q.native(qc, (0.0, 0.20, 2.02))
-
-    def _lerp_v(a: float, b: float, t: float) -> float:
-        return a + (b - a) * t
-
-    grid_verts: list[Vector] = []
-    for r in range(num_rows):
-        v = r / (num_rows - 1)
-        for c in range(num_cols):
-            u = -1.0 + 2.0 * c / (num_cols - 1)
-            zb = 0.30 + 0.12 * abs(math.sin(2.0 * math.pi * u))
-            vz = _lerp_v(2.02, zb, v)
-            vx = u * _lerp_v(0.36, 0.62, v)
-            vy = _lerp_v(0.20, 0.55, v) - _lerp_v(0.04, 0.12, v) * (u ** 2)
-            w_pt = Q.native(qc, (vx, vy, vz))
-            grid_verts.append(w_pt - cape_origin_world)
-
-    quad_faces: list[list[int]] = []
-    for r in range(num_rows - 1):
-        for c in range(num_cols - 1):
-            i0 = r * num_cols + c
-            i1 = r * num_cols + (c + 1)
-            i2 = (r + 1) * num_cols + (c + 1)
-            i3 = (r + 1) * num_cols + c
-            quad_faces.append([i0, i1, i2, i3])
-
-    cape_mesh = bpy.data.meshes.new("batman_cape")
-    cape_mesh.from_pydata(grid_verts, [], quad_faces)
-    cape_mesh.update()
-    cape_mesh.materials.append(dark)
-
-    cape = bpy.data.objects.new("batman_cape", cape_mesh)
-    cape.rotation_mode = "QUATERNION"
-    cape.location = cape_origin_world
-    C.link(cape, target_col)
-
+    cape = kit.cape.build_cape(qc, dark)
     dark.use_backface_culling = False
-
-    mod_thick = cape.modifiers.new("thick", "SOLIDIFY")
-    mod_thick.thickness = 0.012
-    mod_thick.offset = 0.0
-
-    Q.attach_part(qc, cape, "Torso", "cape")
 
     oval_pts = F.superellipse(0.15, 0.08, 2.0, k=32)
     emblem_xz = [(x, 1.62 + z) for x, z in oval_pts]

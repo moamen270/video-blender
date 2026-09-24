@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import math
+import random
 from dataclasses import dataclass
 from typing import Callable, Sequence
 
@@ -415,3 +416,65 @@ def blink(face: Face, frame: int, expression: str = "neutral") -> None:
             obj.scale = cur_scale
             obj.matrix_basis = Matrix.LocRotScale(base_loc, base_rot, cur_scale)
             obj.keyframe_insert("scale", frame=f)
+
+
+def apply_lipsync(face: Face, cues: list[dict], start_frame: int, fps: int = 24) -> int:
+    """Keyframe mouth shapes from Rhubarb mouth cues, returning the final end frame."""
+    if not cues:
+        return start_frame
+    for cue in cues:
+        f = start_frame + round(cue["start"] * fps)
+        val = cue["value"]
+        shape = face.rest_shape if val == "X" else val
+        key_mouth(face, f, shape)
+    last = cues[-1]
+    end_frame = start_frame + round(last["end"] * fps)
+    key_mouth(face, end_frame, face.rest_shape)
+    return end_frame
+
+
+def change_expression(
+    face: Face,
+    frame: int,
+    from_name: str | dict,
+    to_name: str | dict,
+    frames: int = 4,
+) -> None:
+    """Transition between two expressions over frames."""
+    set_expression(face, from_name, frame)
+    set_expression(face, to_name, frame + frames)
+
+
+def auto_blink(
+    face: Face,
+    start: int,
+    end: int,
+    schedule: Sequence[tuple[int, str]],
+    *,
+    seed: int = 0,
+    gap: tuple[int, int] = (48, 110),
+) -> list[int]:
+    """Generate and animate natural blinks avoiding expression changes."""
+    rng = random.Random(seed)
+    sorted_schedule = sorted(schedule, key=lambda s: s[0])
+    blink_frames: list[int] = []
+
+    f = start + 12
+    while f < end - 4:
+        if any(abs(f - s_frame) <= 6 for s_frame, _ in sorted_schedule):
+            f += rng.randint(*gap)
+            continue
+
+        expr = "neutral"
+        for s_frame, s_expr in sorted_schedule:
+            if s_frame <= f:
+                expr = s_expr
+            else:
+                break
+
+        blink(face, f, expr)
+        blink_frames.append(f)
+        f += rng.randint(*gap)
+
+    return blink_frames
+
