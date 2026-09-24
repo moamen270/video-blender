@@ -207,7 +207,7 @@ Same header as `tools/tests/t_toon.py` (ROOT on `sys.path`). Steps and assertion
 
 ## 5. `kit/look.py` — look-dev: toon v2, lights, grade (task E2)
 
-1. `toon2(name, base_hex, *, shadow_hex=None, hi_hex=None, rim_hex="#8ab4ff", rim=0.8, rim_width=0.62,
+1. `toon2(name, base_hex, *, shadow_hex=None, hi_hex=None, rim_hex="#8ab4ff", rim=0.8, rim_width=0.70,
    emission=0.0) -> Material` — cached by name like `kit/toon.py`. If `emission > 0`: return
    `kit.toon.toon(name, base_hex, emission=emission)`. Otherwise build this node tree:
    - `ShaderNodeBsdfDiffuse` (Color (1,1,1,1)) → `ShaderNodeShaderToRGB` → `.outputs["Color"]` →
@@ -307,7 +307,8 @@ Band helper: `band(x0, x1, zc, half, k=13)` — along `x_i` from x0 to x1 (k poi
 `style="grin"` shapes: every shape is a crescent `band(−0.30, 0.30, zc, half)` with
 `top(x) = 0.02 + 0.05·(x/0.30)²`, `bottom(x) = top(x) − t·(1 − (x/0.30)²)` written as
 `zc = (top + bottom) / 2`, `half = (top − bottom) / 2`, and centre thickness `t` per shape:
-X 0.10, A 0.06, B 0.10, C 0.14, D 0.19, E 0.14, F 0.08, G 0.10, H 0.14.
+X 0.10, A 0.06, B 0.10, C 0.13, D 0.15, E 0.13, F 0.08, G 0.10, H 0.13 (thicker dips below the flat
+face front, z < 2.2).
 `rest` may be `"X"` or `"frown"` (plain) — the rest shape object must exist.
 
 ### 6.3 Expressions
@@ -361,6 +362,11 @@ x *= eye_sx, z *= eye_sz. Write `matrix_basis`; if `frame` is given, key `locati
 Common: `CHEST = ["Torso", "Abdomen", "Shoulder.L", "Shoulder.R"]` (measured: the big chest-centre
 quad is dominated by `Shoulder.L`, so a Torso/Abdomen-only filter misses it). `DUMMY = "#1c1d24"` (the skin of every character — our "dummy" house style: black body, white
 eyes). All materials via `kit.look.toon2`. Every builder follows the build order of §3 and returns the QChar.
+Smoothing (look-dev decision, senior test 2026-09-24): add to `kit/qchar.py`
+`smooth(qc, obj=None, levels=1)` — on `obj` (default `qc.body`): remove a modifier named `"Auto Smooth"` if
+present, add a `SUBSURF` modifier named `"smooth"` (levels = render_levels = `levels`) and move it to index 1
+(right after `Armature`, with `obj.modifiers.move(from, to)`), set `use_smooth = True` on every polygon.
+Builders call `smooth()` on the body right before the outlines (the outline must stay the LAST modifier).
 `CAST = {"batman": build_batman, "joker": build_joker}`.
 
 ### 7.1 `build_batman(col=None) -> QChar`
@@ -396,7 +402,8 @@ eyes). All materials via `kit.look.toon2`. Every builder follows the build order
    `(0.00,0.08) (0.04,0.08) (0.055,0.18) (0.08,0.08) (0.15,0.11) (0.30,0.17) (0.50,0.21) (0.46,0.08)
    (0.40,0.00) (0.35,0.05) (0.30,-0.04) (0.24,0.00) (0.19,-0.08) (0.13,-0.05) (0.06,-0.13) (0.00,-0.20)`
    (then multiply every coordinate by 0.88 × 0.268 = 0.236).
-8. Outlines (0.010 world) on: body, belt, ears, cape. Not on face parts, emblem, bat.
+8. `smooth(qc)` on the body; `smooth(qc, obj=cape)`. Outlines (0.010 world) on: body, belt, ears, cape.
+   Not on face parts, emblem, bat.
 
 ### 7.2 `build_joker(col=None) -> QChar`
 1. `qc = load_character("Suit_Male.blend", "joker", col=col)`; `build_face(qc, style="grin", rest="X")`;
@@ -412,7 +419,7 @@ eyes). All materials via `kit.look.toon2`. Every builder follows the build order
    rot=(90, 0, 180), mat=toon2("tag_ink", "#111318"))` — rot (90, 0, 180) makes the text face +Y (the
    character's front) and read left-to-right for a camera in front. Then scale it uniformly so its
    `dimensions.x` (after `view_layer.update()`) is 0.9 × the tag's world width; `attach_part(…, "Torso", "tag_text")`.
-4. Outlines (0.010) on the body only.
+4. `smooth(qc)`, then outline (0.010) on the body only.
 
 ### 7.3 `tools/turnaround.py` — stills for review (task E4)
 `blender -b --factory-startup --python tools/turnaround.py -- --cast batman,joker --out output/tests/E4`

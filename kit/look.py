@@ -30,7 +30,7 @@ def toon2(
     hi_hex: str | None = None,
     rim_hex: str = "#8ab4ff",
     rim: float = 0.8,
-    rim_width: float = 0.62,
+    rim_width: float = 0.70,
     emission: float = 0.0,
 ) -> bpy.types.Material:
     """Create or return a cached toon v2 material with warm/cool ramp and rim lighting."""
