@@ -43,7 +43,13 @@ def build() -> None:
     M1 = R1 + n_frames("r1") + 8
     R2 = M1 + n_frames("m1") + 10
     TAG = R2 + n_frames("r2") + 6
-    END = TAG + 64
+    P0 = TAG + 50            # portal gun comes out
+    P1 = P0 + 16             # zap
+    P2 = P1 + 18             # arm down, glance at Morty
+    P3 = P2 + 14             # hop into the portal
+    P4 = P3 + 22             # portal closes
+    P5 = P4 + 10             # Morty alone
+    END = P5 + 46
 
     def wf(lid: str, start: int, word: str, which: int = 0) -> int:
         """Frame where `word` (case/punctuation-insensitive) starts in line `lid` placed at `start`."""
@@ -54,7 +60,7 @@ def build() -> None:
     morty.breathe(1, END, period=2.8)
     rick.breathe(1, END, period=3.6)
     morty.auto_blink(1, END, seed=3)
-    rick.auto_blink(1, END - 70, seed=8, every=(2.8, 5.0))   # none during the tag glare
+    rick.auto_blink(1, TAG, seed=8, every=(2.8, 5.0))   # none during the tag glare
     morty.look(1, 20, 0)          # both look at each other from the start
     rick.look(1, -13, -3)
     rick.brows(1, 6, 0)          # Rick's resting face: slightly annoyed
@@ -175,6 +181,59 @@ def build() -> None:
     morty.swap("mouth", "E", TAG + 36)
     morty.swap("mouth", "X", TAG + 48)
 
+    # ------------------------------------------------------------ portal exit
+    gun = rick.prop("portal_gun", "hand.R", at=(0, -24), deg=0, z=18.6, visible_from=P0)
+    flash = rick.prop("flash", "hand.R", at=(0, -86), deg=0, z=19.5, visible_from=P1)
+    C.visible(flash, P1 + 3, False)
+    rick.hand("R", "fist", P0)
+    rick.squash("eye.L", P0, 1.0, 0.55)
+    rick.squash("eye.R", P0, 1.0, 0.55)
+    rick.squash("eye.L", P0 + 4, 1.0, 1.0)
+    rick.squash("eye.R", P0 + 4, 1.0, 1.0)
+    rick.brows(P0 + 4, 12, 0)
+    rick.look(P0 + 2, 10, 0)                 # eyes to the right: the target
+    rick.rot("sleeve.R", P0, 0)
+    rick.rot("forearm.R", P0, 0)
+    rick.rot("sleeve.R", P0 + 4, -6)         # small dip before the aim
+    rick.rot("sleeve.R", P0 + 11, 90)
+    rick.rot("forearm.R", P0 + 11, 4)
+    rick.rot("sleeve.R", P0 + 14, 86)
+    rick.rot("sleeve.R", P1, 86)
+    rick.rot("sleeve.R", P1 + 2, 97)         # recoil
+    rick.rot("forearm.R", P1 + 2, 10)
+    rick.rot("head", P1, 0)
+    rick.rot("head", P1 + 2, 3)
+    rick.rot("sleeve.R", P1 + 7, 87)
+    rick.rot("forearm.R", P1 + 7, 4)
+    portal = K.Portal("portal", center=(1.45, 1.20), width=0.95, height=2.55, depth=-0.12)
+    portal.spin(1, END)
+    portal.open(P1 + 3)
+    morty.look(P1 + 4, 24, 4)                # Morty stares at the portal
+    morty.brows(P1 + 4, -20, 8)
+    # arm down, a look back at Morty
+    rick.rot("sleeve.R", P2, 87)
+    rick.rot("forearm.R", P2, 4)
+    rick.rot("sleeve.R", P2 + 8, 4)
+    rick.rot("forearm.R", P2 + 8, 0)
+    rick.rot("head", P2 + 6, 0)
+    rick.look(P2 + 2, -13, -3)
+    rick.brows(P2 + 2, 4, 2)
+    # hop in: three little hops, covered by the portal on arrival
+    rick.at(P3, RICK_X, 0.0)
+    for i, (x, z) in enumerate(((0.62, 0.07), (0.83, 0.0), (1.04, 0.07), (1.25, 0.0), (1.45, 0.05))):
+        rick.at(P3 + 4 * (i + 1), x, z)
+    rick.look(P3, 12, 0)
+    rick.vanish(P3 + 21)
+    morty.look(P3 + 6, 24, 0)
+    portal.close(P4)
+    # Morty alone
+    morty.look(P5, 12, -22)                  # the remote
+    morty.brows(P5, -14, 4)
+    morty.look(P5 + 22, 0, 0)                # ...then the camera
+    morty.brows(P5 + 22, -8, 2)
+    morty.rot("head", P5 + 20, 0)
+    morty.rot("head", P5 + 26, 3)
+
     K.set_linear_constant_bools()
 
     # ------------------------------------------------------------ cameras (ortho, 9:16)
@@ -189,6 +248,16 @@ def build() -> None:
     C.cut(M1 - 3, morty_mcu)
     C.cut(R2 - 4, two)
     C.cut(TAG, tag_cam)
+    cam_portal = K.ortho_camera("cam_portal", (0.05, 1.20), 3.0)
+    K.key_camera(cam_portal, P0, (0.05, 1.20), 3.0)
+    K.key_camera(cam_portal, P1 - 2, (0.10, 1.20), 3.05)
+    K.key_camera(cam_portal, P1 + 8, (0.80, 1.22), 3.7)     # pan with the zap
+    K.key_camera(cam_portal, P4 + 9, (0.84, 1.22), 3.75)
+    C.cut(P0 - 2, cam_portal)
+    cam_alone = K.ortho_camera("cam_alone", (MORTY_X + 0.02, 0.98), 1.55)
+    K.key_camera(cam_alone, P5, (MORTY_X + 0.02, 0.98), 1.55)
+    K.key_camera(cam_alone, END, (MORTY_X + 0.02, 1.02), 1.35)   # slow push on the stare
+    C.cut(P5, cam_alone)
 
     bpy.context.scene.frame_end = END
 
@@ -197,7 +266,11 @@ def build() -> None:
         "music": {"file": "F:/PoCs/blender-video/assets/library/music/Mystery Sax.mp3", "start_s": 0, "gain": 0.12},
         "lines": [{"id": lid, "frame": f, "text": man[lid]["text"], "wav": man[lid]["wav"]}
                   for lid, f in (("r1", R1), ("m1", M1), ("r2", R2))],
-        "sfx": [], "overlays": [],
+        "sfx": [{"frame": P1, "sfx": "portal_gun", "gain": 0.8},
+                {"frame": P1 + 3, "sfx": "portal_open", "gain": 0.8},
+                {"frame": P3 + 14, "sfx": "portal_suck", "gain": 0.9},
+                {"frame": P4, "sfx": "portal_close", "gain": 0.7}],
+        "overlays": [],
     }
     with open(os.path.join(ROOT, "projects", "rm01", "cues.json"), "w", encoding="utf-8") as fh:
         json.dump(cues, fh, indent=1)

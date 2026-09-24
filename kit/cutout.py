@@ -191,6 +191,22 @@ class Puppet:
             ob.keyframe_insert("hide_viewport", frame=frame)
         self.current[slot] = key
 
+    def vanish(self, frame: int) -> None:
+        """Hide the whole puppet from `frame` on. Each object's visibility just before is keyed first:
+        a lone 'hidden' key would hide it on every frame, and a blanket 'visible' key at frame 1 would
+        un-hide every mouth/hand swap."""
+        sc = bpy.context.scene
+        objs = [self.root, *self.root.children_recursive]
+        sc.frame_set(frame - 1)
+        state = {o.name: (o.hide_render, o.hide_viewport) for o in objs}
+        for o in objs:
+            o.hide_render, o.hide_viewport = state[o.name]
+            o.keyframe_insert("hide_render", frame=frame - 1)
+            o.keyframe_insert("hide_viewport", frame=frame - 1)
+            o.hide_render = o.hide_viewport = True
+            o.keyframe_insert("hide_render", frame=frame)
+            o.keyframe_insert("hide_viewport", frame=frame)
+
     def show(self, part: str, frame: int, on: bool) -> None:
         C.visible(self.pivots[part], frame, on)
 
@@ -326,6 +342,72 @@ def backdrop(name: str = "garage", depth: float = 1.0) -> bpy.types.Object:
     bpy.context.scene.collection.objects.link(ob)
     ob.location = (0.0, depth, 0.0)
     return ob
+
+
+def _prop_plane(name: str, obj_name: str, parent: bpy.types.Object, k: float = S,
+                depth: float = 0.0) -> bpy.types.Object:
+    """A prop PNG as a plane centred on `parent`; k = metres (or parent units) per prop unit."""
+    meta = json.loads(open(os.path.join(CUTOUT, "props", "props.json"), encoding="utf-8").read())[name]
+    w, h = meta["size"]
+    me = _quad(obj_name, -w / 2 * k, w / 2 * k, -h / 2 * k, h / 2 * k)
+    ob = bpy.data.objects.new(obj_name, me)
+    ob.data.materials.append(flat_material(os.path.join(CUTOUT, "props", meta["png"])))
+    bpy.context.scene.collection.objects.link(ob)
+    ob.parent = parent
+    ob.location = (0.0, depth, 0.0)
+    return ob
+
+
+class Portal:
+    """Rick-style green portal: glow + swirl disc + counter swirl + rim, squashed into an oval.
+
+    The layers spin inside an empty that carries the oval squash, so the swirl turns while the outline
+    stays an upright oval. open()/close() key the size with overshoot."""
+
+    def __init__(self, name: str, center: tuple[float, float], width: float, height: float, depth: float = -0.12):
+        self.w, self.h = width, height
+        self.root = C.empty(f"{name}.root", loc=(center[0], depth, center[1]))
+        self.root.scale = (0.0, 1.0, 0.0)
+        self.root.keyframe_insert("scale", frame=1)
+        k = 1.0 / 240.0           # every layer is drawn around a 240-unit disc (art/rm/props.py R=120)
+        # layers from back to front (more negative y = closer to the camera)
+        self.glow = _prop_plane("portal_glow", f"{name}.glow", self.root, k, 0.004)
+        self.disc = _prop_plane("portal_disc", f"{name}.disc", self.root, k, 0.0)
+        self.swirl = _prop_plane("portal_swirl", f"{name}.swirl", self.root, k, -0.002)
+        self.rim = _prop_plane("portal_rim", f"{name}.rim", self.root, k, -0.004)
+
+    def spin(self, start: int, end: int, turns_per_s: float = 0.6) -> None:
+        secs = (end - start) / FPS
+        for ob, sgn, k in ((self.disc, 1, 1.0), (self.swirl, -1, 0.7)):
+            ob.rotation_euler.y = 0.0
+            ob.keyframe_insert("rotation_euler", index=1, frame=start)
+            ob.rotation_euler.y = -sgn * math.radians(360 * turns_per_s * k * secs)
+            ob.keyframe_insert("rotation_euler", index=1, frame=end)
+            C.set_interp_all(ob, "LINEAR", "rotation_euler")
+        # glow breathes
+        f, big = start, True
+        while f <= end:
+            self.glow.scale = (1.06, 1.0, 1.06) if big else (0.96, 1.0, 0.96)
+            self.glow.keyframe_insert("scale", frame=f)
+            big = not big
+            f += 6
+
+    def _size(self, frame: int, s: float) -> None:
+        self.root.scale = (self.w * s, 1.0, self.h * s)
+        self.root.keyframe_insert("scale", frame=frame)
+
+    def open(self, frame: int) -> int:
+        self._size(frame, 0.0)
+        self._size(frame + 5, 1.12)
+        self._size(frame + 9, 0.96)
+        self._size(frame + 12, 1.0)
+        return frame + 12
+
+    def close(self, frame: int) -> int:
+        self._size(frame, 1.0)
+        self._size(frame + 3, 1.08)
+        self._size(frame + 8, 0.0)
+        return frame + 8
 
 
 def set_linear_constant_bools() -> None:

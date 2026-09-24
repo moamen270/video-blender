@@ -14,6 +14,7 @@ No synthesized audio may be used (owner rule, 2026-09-24).
 |---|---|---|
 | kenney/kenney_mini-market | https://kenney.nl/assets/mini-market (store shelves, register, employee) | CC0 |
 | kenney/kenney_interface-sounds | https://kenney.nl/assets/interface-sounds (beeps, errors, confirmations) | CC0 |
+| kenney/kenney_sci-fi-sounds | https://kenney.nl/assets/sci-fi-sounds (lasers, force fields, slime: portal gun/open/suck/close) | CC0 |
 | quaternius/ultimate_animated_character | Quaternius "Ultimate Animated Character" pack, public Google Drive folder linked from https://quaternius.com/packs/ultimatedanimatedcharacter.html — 52 rigged .blend characters (23-bone CharacterArmature, 17 actions each) | CC0 (License.txt in folder) |
 | music/Mystery Sax.mp3, music/Hidden Agenda.mp3 | Kevin MacLeod, incompetech.com | CC BY 4.0 — credit required |
 | F:/PoCs/tools/Rhubarb-Lip-Sync-1.14.0-Windows (tool, not an asset) | https://github.com/DanielSWolf/rhubarb-lip-sync | MIT |

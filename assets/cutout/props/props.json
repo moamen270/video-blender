@@ -5,5 +5,47 @@
    68,
    108
   ]
+ },
+ "portal_gun": {
+  "png": "portal_gun.png",
+  "size": [
+   64,
+   120
+  ]
+ },
+ "flash": {
+  "png": "flash.png",
+  "size": [
+   84,
+   84
+  ]
+ },
+ "portal_glow": {
+  "png": "portal_glow.png",
+  "size": [
+   344,
+   344
+  ]
+ },
+ "portal_disc": {
+  "png": "portal_disc.png",
+  "size": [
+   264,
+   264
+  ]
+ },
+ "portal_swirl": {
+  "png": "portal_swirl.png",
+  "size": [
+   264,
+   264
+  ]
+ },
+ "portal_rim": {
+  "png": "portal_rim.png",
+  "size": [
+   276,
+   276
+  ]
  }
 }

@@ -370,7 +370,9 @@ def main() -> None:
     grade = cues.get("grade")  # optional ffmpeg colour-grade filter chain, applied before overlays/captions
     if not overlays and not captions and not grade:
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-i", mix_path, "-c:v", "copy",
-                        "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final], check=True)
+                        "-af", "loudnorm=I=-14:TP=-1:LRA=11",   # same target as the overlay branch
+                        "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+                        "-shortest", "-movflags", "+faststart", final], check=True)
     else:
         FFPROBE = FFMPEG.replace("ffmpeg.exe", "ffprobe.exe")
         res_h = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-show_entries",

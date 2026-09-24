@@ -91,13 +91,21 @@ def garage_svg() -> str:
     return "".join(g)
 
 
+M = 500   # margin so wide/zoomed-out cameras never see past the painting
+
+
 def export() -> Path:
     OUT.mkdir(parents=True, exist_ok=True)
-    svg = f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">{garage_svg()}</svg>'
+    ext = (f'<rect x="{-M}" y="{-M}" width="{W+2*M}" height="{WALL_Y+M}" fill="#93a39d"/>'
+           f'<rect x="{-M}" y="{WALL_Y}" width="{W+2*M}" height="{H-WALL_Y+M}" fill="#8c877d"/>'
+           f'<rect x="{-M}" y="{WALL_Y-22}" width="{W+2*M}" height="22" fill="#6f7c77"/>'
+           f'<path d="M{-M},{WALL_Y} L{W+M},{WALL_Y} M{-M},{WALL_Y-22} L{W+M},{WALL_Y-22}" stroke="#1b1b1b" stroke-width="4"/>')
+    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W+2*M}" height="{H+2*M}" '
+           f'viewBox="{-M} {-M} {W+2*M} {H+2*M}">{ext}{garage_svg()}</svg>')
     img = Image.open(io.BytesIO(bytes(resvg_py.svg_to_bytes(svg_string=svg, zoom=ZOOM)))).convert("RGBA")
     img.save(OUT / "garage.png", optimize=True)
-    (OUT / "garage.json").write_text(json.dumps({"png": "garage.png", "size": [W, H], "ground_y": GROUND_Y,
-                                                 "cx": CX, "wall_y": WALL_Y}, indent=1))
+    (OUT / "garage.json").write_text(json.dumps({"png": "garage.png", "size": [W + 2 * M, H + 2 * M],
+                                                 "ground_y": GROUND_Y + M, "cx": CX + M, "wall_y": WALL_Y + M}, indent=1))
     return OUT / "garage.png"
 
 
