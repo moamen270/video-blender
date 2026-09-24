@@ -69,31 +69,26 @@ def band(
     return pts
 
 
-_GRIN_T: dict[str, float] = {
-    "X": 0.10,
-    "A": 0.06,
-    "B": 0.10,
-    "C": 0.13,
-    "D": 0.15,
-    "E": 0.13,
-    "F": 0.08,
-    "G": 0.10,
-    "H": 0.13,
-}
+# Grin (Joker): a fixed crescent of teeth; talking opens a dark gap between upper and lower teeth.
+# (A thickness change alone did not read on screen - senior review of output/v7.)
+_GRIN_T: dict[str, float] = {"X": 0.11, "A": 0.12, "B": 0.13, "C": 0.13, "D": 0.13, "E": 0.13, "F": 0.12, "G": 0.13, "H": 0.13}
+_GRIN_GAP: dict[str, float] = {"X": 0.0, "A": 0.0, "B": 0.03, "C": 0.05, "D": 0.07, "E": 0.05, "F": 0.025, "G": 0.03, "H": 0.05}
 
 
-def _mouth_faces(verts: list[Vector], *, is_band: bool) -> list[list[int]]:
+def _mouth_faces(verts: list[Vector], *, is_band: bool, bands: int = 1) -> list[list[int]]:
     """Triangulate a mouth outline without relying on n-gon tessellation.
 
     The outlines are conformed to the curved head (non-planar) and bands are concave with
     coincident tips, which Blender's n-gon fill renders with holes. Bands (top edge left->right,
-    then bottom edge right->left, k points each) become a quad strip; convex superellipses become
-    a fan around an appended centre vertex (mutates `verts`).
+    then bottom edge right->left, k points each; `bands` of them back to back) become quad strips;
+    convex superellipses become a fan around an appended centre vertex (mutates `verts`).
     """
     n = len(verts)
     if is_band:
-        k = n // 2
-        return [[i, i + 1, n - 2 - i, n - 1 - i] for i in range(k - 1)]
+        m = n // bands
+        k = m // 2
+        return [[o + i, o + i + 1, o + m - 2 - i, o + m - 1 - i]
+                for o in range(0, n, m) for i in range(k - 1)]
     verts.append(sum(verts, Vector()) / n)
     return [[n, i, (i + 1) % n] for i in range(n)]
 
@@ -122,12 +117,26 @@ def mouth_outlines(style: str = "plain", rest: str = "X") -> dict[str, list[tupl
         }
     elif style == "grin":
         outlines = {}
+        def top(x: float) -> float:
+            return 0.02 + 0.05 * ((x / 0.30) ** 2)
+
+        def taper(x: float) -> float:
+            return 1.0 - ((x / 0.30) ** 2)
+
         for shape, t in _GRIN_T.items():
-            top = lambda x: 0.02 + 0.05 * ((x / 0.30) ** 2)
-            bottom = lambda x, t_val=t: top(x) - t_val * (1.0 - ((x / 0.30) ** 2))
-            zc = lambda x, t_val=t: (top(x) + bottom(x, t_val)) / 2.0
-            half = lambda x, t_val=t: (top(x) - bottom(x, t_val)) / 2.0
-            outlines[shape] = band(-0.30, 0.30, zc, half)
+            g = _GRIN_GAP[shape]
+            lo = lambda x, t=t: top(x) - t * taper(x)  # bottom edge of the crescent
+            mid = lambda x, t=t: top(x) - 0.5 * t * taper(x)
+            if g <= 0.0:
+                outlines[shape] = band(-0.30, 0.30, lambda x: (top(x) + lo(x)) / 2.0,
+                                       lambda x: (top(x) - lo(x)) / 2.0)
+                continue
+            up_lo = lambda x, g=g: mid(x) + 0.5 * g * taper(x)  # upper teeth: top -> up_lo
+            dn_hi = lambda x, g=g: mid(x) - 0.5 * g * taper(x)  # lower teeth: dn_hi -> lo
+            outlines[shape] = (
+                band(-0.30, 0.30, lambda x: (top(x) + up_lo(x)) / 2.0, lambda x: (top(x) - up_lo(x)) / 2.0)
+                + band(-0.30, 0.30, lambda x: (dn_hi(x) + lo(x)) / 2.0, lambda x: (dn_hi(x) - lo(x)) / 2.0)
+            )
     else:
         raise ValueError(f"Unknown mouth style '{style}'")
 
@@ -295,7 +304,8 @@ def build_face(
         surf_pts = qchar.surface_points(qc, pts_xz, bones=["Head"], materials=["Skin"], offset=0.008)
         world_pts = [qchar.native(qc, pt) for pt in surf_pts]
         verts = [wpt - mouth_loc for wpt in world_pts]
-        faces = _mouth_faces(verts, is_band=(style == "grin" or shape == "frown"))
+        bands = 2 if style == "grin" and _GRIN_GAP.get(shape, 0.0) > 0.0 else 1
+        faces = _mouth_faces(verts, is_band=(style == "grin" or shape == "frown"), bands=bands)
 
         m_name = f"{qc.name}_mouth_{shape}"
         m_mesh = bpy.data.meshes.new(m_name)

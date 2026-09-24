@@ -233,3 +233,26 @@ def turn_to(qc: Q.QChar, frame: int, heading: float, frames: int = 8) -> None:
     current_heading = math.degrees(qc.root.rotation_euler.z)
     key_root(qc, frame, heading=current_heading)
     key_root(qc, frame + frames, heading=heading)
+
+
+def foot_events(qc: Q.QChar, start: int, end: int, *, eps: float = 0.006) -> list[int]:
+    """Frames where a foot touches down, measured on the final evaluated animation.
+
+    Call after every motion call of the character (like the cape bake). A touchdown is the first
+    frame of a run where the foot's world z is within `eps` of its lowest z over [start, end].
+    Used for footstep SFX: measured contacts land on the frame, unlike phase guesses.
+    """
+    scene = bpy.context.scene
+    arm = qc.arm
+    zs: dict[str, list[float]] = {"Foot.L": [], "Foot.R": []}
+    for f in range(start, end + 1):
+        scene.frame_set(f)
+        for b in zs:
+            zs[b].append((arm.matrix_world @ arm.pose.bones[b].head).z)
+    frames: set[int] = set()
+    for b, arr in zs.items():
+        low = min(arr) + eps
+        for i, z in enumerate(arr):
+            if z <= low and i > 0 and arr[i - 1] > low:
+                frames.add(start + i)
+    return sorted(frames)

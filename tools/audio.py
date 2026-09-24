@@ -28,6 +28,7 @@ FFMPEG = ("C:/Users/mmoam/AppData/Local/Microsoft/WinGet/Packages/"
           "Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.1-full_build/bin/ffmpeg.exe")
 SR = 48000
 SFX_BANK_PATH = os.path.join(ROOT, "assets", "sfx_bank.json")
+VOICE_RMS_DB = -16.0  # every line is normalised to this RMS (active samples) before mixing
 with open(SFX_BANK_PATH, "r", encoding="utf-8") as _fh:
     BANK = json.load(_fh)
 
@@ -193,6 +194,15 @@ def main() -> None:
         if chatterbox_lines:
             cb_out = os.path.join(out, "voice", "chatterbox")
             voices.update(chatterbox(chatterbox_lines, cb_out))
+
+    # Same loudness for every character: TTS engines/references differ by ~8 dB (senior review of v7).
+    voice_rms = 10 ** (VOICE_RMS_DB / 20)
+    for lid, clip in voices.items():
+        active = clip[np.abs(clip) > 0.01]
+        if len(active) > 0:
+            clip = clip * (voice_rms / max(np.sqrt(np.mean(active ** 2)), 1e-9))
+            peak = np.abs(clip).max()
+            voices[lid] = clip * (0.98 / peak) if peak > 0.98 else clip
 
     # Ducking
     duck = np.ones(len(mix))
