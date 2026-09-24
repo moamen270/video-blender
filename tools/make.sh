@@ -13,4 +13,5 @@ grep "\[build\]" "$out/render.log"
 cp "projects/$proj/cues.json" "$out/cues.json"
 uv run --project F:/PoCs/video-builder/py python tools/audio.py --project "$proj" --out "$out" 2>&1 | grep -E "\[audio\]|Error|Traceback|rror:"
 [ -f "$out/final.mp4" ] || { echo "[make] FAILED: no $out/final.mp4 (see output above)"; exit 1; }
+sh tools/sheet4hz.sh "$out/final.mp4" "$out/sheet_4hz.png"
 echo "[make] done: $out/final.mp4"
