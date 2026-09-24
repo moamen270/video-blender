@@ -223,7 +223,8 @@ def build() -> None:
     scene.frame_end = END
 
     # face Batman (both in profile for the two-shot); the milk is then at his right-front
-    motion.turn_to(jok, jw_end, heading(JOK_STOP, BAT_AT), frames=6)
+    # cheated toward the camera (half Batman, half lens) so the front two-shot sees both faces; the milk is at his right
+    motion.turn_to(jok, jw_end, -45.0, frames=6)
     motion.turn_to(bat, jw_end - 12, heading(BAT_AT, JOK_STOP), frames=10)  # slow turn as he arrives
 
     scene.frame_set(SCAN)
@@ -330,9 +331,9 @@ def build() -> None:
     cam_wide = shots.frame(
         "cam_wide",
         [bat, ck.parts["ck_monitor"], ck.parts["ck_bag_base"]],
-        shot="wide",
-        yaw=-35.0,
-        pitch=12.0,
+        shot="full",
+        yaw=-125.0,
+        pitch=10.0,
         at=40,
     )
     C.cut(40, cam_wide)
@@ -435,8 +436,8 @@ def build() -> None:
         "cam_2s_j",
         [jok, bat],
         shot="two_shot",
-        yaw=5.0,
-        pitch=10.0,
+        yaw=10.0,  # front: Joker cheated to camera (3/4), Batman in profile
+        pitch=8.0,
         at=SCAN - 4,
     )
     C.cut(SCAN - 4, cam_2s_j)
@@ -625,6 +626,8 @@ def build() -> None:
             },
         ],
         "beats": [[BEAT, WHIP + 12]],
+        # night grade in the final ffmpeg pass (EEVEE volume mist rendered as blocky noise - tested, dropped)
+        "grade": "eq=contrast=1.10:brightness=-0.04:saturation=1.10,colorbalance=rs=-0.04:bs=0.06:rm=-0.02:bm=0.04:rh=0.02,vignette=angle=PI/4.5",
     }
 
     cues_path = os.path.join(ROOT, "projects", "ep02", "cues.json")

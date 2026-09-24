@@ -367,7 +367,8 @@ def main() -> None:
     video = os.path.join(out, "video.mp4")
     final = os.path.join(out, "final.mp4")
 
-    if not overlays and not captions:
+    grade = cues.get("grade")  # optional ffmpeg colour-grade filter chain, applied before overlays/captions
+    if not overlays and not captions and not grade:
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-i", mix_path, "-c:v", "copy",
                         "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final], check=True)
     else:
@@ -380,7 +381,7 @@ def main() -> None:
                                 "stream=width", "-of", "csv=p=0", video],
                                capture_output=True, text=True, check=True)
         W = int(res_w.stdout.strip())
-        filters = []
+        filters = [grade] if grade else []
         for o in overlays:
             kind = o.get("kind")
             a = o["from"] - 1
