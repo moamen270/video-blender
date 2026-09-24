@@ -106,6 +106,21 @@ def main() -> None:
         if chatterbox_lines:
             audio.chatterbox(chatterbox_lines, out_dir)
 
+    # Load alignment tokens from align.json and chatterbox.json
+    align_tokens: dict[str, list[dict]] = {}
+    for jname in ("align.json", "chatterbox.json"):
+        jpath = os.path.join(out_dir, jname)
+        if os.path.isfile(jpath):
+            try:
+                with open(jpath, "r", encoding="utf-8") as fh:
+                    jdata = json.load(fh)
+                    for sc in jdata.get("scenes", []):
+                        sid = sc.get("sceneId")
+                        if sid and "tokens" in sc:
+                            align_tokens[sid] = sc["tokens"]
+            except Exception:
+                pass
+
     # Rhubarb per line and build manifest
     new_manifest_lines = dict(prev_lines)
 
@@ -125,7 +140,7 @@ def main() -> None:
         )
 
         if is_unchanged:
-            entry = prev_lines[lid]
+            entry = dict(prev_lines[lid])
         else:
             with open(txt_path, "w", encoding="utf-8") as fh:
                 fh.write(l["text"])
@@ -157,6 +172,13 @@ def main() -> None:
                 "character": l.get("character", ""),
                 "cues": mouth_cues,
             }
+
+        if "words" not in entry or (l in lines_to_synth):
+            tokens = align_tokens.get(lid, [])
+            entry["words"] = [
+                {"w": tok.get("text", tok.get("w", "")), "start": tok["start"], "end": tok["end"]}
+                for tok in tokens
+            ]
 
         new_manifest_lines[lid] = entry
         sec = entry["seconds"]

@@ -256,3 +256,191 @@ def foot_events(qc: Q.QChar, start: int, end: int, *, eps: float = 0.006) -> lis
             if z <= low and i > 0 and arr[i - 1] > low:
                 frames.add(start + i)
     return sorted(frames)
+
+
+# --------------------------------------------------------------------------- IK and props (Task G4)
+from mathutils import Matrix
+
+
+def setup_ik(qc: Q.QChar) -> dict[str, bpy.types.Object]:
+    """Set up IK target empties and constraints for both hands (Task G4)."""
+    bpy.context.view_layer.update()
+    qc.arm.animation_data_create()
+    empties: dict[str, bpy.types.Object] = {}
+    col = qc.root.users_collection[0] if qc.root.users_collection else None
+
+    for side in ("L", "R"):
+        empty_name = f"{qc.name}_ik.{side}"
+        pos = qc.arm.matrix_world @ qc.arm.pose.bones[f"Fist.{side}"].head
+        empty = C.empty(empty_name, loc=pos, col=col)
+        pb = qc.arm.pose.bones[f"LowerArm.{side}"]
+        con = pb.constraints.new("IK")
+        con.target = empty
+        con.chain_count = 2
+        con.use_tail = True
+        con.influence = 0.0
+        con.keyframe_insert("influence", frame=1)
+        empties[side] = empty
+        qc.parts[f"ik.{side}"] = empty
+
+    return empties
+
+
+def reach(
+    qc: Q.QChar,
+    side: str,
+    target: Sequence[float] | Vector,
+    start: int,
+    end: int,
+    *,
+    blend: int = 5,
+) -> None:
+    """Key hand reach toward world target using IK target empty and constraint influence."""
+    empty = qc.parts.get(f"ik.{side}") or bpy.data.objects.get(f"{qc.name}_ik.{side}")
+    if empty is None:
+        raise RuntimeError(f"IK target empty for {qc.name} side {side} not found. Call setup_ik first.")
+
+    t_vec = Vector(target)
+
+    for fc in C.fcurves(empty):
+        if fc.data_path == "location":
+            for kp in fc.keyframe_points:
+                if kp.co.x < (start - blend) - 0.5:
+                    kp.interpolation = "CONSTANT"
+
+    empty.location = t_vec
+    empty.keyframe_insert("location", frame=start - blend)
+    empty.keyframe_insert("location", frame=end)
+    C.set_interp_at(empty, start - blend, "CONSTANT")
+
+    pb = qc.arm.pose.bones[f"LowerArm.{side}"]
+    con = next((c for c in pb.constraints if c.type == "IK" and getattr(c, "target", None) == empty), None)
+    if con is None:
+        con = next(c for c in pb.constraints if c.type == "IK")
+
+    qc.arm.animation_data_create()
+    con.influence = 0.0
+    con.keyframe_insert("influence", frame=start - blend)
+    con.influence = 1.0
+    con.keyframe_insert("influence", frame=start)
+    con.influence = 1.0
+    con.keyframe_insert("influence", frame=end)
+    con.influence = 0.0
+    con.keyframe_insert("influence", frame=end + blend)
+
+
+def hold(
+    qc: Q.QChar,
+    prop: bpy.types.Object,
+    side: str,
+    frame: int,
+) -> bpy.types.Object:
+    """Duplicate prop, attach to character hand bone at frame, and swap visibility."""
+    scene = bpy.context.scene
+    scene.frame_set(frame)
+    bpy.context.view_layer.update()
+
+    held = prop.copy()
+    if held.animation_data:
+        held.animation_data_clear()
+
+    cols = list(prop.users_collection)
+    if cols:
+        for col in cols:
+            col.objects.link(held)
+    else:
+        scene.collection.objects.link(held)
+
+    held.parent = qc.arm
+    held.parent_type = "BONE"
+    held.parent_bone = f"Fist.{side}"
+    held.matrix_parent_inverse = Matrix.Identity(4)
+    bpy.context.view_layer.update()
+    held.matrix_world = prop.matrix_world.copy()
+    bpy.context.view_layer.update()
+
+    has_f1 = False
+    for fc in C.fcurves(prop):
+        if fc.data_path == "hide_render":
+            for kp in fc.keyframe_points:
+                if abs(kp.co.x - 1) < 0.5:
+                    has_f1 = True
+                    break
+    if not has_f1:
+        C.visible(prop, 1, True)
+
+    C.visible(held, 1, False)
+    C.visible(held, frame, True)
+    C.visible(prop, frame, False)
+    return held
+
+
+def release(
+    held: bpy.types.Object,
+    frame: int,
+    *,
+    place: Sequence[float] | Vector | None = None,
+) -> bpy.types.Object:
+    """Release a held prop into world space at frame, optionally placing it at place."""
+    scene = bpy.context.scene
+    scene.frame_set(frame)
+    bpy.context.view_layer.update()
+
+    obj = held.copy()
+    if obj.animation_data:
+        obj.animation_data_clear()
+
+    cols = list(held.users_collection)
+    if cols:
+        for col in cols:
+            col.objects.link(obj)
+    else:
+        scene.collection.objects.link(obj)
+
+    obj.parent = None
+    obj.matrix_parent_inverse = Matrix.Identity(4)
+
+    mw = held.matrix_world.copy()
+    if place is not None:
+        mw.translation = Vector(place)
+    obj.matrix_world = mw
+    bpy.context.view_layer.update()
+
+    C.visible(held, frame, False)
+    C.visible(obj, 1, False)
+    C.visible(obj, frame, True)
+    return obj
+
+
+def throw(
+    obj: bpy.types.Object,
+    start: int,
+    end: int,
+    p0: Sequence[float] | Vector,
+    p1: Sequence[float] | Vector,
+    *,
+    arc: float = 0.25,
+    spin: float = 720.0,
+) -> None:
+    """Animate object thrown along a parabolic arc with z-axis spin."""
+    p0_v = Vector(p0)
+    p1_v = Vector(p1)
+    total_frames = end - start
+
+    for f in range(start, end + 1):
+        t = (f - start) / total_frames if total_frames > 0 else 0.0
+        pt = (1.0 - t) * p0_v + t * p1_v
+        pt.z += 4.0 * arc * t * (1.0 - t)
+        obj.location = pt
+        obj.keyframe_insert("location", frame=f)
+
+    obj.rotation_euler.z = 0.0
+    obj.keyframe_insert("rotation_euler", index=2, frame=start)
+    obj.rotation_euler.z = math.radians(spin)
+    obj.keyframe_insert("rotation_euler", index=2, frame=end)
+    C.set_interp_at(obj, start, "LINEAR")
+    C.set_interp_at(obj, end, "LINEAR")
+    for fc in C.fcurves(obj):
+        if fc.data_path == "rotation_euler" and fc.array_index == 2:
+            for kp in fc.keyframe_points:
+                kp.interpolation = "LINEAR"

@@ -805,7 +805,7 @@ puff at frame 14 → `output/tests/G1/`.
      x = −4.8 … 4.8, rot_z 0; along the back wall `freezers-standing` at x = −4.8, −2.4, 2.4, 4.8, y = −2.9,
      rot_z 180 (front faces +Y into the store); left aisle: `shelf-boxes` at x = −3.6, y = 1.2, 3.1, 5.0, rot_z 90;
      right aisle: `shelf-bags` at x = +3.6, same y, rot_z 90; a sign "GOTHAM MART" (C.text, extrude 0.02, emission
-     `#ff3344` strength 2) centred at (0, −2.85, 2.15), scaled so it is 2.4 wide, facing +Y (rot (90, 0, 0));
+     `#ff3344` strength 2) centred at (0, −2.85, 2.15), scaled so it is 2.4 wide, facing +Y (rot (90, 0, 180) — (90, 0, 0) faces −Y and reads mirrored);
      tube light: box 1.2 × 0.08 × 0.05 at (0, 0.35, 2.6), emission `#e6f4ff` strength 4, plus an AREA light
      (shape RECTANGLE, size 1.2 × 0.12, energy 80, colour `#dff2ff`) at (0, 0.35, 2.55) pointing down.
    - `flicker(mart, frames: list[tuple[int, int]])` — for each `(a, b)`: the tube emission strength and the area

@@ -144,6 +144,44 @@ def place(mix: np.ndarray, clip: np.ndarray, at_sec: float, gain: float) -> None
     if e > s:
         mix[s:e] += clip[:e - s] * gain
 
+def trim_clip(clip: np.ndarray, dur: float, sr: int = SR) -> np.ndarray:
+    """Cut clip to dur seconds with a 20 ms linear fade-out."""
+    max_len = int(round(dur * sr))
+    if len(clip) <= max_len:
+        return clip
+    trimmed = clip[:max_len].copy()
+    fade_len = min(int(round(0.020 * sr)), len(trimmed))
+    if fade_len > 0:
+        trimmed[-fade_len:] *= np.linspace(1.0, 0.0, fade_len)
+    return trimmed
+
+
+def build_caption_filters(
+    captions: list[dict],
+    fps: float | int,
+    width: int,
+    height: int,
+) -> list[str]:
+    """Build ffmpeg drawtext filters for caption overlays."""
+    fontfile_str = r"C\:/Windows/Fonts/ariblk.ttf"
+    size_px = round(72 * width / 1080)
+    bw = max(1, round(5 * width / 1080))
+    filters = []
+    for c in captions:
+        t = c.get("text", "")
+        t = t.replace("\\", "\\\\")
+        t = t.replace(":", r"\:")
+        t = t.replace("'", "’")
+        t = t.replace("%", r"\%")
+        color = "#ffd400" if c.get("hi") else "white"
+        t_start = round(c["start_frame"] / fps, 3)
+        t_end = round(c["end_frame"] / fps, 3)
+        filters.append(
+            f"drawtext=fontfile='{fontfile_str}':text='{t}':fontsize={size_px}:fontcolor={color}:"
+            f"borderw={bw}:bordercolor=black:x=(w-text_w)/2:y=0.70*h-text_h/2:enable='between(t,{t_start},{t_end})'"
+        )
+    return filters
+
 
 # --------------------------------------------------------------------------- main
 
@@ -211,6 +249,8 @@ def main() -> None:
             lid = l["id"]
             if lid in voices:
                 clip = voices[lid]
+                if "dur" in l:
+                    clip = trim_clip(clip, float(l["dur"]))
                 s = int(l["frame"] / fps * SR)
                 e = min(len(mix), s + len(clip))
                 if e > s:
@@ -301,7 +341,10 @@ def main() -> None:
     for l in lines:
         lid = l["id"]
         if lid in voices:
-            place(mix, voices[lid], l["frame"] / fps, 1.0)
+            clip = voices[lid]
+            if "dur" in l:
+                clip = trim_clip(clip, float(l["dur"]))
+            place(mix, clip, l["frame"] / fps, 1.0)
 
     mix = mix[:int(SR * seconds)]
     peak = np.abs(mix).max() or 1.0
@@ -310,6 +353,7 @@ def main() -> None:
     sf.write(mix_path, mix.astype(np.float32), SR)
 
     overlays = cues.get("overlays", [])
+    captions = cues.get("captions", [])
     if engines_used:
         eng_str = ", ".join(sorted(engines_used))
     elif lines:
@@ -323,15 +367,19 @@ def main() -> None:
     video = os.path.join(out, "video.mp4")
     final = os.path.join(out, "final.mp4")
 
-    if not overlays:
+    if not overlays and not captions:
         subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-i", mix_path, "-c:v", "copy",
                         "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final], check=True)
     else:
         FFPROBE = FFMPEG.replace("ffmpeg.exe", "ffprobe.exe")
-        res = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-show_entries",
-                              "stream=height", "-of", "csv=p=0", video],
-                             capture_output=True, text=True, check=True)
-        H = int(res.stdout.strip())
+        res_h = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                "stream=height", "-of", "csv=p=0", video],
+                               capture_output=True, text=True, check=True)
+        H = int(res_h.stdout.strip())
+        res_w = subprocess.run([FFPROBE, "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                "stream=width", "-of", "csv=p=0", video],
+                               capture_output=True, text=True, check=True)
+        W = int(res_w.stdout.strip())
         filters = []
         for o in overlays:
             kind = o.get("kind")
@@ -355,6 +403,8 @@ def main() -> None:
                     f"drawtext=fontfile='{fontfile_str}':text='{t}':fontsize={size_px}:fontcolor=white@{alpha}:"
                     f"borderw={bw}:bordercolor=black:x=(w-text_w)/2:y=h*{y}-text_h/2:enable='between(n,{a},{b})'"
                 )
+        if captions:
+            filters.extend(build_caption_filters(captions, fps, W, H))
         script = os.path.join(out, "overlays.txt")
         with open(script, "w", encoding="utf-8") as fh:
             fh.write(",".join(filters))

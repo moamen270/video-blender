@@ -180,3 +180,125 @@ def floor(
 ) -> bpy.types.Object:
     """Ground plane with toon2 material."""
     return C.plane("floor", size=size, mat=toon2("floor", hex_, rim=0.0), col=col)
+
+
+def toon_tex(mat: bpy.types.Material, tint: float = 1.0) -> bpy.types.Material:
+    """Convert an imported glTF material in place to a toon texture material.
+
+    `tint` multiplies the texture colour (sets are darkened so the characters pop at night).
+    """
+    if "glass" in mat.name.lower():
+        return toon2(mat.name, "#9fb4c8", rim=0.0)
+
+    image = None
+    flat_color = (0.8, 0.8, 0.8, 1.0)
+
+    if mat.use_nodes and mat.node_tree:
+        for n in mat.node_tree.nodes:
+            if n.type == "TEX_IMAGE" and n.image:
+                image = n.image
+                break
+        for n in mat.node_tree.nodes:
+            if n.type == "BSDF_PRINCIPLED":
+                if "Base Color" in n.inputs:
+                    flat_color = tuple(n.inputs["Base Color"].default_value)
+                break
+
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    nodes.clear()
+    links = mat.node_tree.links
+
+    mat.diffuse_color = (*flat_color[:3], 1.0)
+
+    # Image Texture (same image, interpolation = "Closest") -> colour C
+    if image is not None:
+        node_tex = nodes.new("ShaderNodeTexImage")
+        node_tex.image = image
+        node_tex.interpolation = "Closest"
+        color_c = node_tex.outputs["Color"]
+    else:
+        node_rgb = nodes.new("ShaderNodeRGB")
+        node_rgb.outputs["Color"].default_value = (*flat_color[:3], 1.0)
+        color_c = node_rgb.outputs["Color"]
+
+    if abs(tint - 1.0) > 1e-6:
+        node_tint = nodes.new("ShaderNodeMix")
+        node_tint.data_type = "RGBA"
+        node_tint.blend_type = "MULTIPLY"
+        next(i for i in node_tint.inputs if i.identifier == "Factor_Float").default_value = 1.0
+        links.new(color_c, next(i for i in node_tint.inputs if i.identifier == "A_Color"))
+        next(i for i in node_tint.inputs if i.identifier == "B_Color").default_value = (tint, tint, tint, 1.0)
+        color_c = next(o for o in node_tint.outputs if o.identifier == "Result_Color")
+
+    # Diffuse (white) -> ShaderToRGB -> RGBToBW = L
+    node_diffuse = nodes.new("ShaderNodeBsdfDiffuse")
+    node_diffuse.inputs["Color"].default_value = (1.0, 1.0, 1.0, 1.0)
+
+    node_s2rgb = nodes.new("ShaderNodeShaderToRGB")
+    links.new(node_diffuse.outputs["BSDF"], node_s2rgb.inputs["Shader"])
+
+    node_rgb2bw = nodes.new("ShaderNodeRGBToBW")
+    links.new(node_s2rgb.outputs["Color"], node_rgb2bw.inputs["Color"])
+    light_l = node_rgb2bw.outputs["Val"]
+
+    # lit = L > 0.30 (Math GREATER_THAN), hi = L > 0.85
+    node_lit = nodes.new("ShaderNodeMath")
+    node_lit.operation = "GREATER_THAN"
+    links.new(light_l, node_lit.inputs[0])
+    node_lit.inputs[1].default_value = 0.30
+
+    node_hi = nodes.new("ShaderNodeMath")
+    node_hi.operation = "GREATER_THAN"
+    links.new(light_l, node_hi.inputs[0])
+    node_hi.inputs[1].default_value = 0.85
+
+    def _new_mix(blend_type: str = "MIX"):
+        n = nodes.new("ShaderNodeMix")
+        n.data_type = "RGBA"
+        n.blend_type = blend_type
+        in_fac = next(s for s in n.inputs if s.identifier == "Factor_Float")
+        in_a = next(s for s in n.inputs if s.identifier == "A_Color")
+        in_b = next(s for s in n.inputs if s.identifier == "B_Color")
+        out_res = next(s for s in n.outputs if s.identifier == "Result_Color")
+        return n, in_fac, in_a, in_b, out_res
+
+    # shadow colour = C * 0.5 mixed 35 % toward #1b2440
+    _, fac_half, in_a_half, in_b_half, out_half = _new_mix("MULTIPLY")
+    fac_half.default_value = 1.0
+    links.new(color_c, in_a_half)
+    in_b_half.default_value = (0.5, 0.5, 0.5, 1.0)
+
+    _, fac_shadow, in_a_shadow, in_b_shadow, out_shadow = _new_mix("MIX")
+    fac_shadow.default_value = 0.35
+    links.new(out_half, in_a_shadow)
+    in_b_shadow.default_value = (*C.hex_rgb("#1b2440"), 1.0)
+
+    # highlight = C mixed 18 % toward #fff1d6
+    _, fac_hi, in_a_hi, in_b_hi, out_hi = _new_mix("MIX")
+    fac_hi.default_value = 0.18
+    links.new(color_c, in_a_hi)
+    in_b_hi.default_value = (*C.hex_rgb("#fff1d6"), 1.0)
+
+    # col = mix(shadow, C, lit)
+    _, fac_lit, in_a_lit, in_b_lit, out_lit = _new_mix("MIX")
+    links.new(node_lit.outputs[0], fac_lit)
+    links.new(out_shadow, in_a_lit)
+    links.new(color_c, in_b_lit)
+
+    # col = mix(col, highlight, hi)
+    _, fac_final, in_a_final, in_b_final, out_final = _new_mix("MIX")
+    links.new(node_hi.outputs[0], fac_final)
+    links.new(out_lit, in_a_final)
+    links.new(out_hi, in_b_final)
+
+    # Emission (1.0) -> output
+    node_emit = nodes.new("ShaderNodeEmission")
+    node_emit.inputs["Strength"].default_value = 1.0
+    links.new(out_final, node_emit.inputs["Color"])
+
+    node_out = nodes.new("ShaderNodeOutputMaterial")
+    links.new(node_emit.outputs["Emission"], node_out.inputs["Surface"])
+
+    return mat
+
