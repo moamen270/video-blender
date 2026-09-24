@@ -54,6 +54,15 @@ def main() -> None:
     lines_file = os.path.join(p_dir, "lines.json")
     with open(lines_file, "r", encoding="utf-8") as fh:
         lines = json.load(fh)
+    # Casting sheet: a line with "character" gets that character's voice settings; the line's own keys win.
+    with open(os.path.join(ROOT, "assets", "cast", "voices.json"), "r", encoding="utf-8") as fh:
+        cast = json.load(fh)["characters"]
+    for i, l in enumerate(lines):
+        voice = cast.get(l.get("character", ""), {})
+        lines[i] = {**{k: v for k, v in voice.items() if k != "notes"}, **l}
+        ref = lines[i].get("voiceRef")
+        if ref and not os.path.isabs(ref):
+            lines[i]["voiceRef"] = os.path.join(ROOT, ref).replace("\\", "/")
 
     out_dir = os.path.join(p_dir, "voice")
     os.makedirs(out_dir, exist_ok=True)
