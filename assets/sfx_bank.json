@@ -103,6 +103,62 @@
         "assets/library/kenney/kenney_impact-sounds/Audio/footstep_concrete_003.ogg",
         "assets/library/kenney/kenney_impact-sounds/Audio/footstep_concrete_004.ogg"
       ]
+    },
+    "scan_beep": {
+      "gain": 0.5,
+      "files": [
+        "assets/library/kenney/kenney_interface-sounds/Audio/select_002.ogg",
+        "assets/library/kenney/kenney_interface-sounds/Audio/select_003.ogg"
+      ]
+    },
+    "error_beep": {
+      "gain": 0.55,
+      "files": [
+        "assets/library/kenney/kenney_interface-sounds/Audio/error_003.ogg",
+        "assets/library/kenney/kenney_interface-sounds/Audio/error_004.ogg"
+      ]
+    },
+    "success": {
+      "gain": 0.5,
+      "files": [
+        "assets/library/kenney/kenney_interface-sounds/Audio/confirmation_001.ogg",
+        "assets/library/kenney/kenney_interface-sounds/Audio/confirmation_002.ogg"
+      ]
+    },
+    "flicker": {
+      "gain": 0.35,
+      "files": [
+        "assets/library/kenney/kenney_interface-sounds/Audio/glitch_001.ogg",
+        "assets/library/kenney/kenney_interface-sounds/Audio/glitch_002.ogg"
+      ]
+    },
+    "slam": {
+      "gain": 0.8,
+      "files": [
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_000.ogg",
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_001.ogg"
+      ]
+    },
+    "thunk": {
+      "gain": 0.8,
+      "files": [
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactWood_heavy_000.ogg",
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactWood_heavy_001.ogg"
+      ]
+    },
+    "grab": {
+      "gain": 0.5,
+      "files": [
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactPlate_light_000.ogg",
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactPlate_light_001.ogg"
+      ]
+    },
+    "poof": {
+      "gain": 0.8,
+      "files": [
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactSoft_heavy_000.ogg",
+        "assets/library/kenney/kenney_impact-sounds/Audio/impactSoft_heavy_001.ogg"
+      ]
     }
   }
 }

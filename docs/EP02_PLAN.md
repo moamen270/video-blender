@@ -911,3 +911,146 @@ Writes `qa.json` `{hook: {...pass}, dead_time: [...], length: ..., pass: bool}` 
 Arguments: `--out output/vN` (input folder) and `--report <path>` (default `<out>/qa.json`).
 Test: `--out output/v9 --report output/tests/G7/qa.json` (never write into an existing output/vN during tests).
 The check passes when the script exits 0 and the report exists.
+
+### 12.7 `projects/ep02/script.py` — the episode (task G6)
+
+Script: `content/scripts/02-unexpected-item.md` (two senior edits for length: the machine's third full line after
+"Show yourself." and the cough are dropped). Structure like `projects/cp2/script.py`: ROOT header, imports
+(json, math, os, bpy, mathutils Vector/Matrix, `studio.core as C`, `kit.cast as cast`, `kit.motion as motion`,
+`kit.face as face`, `kit.cape as cape`, `kit.look as look`, `kit.sets as sets`, `kit.checkout as checkout`,
+`kit.props as props`, `kit.shots as shots`, `kit.captions as captions`), constants, `build()`.
+
+**Constants.** `FPS = 24`; `MAN = projects/ep02/voice/manifest.json`; `L(id) = ceil(seconds · 24)`;
+`BAT_AT = (0.0, 0.45)` (close to the kiosk: the chibi arm reaches ≈ 0.55 m); `PLACE_AT = (−0.50, 0.15)` (near
+corner of the bagging plate, in reach); `LAND_AT = (−0.55, 0.08)` (batarang landing); `JOK_FAR = (−2.4, 9.5)`,
+`JOK_FROM = (−2.4, 3.2)`, `JOK_STOP = (−0.95, 0.40)`, `JOK_EXIT = (−2.4, 6.0)`;
+`KEYWORDS = {"unexpected", "item", "nothing", "yourself", "where", "wait", "assistant", "trouble", "bats",
+"thank", "vengeance", "night", "exact", "change"}`.
+
+**Timeline** (compute in this order; all integers):
+```
+F_SLAM   = 5
+M1       = 1                                   # m_unexpected (hook)
+B_NOTH   = M1 + L("m_unexpected") + 1          # b_nothing
+TURN     = B_NOTH + L("b_nothing") + 1
+M2       = TURN + 4                            # m_unexpected
+THROW    = M2 + L("m_unexpected") - 8
+B_SHOW   = THROW + 20                          # b_show
+PULL     = B_SHOW + L("b_show") + 2
+M_PLACE  = PULL + 4                            # m_place
+PLACE    = M_PLACE + 18
+M_CUT    = M_PLACE + L("m_place") + 1          # m_unexpected with "dur": 1.45 (cut off after "item")
+GRAB     = M_CUT + 30
+B_WHERE  = GRAB + 6                            # b_where
+M_WAIT   = B_WHERE + L("b_where") + 3          # m_wait
+BEAT     = M_WAIT + L("m_wait") + 1            # 1 s of silence (deliberate beat)
+WHIP     = BEAT + 24
+JOK_WALK = WHIP - 18
+(jw_end computed by walk_to)
+J_TROUB  = max(WHIP + 8, jw_end - 12)          # j_trouble
+SCAN     = J_TROUB + L("j_trouble") + 2
+M_THANKS = SCAN + 20                           # m_thanks
+AWAY     = M_THANKS + 30
+B_VENG   = M_THANKS + L("m_thanks") + 4        # b_vengeance
+SMOKE    = B_VENG + L("b_vengeance") + 4
+M_FINAL  = SMOKE + 26                          # m_unexpected (loops into frame 1)
+END      = M_FINAL + L("m_unexpected") + 1
+```
+
+**build()** — in this order:
+1. Scene: `C.reset_scene()`; `mart = sets.gotham_mart()`; `ck = checkout.build_checkout()`;
+   `look.store_night(target=(0, 0, 1.0))`; `scene.frame_end = END` (after the timeline is known).
+2. Characters (built at the origin, then placed): `bat = cast.build_batman()`, `jok = cast.build_joker()`;
+   `motion.key_root(bat, 1, loc=(*BAT_AT, 0), heading=180.0)`; `motion.key_root(jok, 1, loc=(*JOK_FAR, 0),
+   heading=180.0)`; `motion.key_root(jok, JOK_WALK - 1, loc=(*JOK_FAR, 0))`; `motion.key_root(jok, JOK_WALK,
+   loc=(*JOK_FROM, 0))` (off-screen teleport during Batman's close-up); `motion.setup_ik(bat)`,
+   `motion.setup_ik(jok)`; `motion.play(bat, "Idle", 1, END + 10)`; `motion.play(jok, "Idle", 1, END + 10)`.
+3. Hook — the slam: `milk = props.milk("milk")`. `scene.frame_set(1)`; put the milk in Batman's right fist:
+   `hand = bat.arm.matrix_world @ bat.arm.pose.bones["Fist.R"].tail`; but first key the reach so frame 1 already
+   has the raised hand: `motion.reach_path(bat, "R", [(1, S + (0, 0.05, 0.45)), (F_SLAM, S + (0, 0.03, 0.22)),
+   (F_SLAM + 10, S + (0, 0.03, 0.22))], blend_in=1, blend_out=6)` with `S = ck.anchors["scanner"]`; then
+   `scene.frame_set(1)`, compute `hand`, `milk.location = hand − (0, 0, 0.14)`; `held = motion.hold(bat, milk, "R",
+   1)`; `m_scan = motion.release(held, F_SLAM + 2, place=S)`; then set `m_scan.rotation_euler = (0, 0, 0)` and key
+   nothing else on it. `checkout.screen_state(ck, F_SLAM + 2, "error")`; `checkout.lamp(ck, F_SLAM + 2, "red")`.
+4. Turn to the empty bagging area: `motion.turn_to(bat, TURN, 130.0, frames=8)`.
+5. Batarang throw: `motion.play(bat, "Punch", THROW, 18, blend_in=3)`; `motion.play(bat, "Idle", THROW + 18, END + 10,
+   blend_in=4)`; `bt = props.batarang("batarang")`; `scene.frame_set(THROW + 7)`;
+   `p0 = bat.arm.matrix_world @ bat.arm.pose.bones["Fist.R"].tail`; `p1 = Vector((*LAND_AT, 0.83))`;
+   `motion.throw(bt, THROW + 7, THROW + 12, p0, p1, arc=0.15, spin=720)`; after the throw keys, key the batarang
+   rotation at THROW + 12 as (60°, 0, 20°) (stuck at an angle); `C.visible(bt, 1, False)`, `C.visible(bt, THROW + 7, True)`.
+6. Pull the batarang out: `motion.turn_to(bat, PULL - 8, 150.0, frames=6)`;
+   `motion.reach_path(bat, "R", [(PULL, p1 + (0, 0, 0.05)), (PULL + 10, Vector((*BAT_AT, 0)) + (−0.25, −0.10, 1.0))],
+   blend_in=5, blend_out=6)`; `hb = motion.hold(bat, bt, "R", PULL)`; `C.visible(hb, PULL + 14, False)` (tucked away).
+7. Place the milk: `motion.reach_path(bat, "R", [(PLACE, S + (0, 0.03, 0.20)), (PLACE + 8, S + (0, 0.03, 0.20)),
+   (PLACE + 22, Vector((*PLACE_AT, 1.0))), (PLACE + 28, Vector((*PLACE_AT, 1.0)))], blend_in=5, blend_out=6)`;
+   `h2 = motion.hold(bat, m_scan, "R", PLACE + 6)`; `m_bag = motion.release(h2, PLACE + 26, place=(*PLACE_AT, 0.81))`;
+   `m_bag.rotation_euler = (0, 0, 0)`.
+8. Grab the screen: `motion.turn_to(bat, M_CUT, 180.0, frames=6)`; `SL = ck.anchors["screen_L"] + Vector((0, 0.06,
+   −0.02))`, `SR = ck.anchors["screen_R"] + Vector((0, 0.06, −0.02))`; `motion.reach_path(bat, "L", [(GRAB, SL),
+   (M_WAIT − 4, SL)], blend_in=4, blend_out=6)`; the same for "R" with `SR`. SFX "grab" at GRAB.
+   Screen: `screen_state(ck, M_WAIT, "wait")`.
+9. The beat: `sets.flicker(mart, [(BEAT + 3, BEAT + 5), (BEAT + 9, BEAT + 10), (BEAT + 14, BEAT + 18)])`; SFX
+   "flicker" at BEAT + 3 and BEAT + 14.
+10. The Joker: `motion.key_root(jok, JOK_WALK, heading=<heading from JOK_FROM to JOK_STOP>)`;
+    `jw_end, jsteps = motion.walk_to(jok, JOK_WALK, JOK_STOP)`; then compute J_TROUB … END (timeline);
+    `motion.turn_to(jok, jw_end, <heading from JOK_STOP to PLACE_AT>, frames=6)`;
+    `motion.turn_to(bat, J_TROUB - 4, <heading from BAT_AT to JOK_STOP>, frames=8)`.
+    Scan: `motion.reach_path(jok, "L", [(SCAN, Vector((*PLACE_AT, 0.95))), (SCAN + 8, Vector((*PLACE_AT, 0.95))),
+    (SCAN + 16, W), (SCAN + 22, W)], blend_in=5, blend_out=8)` where `W` = the point 0.5 m from the Joker's left
+    shoulder toward the scanner (`jok.arm.matrix_world @ jok.arm.pose.bones["UpperArm.L"].head` at SCAN, plus 0.5 ×
+    the normalised direction to `S + (0, 0, 0.2)`); `hj = motion.hold(jok, m_bag, "L", SCAN + 6)`;
+    SFX "scan_beep" at SCAN + 17 and "success" at SCAN + 19; `screen_state(ck, SCAN + 18, "thanks")`,
+    `lamp(ck, SCAN + 18, "green")`.
+    Leave with the milk: `motion.walk_to(jok, AWAY, JOK_EXIT, action="Walk_Carry")`.
+11. "I am vengeance": `motion.turn_to(bat, B_VENG - 10, 180.0, frames=8)`.
+12. Smoke bomb: `motion.play(bat, "Shoot_OneHanded", SMOKE, 13, blend_in=3)`; `motion.play(bat, "Idle", SMOKE + 13,
+    END + 10, blend_in=4)`; `props.smoke_puff("smoke", Vector((*BAT_AT, 0)), SMOKE + 6, count=11, radius=0.7, seed=3)`;
+    SFX "poof" at SMOKE + 6. Teleport under the smoke: `motion.key_root(bat, SMOKE + 13, loc=(*BAT_AT, 0),
+    heading=180.0)`, `motion.key_root(bat, SMOKE + 14, loc=(−0.72, 0.0, 0.81), heading=0.0)` (standing ON the
+    bagging area, facing the store). `screen_state(ck, M_FINAL - 2, "error")`, `lamp(ck, M_FINAL - 2, "red")`.
+13. Faces (Batman): `set_expression(bat.face, "stern", 1)`; `change_expression` stern→angry at THROW − 2, angry→stern
+    at PULL, stern→angry at GRAB − 2, angry→deadpan at BEAT, deadpan→suspicious at J_TROUB, suspicious→deadpan at
+    B_VENG − 6, deadpan→surprised at SMOKE + 30. Joker: `set_expression(jok.face, "smug", 1)`.
+    Lip sync: `apply_lipsync` for every Batman line (b_nothing at B_NOTH, b_show at B_SHOW, b_where at B_WHERE,
+    b_vengeance at B_VENG) and the Joker line (j_trouble at J_TROUB). Blinks: `auto_blink(bat.face, 1, END,
+    <the schedule of step 13>, seed=1)`, `auto_blink(jok.face, JOK_WALK, END, [(1, "smug")], seed=2)`.
+14. Cameras (`shots.frame(name, target, shot=…, yaw=…, pitch=…, at=<from frame>)`, then `C.cut(from, cam)`, in
+    frame order; the render resolution must be 1080x1920 BEFORE framing: `C.render_settings(width=1080,
+    height=1920, frame_end=END, quality="preview", video=True)`):
+    | cam | from | shot | target | yaw | pitch | extra |
+    |---|---|---|---|---|---|---|
+    | cam_hook | 1 | insert | [S + (0, 0, 0.30), ck.parts["ck_scanner"]] | 25 | 30 | |
+    | cam_wide | 40 | wide | [bat, ck.parts["ck_monitor"], ck.parts["ck_bag_base"]] | 35 | 10 | |
+    | cam_bag | TURN | insert | [ck.parts["ck_bag_plate"], ck.parts["ck_bag"]] | 20 | 25 | `shots.push(cam, TURN, THROW − 4, 0.15)` |
+    | cam_throw | THROW − 4 | full | [bat, ck.parts["ck_bag_plate"]] | 75 | 5 | |
+    | cam_2s | PULL − 2 | full | [bat, ck.parts["ck_monitor"], ck.parts["ck_bag_plate"]] | 40 | 10 | |
+    | cam_ecu | GRAB | ecu | bat | −20 | −12 | |
+    | cam_screen | M_WAIT | insert | [ck.parts["ck_monitor"]] | 0 | 5 | |
+    | cam_beat | M_WAIT + 44 | close | bat | 15 | 0 | |
+    | cam_whip | WHIP | a copy of cam_beat (same location/rotation/lens) | | | | `shots.whip(cam, WHIP, Vector((*JOK_FROM, 1.2)) + (…walked 5 frames…), frames=5)` — target = the Joker root world position at WHIP + 5 plus (0, 0, 1.2) |
+    | cam_jok | WHIP + 6 | medium | jok (at J_TROUB) | 25 | 3 | |
+    | cam_2s_j | SCAN − 4 | two_shot | [jok, bat] | 30 | 8 | |
+    | cam_veng | B_VENG − 6 | close | bat | 10 | 0 | `shots.push(cam, B_VENG − 6, SMOKE − 2, 0.12)` |
+    | cam_end | SMOKE − 2 | wide | [bat, ck.parts["ck_monitor"], ck.parts["ck_bag_base"]] | 30 | 12 | |
+15. Cape LAST: `cape.bake_cape(bat, 1, SMOKE + 13)`; `cape.bake_cape(bat, SMOKE + 14, END)` (restart after the teleport).
+16. `cues.json` (projects/ep02/cues.json): `fps`, `frames: END`;
+    `music: {"file": ".../music/Mystery Sax.mp3", "start_s": 0, "gain": 0.25, "cut_frame": BEAT, "resume_frame":
+    WHIP, "end_frame": END}`; `lines`: every placed line `{"id": <unique cue id, e.g. "m_unexpected@M2">, "frame":
+    <start>, "text": ..., "wav": MAN[id]["wav"]}` plus `"dur": 1.45` for the M_CUT line — order: M1 m_unexpected,
+    B_NOTH b_nothing, M2 m_unexpected, B_SHOW b_show, M_PLACE m_place, M_CUT m_unexpected (dur), B_WHERE b_where,
+    M_WAIT m_wait, J_TROUB j_trouble, M_THANKS m_thanks, B_VENG b_vengeance, M_FINAL m_unexpected;
+    `sfx`: slam @ F_SLAM, error_beep @ F_SLAM + 2, swoosh @ THROW + 7, thunk @ THROW + 12, grab @ GRAB, flicker ×2,
+    scan_beep + success, poof, plus "step_hard" at `motion.foot_events(jok, JOK_WALK, jw_end + 8)` and
+    `motion.foot_events(jok, AWAY, END)` (gain 0.3), and error_beep at M2 − 2 and M_FINAL − 2;
+    `captions`: for every placed line, `captions.groups(words, start_frame, keywords=KEYWORDS)` (for the M_CUT line use
+    only the words whose start < 1.45) — concatenate all, sorted by start_frame;
+    `overlays`: `{"kind": "text", "text": "His deadliest enemy yet.", "from": 1, "to": 50, "y": 0.16, "size": 64}` and
+    the watermark `{"kind": "text", "text": "@DummySticky", "from": 25, "to": END, "y": 0.95, "size": 34, "alpha": 0.6}`;
+    `beats: [[BEAT, WHIP]]`.
+17. Print `[ep02] END=<END> (<seconds> s) F_SLAM=… B_NOTH=… TURN=… THROW=… PULL=… PLACE=… GRAB=… BEAT=… WHIP=…
+    jw_end=… SCAN=… B_VENG=… SMOKE=… M_FINAL=…`.
+
+Headings: `heading(from_xy, to_xy) = degrees(atan2(−(to.x − from.x), to.y − from.y))` (0 = facing +Y, 90 = facing −X).
+
+SFX bank names used (added by the senior; beeps chosen by Gemini listening): scan_beep, error_beep, success, flicker,
+slam, thunk, grab, poof, swoosh, step_hard.

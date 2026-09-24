@@ -444,3 +444,43 @@ def throw(
         if fc.data_path == "rotation_euler" and fc.array_index == 2:
             for kp in fc.keyframe_points:
                 kp.interpolation = "LINEAR"
+
+
+def reach_path(
+    qc: Q.QChar,
+    side: str,
+    points: list[tuple[int, Sequence[float] | Vector]],
+    *,
+    blend_in: int = 5,
+    blend_out: int = 5,
+) -> None:
+    """One continuous IK reach through several (frame, world target) points.
+
+    Use this instead of back-to-back `reach` calls (their influence keys would overwrite each other):
+    the IK target glides between the points (Bezier), influence is 0 -> 1 over `blend_in` frames before
+    the first point and 1 -> 0 over `blend_out` frames after the last one.
+    """
+    empty = qc.parts.get(f"ik.{side}") or bpy.data.objects.get(f"{qc.name}_ik.{side}")
+    if empty is None:
+        raise RuntimeError(f"IK target empty for {qc.name} side {side} not found. Call setup_ik first.")
+    points = sorted(points, key=lambda p: p[0])
+    f0, p0 = points[0]
+    f1 = points[-1][0]
+    for fc in C.fcurves(empty):
+        if fc.data_path == "location":
+            for kp in fc.keyframe_points:
+                if kp.co.x < (f0 - blend_in) - 0.5:
+                    kp.interpolation = "CONSTANT"
+    empty.location = Vector(p0)
+    empty.keyframe_insert("location", frame=f0 - blend_in)
+    C.set_interp_at(empty, f0 - blend_in, "CONSTANT")
+    for f, p in points:
+        empty.location = Vector(p)
+        empty.keyframe_insert("location", frame=f)
+    pb = qc.arm.pose.bones[f"LowerArm.{side}"]
+    con = next((c for c in pb.constraints if c.type == "IK" and getattr(c, "target", None) == empty), None)
+    if con is None:
+        con = next(c for c in pb.constraints if c.type == "IK")
+    for f, v in ((f0 - blend_in, 0.0), (f0, 1.0), (f1, 1.0), (f1 + blend_out, 0.0)):
+        con.influence = v
+        con.keyframe_insert("influence", frame=f)
