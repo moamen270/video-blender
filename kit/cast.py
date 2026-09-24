@@ -201,6 +201,85 @@ def build_joker(col: bpy.types.Collection | None = None) -> Q.QChar:
 SKIN = {"dummy": DUMMY, "ryu": "#d9a47a", "ken": "#e8bb92"}
 
 
+def _arm_t(qc: Q.QChar, v, bone: str) -> tuple[float, Vector, Vector]:
+    """(t along the bone 0..1, closest axis point, radial vector) for a rest vertex."""
+    b = qc.arm.data.bones[bone]
+    h, t = b.head_local, b.tail_local
+    ax = t - h
+    s = max(0.0, min(1.0, (v.co - h).dot(ax) / ax.length_squared))
+    p = h + ax * s
+    return s, p, v.co - p
+
+
+def shape_arms(qc: Q.QChar, bicep: float = 0.34, forearm: float = 0.24, wrist: float = 0.22) -> None:
+    """Give the pack's tube arms an anatomy (bicep bulge, forearm swell tapering to the wrist) by
+    scaling rest vertices around each bone axis. Tube arms + mitten fists read as horse legs."""
+    vg = qc.body.vertex_groups
+    names = {g.index: g.name for g in vg}
+    for v in qc.body.data.vertices:
+        if not v.groups:
+            continue
+        g = max(v.groups, key=lambda x: x.weight)
+        bone = names.get(g.group, "")
+        if bone.startswith("UpperArm."):
+            s, p, r = _arm_t(qc, v, bone)
+            f = 1.0 + bicep * math.sin(math.pi * min(1.0, s / 0.85))
+        elif bone.startswith("LowerArm."):
+            s, p, r = _arm_t(qc, v, bone)
+            f = 1.0 + forearm * math.sin(math.pi * min(1.0, s / 0.55)) - wrist * max(0.0, (s - 0.55) / 0.45)
+        else:
+            continue
+        v.co = p + r * f
+    qc.body.data.update()
+
+
+def add_thumbs(qc: Q.QChar, skin_m: bpy.types.Material, col) -> None:
+    """A small thumb on the inner-front side of each fist: a block fist reads as a hand with it."""
+    for side, k in (("L", 1.0), ("R", -1.0)):
+        b = qc.arm.data.bones[f"Fist.{side}"]
+        h, t = b.head_local, b.tail_local
+        ax = (t - h)
+        # rest pose is a T-pose (arms along x, palms down): the thumb sits on the front (-y) of the fist
+        pos = h + ax * 0.40 + Vector((0.0, -0.13, 0.03))
+        world = qc.arm.matrix_world @ pos
+        th = C.sphere(f"{qc.name}_thumb.{side}", r=0.045, loc=world, scale=(1.0, 1.0, 1.7), mat=skin_m, col=col)
+        th.rotation_euler = ax.to_track_quat("Z", "Y").to_euler()
+        Q.attach_part(qc, th, f"Fist.{side}", f"thumb.{side}")
+        Q.outline(th, 0.008)
+
+
+def fingerless_gloves(qc: Q.QChar, skin_m: bpy.types.Material, glove_m: bpy.types.Material) -> None:
+    """Fist faces become skin (a hand, not a hoof); the glove is a wrap on the wrist end of the forearm
+    and the back of the hand."""
+    Q.assign(qc, skin_m, bones=["Fist.L", "Fist.R"])
+    me = qc.body.data
+    gi = list(me.materials).index(glove_m) if glove_m.name in [m.name for m in me.materials] else None
+    if gi is None:
+        me.materials.append(glove_m)
+        gi = len(me.materials) - 1
+    names = {g.index: g.name for g in qc.body.vertex_groups}
+
+    def dominant(poly) -> str:
+        return Q.dominant_bone(qc.body, poly)
+
+    for poly in me.polygons:
+        bone = dominant(poly)
+        if bone.startswith("LowerArm."):
+            b = qc.arm.data.bones[bone]
+            ax = b.tail_local - b.head_local
+            s = (poly.center - b.head_local).dot(ax) / ax.length_squared
+            if s > 0.78:                                      # wrist wrap
+                poly.material_index = gi
+        elif bone.startswith("Fist."):
+            b = qc.arm.data.bones[bone]
+            ax = b.tail_local - b.head_local
+            s = (poly.center - b.head_local).dot(ax) / ax.length_squared
+            if s < 0.45:                                      # back of the hand, near the wrist
+                poly.material_index = gi
+    me.update()
+    del names
+
+
 def _fighter(name: str, *, gi: str, lapel_hex: str, belt: str, hair_file: str, hair: str, headband: str | None,
              gloves: str, skin: str, expression: str, hair_lift: float = 0.0,
              col: bpy.types.Collection | None = None) -> Q.QChar:
@@ -241,7 +320,9 @@ def _fighter(name: str, *, gi: str, lapel_hex: str, belt: str, hair_file: str, h
         Q.assign(qc, L.toon2(f"{name}_band", headband), materials=["Band"], z_range=(2.0, 9.0))
     else:
         Q.assign(qc, hair_m, materials=["Band"], z_range=(2.0, 9.0))
-    Q.assign(qc, L.toon2(f"{name}_gloves", gloves), bones=["Fist.L", "Fist.R"])
+    shape_arms(qc)
+    fingerless_gloves(qc, skin_m, L.toon2(f"{name}_gloves", gloves))
+    add_thumbs(qc, skin_m, target_col)
     Q.assign(qc, skin_m, bones=["Foot.L", "Foot.R"])            # barefoot
     part = Q.take_part(qc, hair_file, "Hair", "hair", hair_m)
     if hair_lift:
