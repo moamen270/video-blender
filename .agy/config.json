@@ -1,3 +1,9 @@
 {
-  "ignore": ["output", "assets/library", "projects/*/cues.json", "**/*.blend1"]
+  "ignore": [
+    "output",
+    "assets/library",
+    "projects/*/cues.json",
+    "**/*.blend1",
+    "projects/*/voice"
+  ]
 }

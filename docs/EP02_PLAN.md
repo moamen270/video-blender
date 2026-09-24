@@ -17,7 +17,7 @@ characters** (Quaternius, CC0) instead of primitives glued to bones.
 | checkpoint | what the owner sees | tasks |
 |---|---|---|
 | **1 (this file)** | look-dev test + first Batman and Joker stills (turnaround sheets) | E1–E4 |
-| 2 | fixed turnarounds, cape with spring motion, expressions + mouth shapes on camera | later |
+| 2 | screen test clip: Batman walks in (spring cape), both characters speak with lip sync, blinks | F1–F4 (§11) |
 | 3 | grey animatic of the whole episode (store set, shots, timing, voices) | later |
 | 4 | final video with SFX, music, captions | later |
 
@@ -472,3 +472,171 @@ Check command pattern: `/f/blender/blender.exe -b --factory-startup --python-exi
 After each task: `ACCEPT E<n>` or a numbered fix list. Checkpoint 1 is shown to the owner as one sheet:
 look-dev grid, Batman and Joker turnarounds, face close-ups, silhouettes, the line-up still.
 Time and findings go into `docs/EP02_LOG.md`.
+
+
+---
+
+## 11. Checkpoint 2 — spring cape, motion, voice + lip sync, screen test (tasks F1–F4)
+
+Owner decisions after checkpoint 1 (2026-09-24): keep the "dummy" house style, the chibi proportions, and the
+Joker's name tag (no apron).
+
+### 11.1 `kit/cape.py` — skinned cape with baked spring motion (task F1)
+
+Replaces the rigid cape of §7.1 step 6. Everything in NATIVE coordinates unless stated.
+
+**Grid** (unchanged shape): `P(u, v)` with `z = lerp(2.02, zb(u), v)`, `x = u·lerp(0.36, 0.62, v)`,
+`y = lerp(0.20, 0.55, v) − lerp(0.04, 0.12, v)·u²`, `zb(u) = 0.30 + 0.12·|sin(2πu)|`; 17 columns
+`u = −1 … 1`, 10 rows `v = 0 … 1`.
+
+**Bones** — `add_cape_bones(qc) -> dict[str, list[str]]`: enter EDIT mode on `qc.arm`
+(`view_layer.objects.active = qc.arm`; `bpy.ops.object.mode_set(mode="EDIT")`), create 3 chains × 3 bones:
+chain `"R"` at u = −1, `"C"` at u = 0, `"L"` at u = +1 (native +X = character's left). Bone
+`f"cape.{c}.{j}"` (j = 0, 1, 2): head = `P(u_c, j/3)`, tail = `P(u_c, (j+1)/3)` (armature data coordinates
+= native), `use_deform = True`, `roll = 0`. Parent of `cape.{c}.0` = `Torso` (`use_connect = False`);
+parent of `cape.{c}.j` = `cape.{c}.{j-1}` (`use_connect = True`). Back to OBJECT mode. Return
+`{"R": [...3 names], "C": [...], "L": [...]}`.
+
+**Mesh + weights** — `build_cape(qc, mat) -> Object`: call `add_cape_bones`; build the grid mesh in NATIVE
+coordinates (object `f"{qc.name}_cape"`, `parent = qc.arm`, `matrix_parent_inverse = identity`, identity
+local transform, linked to the body's collection), quads between neighbours, material `mat`.
+Vertex groups: the 9 cape bone names and `"Torso"`. For a vertex at `(u, v)`:
+- chain weights: `u ≤ 0`: `wR = −u`, `wC = 1 + u`; `u > 0`: `wC = 1 − u`, `wL = u`;
+- segment weights with `s = 3v`: `w_j = max(0, 1 − |s − (j + 0.5)|)` for j = 0, 1, 2, then divide by their sum;
+- torso weight `wT = max(0, 1 − v / 0.15)` (pins the top edge to the shoulders);
+- final: `Torso = wT`, `cape.{c}.{j} = (1 − wT) · w_c · w_j`; skip weights < 0.001.
+Modifiers in this order: `ARMATURE` (object `qc.arm`), `SOLIDIFY` `"thick"` (thickness `0.012 / qc.scale`,
+offset 0 — local units are native), then the caller adds `smooth` and the outline.
+`qc.parts["cape"] = cape`. Return it.
+
+**Spring bake** — `bake_cape(qc, start, end, *, stiffness=0.12, drag=0.18, max_forward=0.02) -> None`.
+Must be called LAST in a project build (after all root keys and NLA strips exist). It uses no depsgraph
+update except one `scene.frame_set(f)` per frame. Let `A = qc.arm`, `Rest(b) = A.data.bones[b].matrix_local`
+(armature space). For each frame `f = start … end`:
+1. `scene.frame_set(f)`; `Mw = A.matrix_world` (read after `frame_set`; it changes with the root);
+   `Mt = A.pose.bones["Torso"].matrix` (armature space);
+   `rigid(b) = Mt @ Rest("Torso").inverted() @ Rest(b)` — where cape bone `b` would be if the cape were rigid.
+2. For each chain `c`: armature-space points `h0 = rigid(cape.c.0).translation` and the rigid tails
+   `t_j = rigid(cape.c.j) @ Vector((0, len_j, 0))` for j = 0, 1, 2 with `len_j = A.data.bones[cape.c.j].length`.
+   World: root `X_0 = Mw @ h0` (fixed), targets `T_k = Mw @ t_{k−1}` for k = 1, 2, 3.
+3. Particles `X_k`, `Xprev_k` (world, per chain, k = 1..3). At `f == start`: `X = Xprev = T`.
+   Otherwise: `vel = (X − Xprev)·(1 − drag)`; `Xnew = X + vel + stiffness·(T − X)`; `Xprev = X`; `X = Xnew`.
+4. Body collision: `fwd = (qc.root.matrix_world.to_3x3() @ Vector((0, 1, 0))).normalized()`; for each k:
+   `e = (X_k − T_k)·fwd`; if `e > max_forward`: `X_k −= (e − max_forward)·fwd`.
+5. Lengths (root to tip, k = 1..3): `X_k = X_{k−1} + (X_k − X_{k−1}).normalized() · len_{k−1} · sw` with
+   `sw = Mw.to_scale()[0]`.
+6. Bone rotations, chain root to tip, in ARMATURE space. `Minv3 = Mw.inverted().to_3x3()`. For j = 0, 1, 2 with
+   bone `b = cape.c.j`, parent `p` (`Torso` for j = 0, else `cape.c.{j−1}`), `M_parent = Mt` for j = 0 else the
+   `M_{j−1}` computed here:
+   `M0 = M_parent @ Rest(p).inverted() @ Rest(b)`; `R0 = M0.to_quaternion()`;
+   `y0 = (M0.to_3x3() @ Vector((0, 1, 0))).normalized()`; `d = (Minv3 @ (X_{j+1} − X_j)).normalized()`;
+   `q = y0.rotation_difference(d)`; `basis = R0.inverted() @ q @ R0`;
+   `pb.rotation_mode = "QUATERNION"`; `pb.rotation_quaternion = basis`;
+   `pb.keyframe_insert("rotation_quaternion", frame=f)`;
+   `M_j = Matrix.Translation(M0.translation) @ (q @ R0).to_matrix().to_4x4()`.
+7. Keep `X`, `Xprev` in Python for the next frame (do not store them in Blender).
+The keys go into the armature's ACTIVE action (created by `keyframe_insert`); body motion lives in NLA strips
+(§11.2), so the two never overwrite each other. After the bake do not call `qchar.set_action`.
+
+### 11.2 `kit/motion.py` — NLA actions, walking, turning (task F2)
+
+All body animation goes into NLA strips (never `animation_data.action`, which is reserved for the cape bake).
+1. `play(qc, action, start, frames, *, blend_in=0) -> NlaStrip` — creates a NEW NLA track on top
+   (`qc.arm.animation_data_create()`; `qc.arm.animation_data.nla_tracks.new()`, name `f"{action}@{start}"`),
+   a strip `track.strips.new(f"{action}@{start}", start, qc.actions[action])`, sets
+   `strip.repeat = frames / action_length` (`action_length = act.frame_range[1] − act.frame_range[0]`),
+   `strip.blend_in = blend_in`, `strip.extrapolation = "HOLD_FORWARD"`, `strip.blend_type = "REPLACE"`.
+   Each new strip is on a higher track, so a new action cross-fades over the one below (only `blend_in`,
+   never `blend_out`). (Measured: `strips.new` assigns the action slot automatically in Blender 5.2.)
+2. `ground_speed(qc, action) -> float` — world metres per frame of a looping locomotion action. Mute every NLA
+   track, set the action as the active action (with its slot), for every integer frame in the action's range read
+   the ARMATURE-space heads of pose bones `Foot.L` and `Foot.R` (after `scene.frame_set`); a foot is planted on
+   frames where its z ≤ (its minimum z over the cycle) + 0.03; speed = mean of |Δy| between consecutive planted
+   frames of the same foot; unmute, set the active action back to its previous value. Return
+   `speed_native · qc.scale`. Cache per `(qc.name, action)` in a module dict. (Senior measurement for Walk:
+   ≈ 0.10 native ≈ 0.058 world m/frame, cycle 30 frames, in place.)
+3. `key_root(qc, frame, *, loc=None, heading=None)` — keys `qc.root` location and/or rotation z (heading in
+   degrees, 0 = facing world +Y, 90 = facing world −X; `rotation_euler.z = radians(heading)`), LINEAR
+   interpolation on the keys it inserts (`C.set_interp_at`).
+4. `walk_to(qc, start, to_xy, *, action="Walk", turn_frames=6, blend=6) -> tuple[int, list[int]]`
+   - `p0` = root location at `start` (`scene.frame_set(start)`); `d = Vector(to_xy) − p0.xy`;
+     `heading = degrees(atan2(−d.x, d.y))` (the root's +Y then points along d); current heading =
+     `degrees(root.rotation_euler.z)`.
+   - `key_root(start, heading=current)`, `key_root(start + turn_frames, heading=heading)`;
+     `n = round(d.length / ground_speed(qc, action))`; `key_root(start, loc=p0)`,
+     `key_root(start + n, loc=(to_xy[0], to_xy[1], p0.z))`.
+   - `play(qc, action, start, n + blend, blend_in=blend)`; `play(qc, "Idle", start + n, 240, blend_in=blend)`.
+   - Step frames: in the Walk cycle measured in item 2, a foot lands on the first frame of each planted run;
+     for every frame `f` in `start … start + n` whose phase `(f − start) mod action_length` is a landing phase,
+     add `f`. Return `(start + n, step_frames)`.
+5. `turn_to(qc, frame, heading, frames=8)` — keys the current heading at `frame` and `heading` at `frame + frames`.
+
+### 11.3 Voice, lip sync, blinks (task F3)
+
+1. `projects/<p>/lines.json` (written by the senior): list of `{id, character, text, engine, voice | voiceRef,
+   emotion, speed, seed}`.
+2. `tools/voice.py` (system Python: `uv run --project F:/PoCs/video-builder/py python tools/voice.py --project <p>`):
+   - imports `narrate`, `chatterbox` from `tools/audio.py` (put the tools folder on `sys.path`, `import audio`);
+   - out dir `projects/<p>/voice/`; manifest `projects/<p>/voice/manifest.json`;
+   - `hash` = sha1 of `json.dumps({text, engine, voice, voiceRef, emotion, speed, seed}, sort_keys=True)`;
+     a line is re-synthesised only if its wav is missing or its hash changed (group the changed lines by engine
+     as `audio.main` does: Kokoro by voice, Chatterbox together). `narrate`/`chatterbox` write `<id>.wav` into
+     the dir you give them — give them `projects/<p>/voice/`;
+   - for every line run Rhubarb: `F:/PoCs/tools/Rhubarb-Lip-Sync-1.14.0-Windows/rhubarb.exe -q -f json
+     -o <dir>/<id>.rhubarb.json --dialogFile <dir>/<id>.txt <dir>/<id>.wav` (write the text file first);
+     output format (measured): `{"metadata": {...}, "mouthCues": [{"start": 0.0, "end": 0.08, "value": "X"}, ...]}`;
+   - manifest: `{"lines": {id: {"wav": <absolute path>, "seconds": <float>, "hash": ..., "text": ...,
+     "character": ..., "cues": <the mouthCues list>}}}`; print `[voice] <id> <seconds>s <n> cues`.
+3. `tools/audio.py`: a cue line that has a `"wav"` key is loaded with `load_wav(line["wav"])` and never
+   synthesised (only lines without `"wav"` go to `narrate` / `chatterbox`). Nothing else changes.
+4. `kit/face.py` additions (do not change existing functions):
+   - `apply_lipsync(face, cues, start_frame, fps=24) -> int` — for each cue: `f = start_frame +
+     round(cue["start"] * fps)`; shape = `face.rest_shape` if the value is `"X"` else the value; `key_mouth(face,
+     f, shape)`. After the last cue key the rest shape at `start_frame + round(last["end"] * fps)`. Return that frame.
+   - `change_expression(face, frame, from_name, to_name, frames=4)` — `set_expression(face, from_name, frame)`
+     then `set_expression(face, to_name, frame + frames)`.
+   - `auto_blink(face, start, end, schedule, *, seed=0, gap=(48, 110)) -> list[int]` — `schedule` = sorted list
+     of `(frame, expression)`; `rng = random.Random(seed)`; candidate blink frames start at `start + 12` and
+     advance by `rng.randint(*gap)` while `< end − 4`; skip a candidate within 6 frames of a schedule entry; call
+     `blink(face, f, expression_active_at_f)`. Return the blink frames.
+
+### 11.4 `projects/cp2/script.py` — the screen test (task F4)
+Specified after F1–F3 are accepted.
+
+### 11.5 Tasks (checkpoint 2)
+
+| task | files you may edit | check |
+|---|---|---|
+| **F1** cape | `kit/cape.py`, `kit/cast.py` (use `build_cape` instead of the rigid cape), `tools/tests/t_cape.py` | `t_cape.py` PASS and `t_cast.py` still PASS |
+| **F2** motion | `kit/motion.py`, `tools/tests/t_motion.py` | `t_motion.py` PASS |
+| **F3** voice | `tools/voice.py`, `tools/audio.py`, `kit/face.py` (additions only), `tools/tests/t_lipsync.py` | `voice.py --project cp2`, then `t_lipsync.py` PASS |
+
+**t_cape.py (F1):** build Batman (`kit.cast.build_batman`); root keyed (LINEAR): frames 1 and 24 at (0, 0, 0);
+(0, 2.8, 0) at frame 72; held (same key) at frame 132. `bake_cape(qc, 1, 132)`. Helper `targets(f)` recomputes
+the rigid tail targets exactly as bake steps 1–2 (world). Measure the baked result as the WORLD tail of the pose
+bone: `A.matrix_world @ A.pose.bones[b].tail` after `scene.frame_set(f)`. Assert:
+(a) frame 20: the tail of `cape.C.2` is within 0.01 m of its target;
+(b) frame 60 (moving forward at 0.058 m/frame): `(tail − target)·fwd < −0.04` (the cape streams behind);
+(c) frame 132 (60 frames after the stop): within 0.02 m of the target again;
+(d) every frame 1–132, every chain's last tail: `(tail − target)·fwd ≤ 0.021`;
+(e) skinning: at frame 60, the evaluated cape mesh vertex nearest (in rest) to native `P(0, 1)` is within 0.04 m of
+the world tail of `cape.C.2` (evaluate with `evaluated_depsgraph_get`, `obj.evaluated_get(dg).to_mesh()`, compare
+in world space; the solidify doubles vertices — use the vertex nearest to the tail).
+`t_cast.py` must still pass (Batman keeps a part named `cape`). Render side-view stills (camera
+(4.5, 1.4, 1.0) → (0, 1.4, 0.9), lens 40, 540x960, `store_night`, `floor`) at frames 20, 48, 60, 72, 84, 100
+to `output/tests/F1/cape_<f>.png`.
+
+**t_motion.py (F2):** Joker (`kit.cast.build_joker`), `end, steps = walk_to(qc, 1, (0, 3.0))`; assert
+`end == 1 + round(3.0 / ground_speed(qc, "Walk"))` and `0.035 < ground_speed < 0.08`; for frames
+`10 … end − 6`: whenever a foot is planted (its world z ≤ the lowest world z of that foot over those frames + 0.02)
+the foot's world horizontal speed between f and f+1 is < 0.015 m/frame; `len(steps) >= 4`; the top NLA track's
+strip action is the Joker's Idle action. Then `turn_to(qc, end + 12, 90)`; at `end + 20` the root heading is
+90° ± 0.5. Render frames 10, 20, 30, end, end + 20 (camera (4.0, 1.5, 1.1) → (0, 1.5, 0.9), lens 35,
+540x960, `store_night`, `floor`) to `output/tests/F2/`.
+
+**t_lipsync.py (F3):** reads `projects/cp2/voice/manifest.json` (asserts lines `bat1` and `jok1` exist, seconds >
+0.5, ≥ 5 cues each, wav files exist); builds Batman, `apply_lipsync(face, cues_bat1, 10)`; for every cue whose
+frame differs from the next cue's frame, at that frame exactly one mouth object has `hide_render == False` and it
+is the cue's shape (rest shape for `"X"`); `auto_blink(face, 1, 240, [(1, "stern")])` returns ≥ 2 blinks, no two
+closer than 48 frames; render 4 face stills at the frames of cues 1, 3, 5, 7 (camera (0, 2.1, 1.5) →
+(0, 0, 1.38), lens 50, 540x960, `store_night`) to `output/tests/F3/`.

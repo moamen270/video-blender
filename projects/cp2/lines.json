@@ -1,0 +1,22 @@
+[
+  {
+    "id": "bat1",
+    "character": "batman",
+    "text": "There is nothing in the bagging area.",
+    "engine": "chatterbox",
+    "voiceRef": "F:/PoCs/video-builder/assets/voices/lewis.wav",
+    "emotion": 0.3,
+    "speed": 0.88,
+    "seed": 7
+  },
+  {
+    "id": "jok1",
+    "character": "joker",
+    "text": "Having trouble, Bats?",
+    "engine": "chatterbox",
+    "voiceRef": "F:/PoCs/video-builder/assets/voices/puck.wav",
+    "emotion": 0.6,
+    "speed": 1.0,
+    "seed": 7
+  }
+]
