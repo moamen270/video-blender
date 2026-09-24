@@ -215,7 +215,7 @@ Same header as `tools/tests/t_toon.py` (ROOT on `sys.path`). Steps and assertion
    - `ShaderNodeValToRGB` named `"ramp"`, `interpolation = "CONSTANT"`, input `"Fac"` = L, 3 elements:
      position 0.00 = shadow, 0.30 = base, 0.85 = highlight.
      Defaults: `shadow = lerp(base * 0.5, hex_rgb("#1b2440"), 0.35)` (cool), `highlight = lerp(base,
-     hex_rgb("#fff1d6"), 0.22)` (warm). `lerp(a, b, t) = a + (b - a) * t` per channel.
+     hex_rgb("#fff1d6"), 0.06 + 0.16 * max(base))` (warm; only a subtle sheen on near-black). `lerp(a, b, t) = a + (b - a) * t` per channel.
    - Rim mask: `ShaderNodeLayerWeight` (input `"Blend"` = 0.5) output `"Facing"` → `ShaderNodeMath`
      `GREATER_THAN` (second value = `rim_width`) = A. `ShaderNodeMath GREATER_THAN` (L, 0.30) = B.
      `ShaderNodeMath MULTIPLY` (A, B) → `ShaderNodeMath MULTIPLY` (…, `rim`) = mask.
@@ -411,7 +411,7 @@ Builders call `smooth()` on the body right before the outlines (the outline must
 2. Recolour: `Black` → `toon2("jok_suit", "#5b2a86")`; `Shirt` → `toon2("jok_vest", "#3e9b4f")`;
    `Details` → `toon2("jok_tie", "#e08a1e")`; `Belt` → `toon2("jok_belt", "#2a1f3d")`;
    `Skin` → `toon2("jok_skin", DUMMY)`; `Hair` → `toon2("jok_hair", "#35b24a")`.
-3. Name tag across the chest: rounded rectangle superellipse(0.17, 0.055, 6, k=32) centred at
+3. Name tag across the chest: rounded rectangle superellipse(0.22, 0.07, 6, k=32) centred at
    native (0.0, 1.66) → `surface_points(…, bones=CHEST, offset=0.010)` (the jacket front is
    at the same depth as BaseCharacter's chest); object `joker_tag`, material `toon2("tag_white", "#f2f2ee")`,
    `attach_part(…, "Torso", "tag")`. Text: `C.text("joker_tag_text", "ASSISTANT", size=0.03,
@@ -431,7 +431,7 @@ For each name: `C.reset_scene()`; `qc = CAST[name]()`; `store_night(target=(0, 0
 | `threeq` | (2.64, 3.77, 1.05) → (0, 0, 0.9) | 50 |
 | `side` | (4.6, 0, 1.05) → (0, 0, 0.9) | 50 |
 | `back` | (0, −4.6, 1.05) → (0, 0, 0.9) | 50 |
-| `face` | (0, 1.40, 1.48) → (0, 0, 1.42) | 50 |
+| `face` | (0, 2.10, 1.50) → (0, 0, 1.38) | 50 |
 | `sil` | as `front`, with `view_layer.material_override` = black emission, world `#ffffff`, resolution 25 % | 50 |
 Files: `<out>/<name>_<view>.png`. Then `--lineup`: one scene with both characters (Batman root at
 (−0.55, 0, 0) rot_z −12°, Joker at (0.55, 0, 0) rot_z 12°), camera (0.6, 4.2, 1.2) → (0, 0, 0.95),

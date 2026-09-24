@@ -65,7 +65,8 @@ def toon2(
     if hi_hex is not None:
         highlight = C.hex_rgb(hi_hex)
     else:
-        highlight = _lerp(base, C.hex_rgb("#fff1d6"), 0.22)
+        # Scaled by brightness: a subtle sheen on near-black (cowl, dummy skin), a warm glint on colours.
+        highlight = _lerp(base, C.hex_rgb("#fff1d6"), 0.06 + 0.16 * max(base))
 
     rim_color = C.hex_rgb(rim_hex)
 

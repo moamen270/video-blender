@@ -478,3 +478,23 @@ def height_now(qc: QChar) -> float:
     if not zs:
         return 0.0
     return max(zs) - min(zs)
+
+
+def smooth(qc: QChar, obj: bpy.types.Object | None = None, levels: int = 1) -> None:
+    """Apply subsurf smoothing at index 1 and mark all polygons smooth."""
+    target = obj if obj is not None else qc.body
+    if "Auto Smooth" in target.modifiers:
+        target.modifiers.remove(target.modifiers["Auto Smooth"])
+    mod = target.modifiers.get("smooth")
+    if mod is None:
+        mod = target.modifiers.new("smooth", "SUBSURF")
+    mod.levels = levels
+    mod.render_levels = levels
+    idx = list(target.modifiers).index(mod)
+    if idx != 1 and len(target.modifiers) > 1:
+        target.modifiers.move(idx, 1)
+    if hasattr(target, "data") and hasattr(target.data, "polygons"):
+        for poly in target.data.polygons:
+            poly.use_smooth = True
+        target.data.update()
+
