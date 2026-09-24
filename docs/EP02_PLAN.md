@@ -626,7 +626,7 @@ in world space; the solidify doubles vertices — use the vertex nearest to the 
 (4.5, 1.4, 1.0) → (0, 1.4, 0.9), lens 40, 540x960, `store_night`, `floor`) at frames 20, 48, 60, 72, 84, 100
 to `output/tests/F1/cape_<f>.png`.
 
-**t_motion.py (F2):** Joker (`kit.cast.build_joker`), `end, steps = walk_to(qc, 1, (0, 3.0))`; assert
+**t_motion.py (F2):** `qc = load_character("Suit_Male.blend", "walker")` (not `kit.cast` — F1 edits it in parallel), `end, steps = walk_to(qc, 1, (0, 3.0))`; assert
 `end == 1 + round(3.0 / ground_speed(qc, "Walk"))` and `0.035 < ground_speed < 0.08`; for frames
 `10 … end − 6`: whenever a foot is planted (its world z ≤ the lowest world z of that foot over those frames + 0.02)
 the foot's world horizontal speed between f and f+1 is < 0.015 m/frame; `len(steps) >= 4`; the top NLA track's
@@ -635,7 +635,8 @@ strip action is the Joker's Idle action. Then `turn_to(qc, end + 12, 90)`; at `e
 540x960, `store_night`, `floor`) to `output/tests/F2/`.
 
 **t_lipsync.py (F3):** reads `projects/cp2/voice/manifest.json` (asserts lines `bat1` and `jok1` exist, seconds >
-0.5, ≥ 5 cues each, wav files exist); builds Batman, `apply_lipsync(face, cues_bat1, 10)`; for every cue whose
+0.5, ≥ 5 cues each, wav files exist); `qc = load_character("BaseCharacter.blend", "hero")`,
+`face = build_face(qc, rest="frown")` (not `kit.cast` — F1 edits it in parallel), `apply_lipsync(face, cues_bat1, 10)`; for every cue whose
 frame differs from the next cue's frame, at that frame exactly one mouth object has `hide_render == False` and it
 is the cue's shape (rest shape for `"X"`); `auto_blink(face, 1, 240, [(1, "stern")])` returns ≥ 2 blinks, no two
 closer than 48 frames; render 4 face stills at the frames of cues 1, 3, 5, 7 (camera (0, 2.1, 1.5) →
