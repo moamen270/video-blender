@@ -67,7 +67,10 @@ def region(target: Any, part: str = "full") -> tuple[Vector, Vector]:
     if is_qchar:
         objs = [target.body]
         if hasattr(target, "parts") and isinstance(target.parts, dict):
-            objs.extend(target.parts.values())
+            # Only visible geometry: IK target empties (parts "ik.L"/"ik.R") sit wherever the last reach
+            # left them and made two-shots frame half the store (senior review of output/v10).
+            objs.extend(o for o in target.parts.values()
+                        if o is not None and o.type in {"MESH", "CURVE", "FONT"} and not o.hide_render)
         for obj in objs:
             if obj is None:
                 continue

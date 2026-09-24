@@ -34,3 +34,30 @@ Owner review stills: `output/ep02/cp1/` (lineup, turnarounds, expressions, silho
 
 Render: output/v7 (first), **output/v8 (review fixes)** — 193 frames, 42 s render at preview size.
 Time: ~55 min wall; 7 worker jobs.
+
+## Voices — "closer to the originals" (2026-09-24)
+Owner chose reference clips of the original performances. Approved partial downloads (first 6 MB each of two
+Dropbox MP3s linked from YouTube Arkham dialogue compilations); Gemini listening picked the clean lines (no PA echo /
+music); references pitch/formant-modified with rubberband (Batman 0.93, Joker 1.04) before Chatterbox cloning;
+takes chosen by Gemini + ASR read-back ≥ 0.97 ("bagging area" slurred until written "nothing, in the bagging
+area"). Casting sheet `assets/cast/voices.json`; machine = Kokoro bf_emma. 101soundboards was behind a bot check
+(not bypassed); the Arkham City archive.org pack has only numbered files.
+
+## Checkpoint 3 — the episode as an animatic (2026-09-24)
+
+| task | worker | result | senior findings / fixes |
+|---|---|---|---|
+| G1 checkout + props | 1 job, 3 rounds | kiosk with 4 screen states, lamp, anchors; milk, batarang, smoke puff | worker fixed a stale-matrix anchor bug itself (test unchanged) |
+| G2 Kenney set | 1 job, round 1 | glTF import + textured toon, Gotham Mart layout, flicker | **Senior spec bugs:** Kenney floor tile = 2×2 checker (1.2 m squares at ×2.4) → half scale + tint; wall model 1.44 m deep swallowed the freezers; sign faced the wall (rot (90,0,0) → (90,0,180), same lesson as the name tag) |
+| G3 auto-framing | 1 job, 3 rounds | frame/push/whip/check | worker added a damped measure-and-correct loop (perspective broke my closed-form distance at ECU); senior: region() ignored IK empties later |
+| G4 reach/hold/throw | 1 job, round 1 | IK reach 0.0000 m, visibility-swap props | senior added `reach_path` (chained reaches overwrote each other's influence keys) |
+| G5 captions | 1 job, round 1 | word timings in the manifest, `dur` trim, drawtext captions, `kit/captions.py` | Pillow missing → whole-group highlight |
+| G7 QA | 1 job, round 1 | hook / dead time / length | flagged the known hook weakness on the cp2 clip |
+| G6 episode | 1 job, round 1 | projects/ep02, 13 shots, 12 lines, 28 SFX | review v10 → v13 (below) |
+
+Review rounds (all senior): **v10** — most shots showed Batman's back (my yaw 0 = customer side), the first wide sat
+inside a shelf, IK empties inflated the Joker's framing, captions overlapped, 40.8 s. **v11** — machine-POV shots too
+close, two-shot blocked by Batman. **v12** — POV camera moved behind the screen with `clip_start` past the monitor
+(the camera *is* the screen), Joker faces Batman and scans with his right hand. **v13** — monitor hidden during POV
+shots (edge line). QA: hook PASS (motion 10.96, audio −22.9 dBFS, text frame 1), dead time 0, length 39.2 s.
+Render ≈ 6 min at preview size (540x960, 942 frames).
