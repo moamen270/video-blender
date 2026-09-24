@@ -5,5 +5,8 @@
     "projects/*/cues.json",
     "**/*.blend1",
     "projects/*/voice"
+  ],
+  "skills": [
+    "blender-kit"
   ]
 }
