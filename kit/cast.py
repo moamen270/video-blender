@@ -198,7 +198,85 @@ def build_joker(col: bpy.types.Collection | None = None) -> Q.QChar:
     return qc
 
 
+SKIN = {"dummy": DUMMY, "ryu": "#d9a47a", "ken": "#e8bb92"}
+
+
+def _fighter(name: str, *, gi: str, lapel_hex: str, belt: str, hair_file: str, hair: str, headband: str | None,
+             gloves: str, skin: str, expression: str, hair_lift: float = 0.0,
+             col: bpy.types.Collection | None = None) -> Q.QChar:
+    """Street-fighter build on Quaternius Kimono_Male: gi colour, belt, headband or none, hair from
+    another pack model, gloves, bare feet."""
+    qc = Q.load_character("Kimono_Male.blend", name, col=col)
+    target_col = col or (qc.body.users_collection[0] if qc.body.users_collection else None)
+    dummy = skin == DUMMY
+    # decal eyes/brows: white on the black dummy head, dark ink on skin tones
+    F.build_face(qc, rest="frown", paint_hex="#f4f4ef" if dummy else "#241812")
+    F.set_expression(qc.face, expression)
+    skin_m = L.toon2(f"{name}_skin", skin)
+    gi_m = L.toon2(f"{name}_gi", gi)
+    Q.assign(qc, skin_m, materials=["Skin"])
+    Q.assign(qc, gi_m, materials=["Clothes"])
+    # sleeveless gi (the torn-off sleeves are the character): arms are bare, shoulders keep the gi
+    # (after the recolour the gi faces carry gi_m, so select by that material, not the pack's "Clothes")
+    Q.assign(qc, skin_m, materials=[gi_m.name], bones=["UpperArm.L", "UpperArm.R", "LowerArm.L", "LowerArm.R"])
+    # V-neck: a skin triangle on the chest (the low-poly chest is too coarse to select faces for it)
+    tri = [(-0.185, 2.07), (0.185, 2.07), (0.0, 1.62)]
+    surf = Q.surface_points(qc, tri, bones=CHEST, offset=0.008)
+    centre = Q.native(qc, Q.surface_points(qc, [(0.0, 1.92)], bones=CHEST, offset=0.008)[0])
+    vneck = _ngon_object(f"{name}_vneck", [Q.native(qc, pt) for pt in surf], centre, skin_m, col=target_col)
+    Q.attach_part(qc, vneck, "Torso", "vneck")
+    # lapels: two overlapping strips along the V edges, a shade darker than the gi
+    lapel = L.toon2(f"{name}_lapel", lapel_hex)
+    for k, side in ((1, "L"), (-1, "R")):
+        quad = [(k * 0.215, 2.06), (k * 0.155, 2.06), (-k * 0.02, 1.60), (k * 0.04, 1.60)]
+        surf = Q.surface_points(qc, quad, bones=CHEST, offset=0.012)
+        world = [Q.native(qc, pt) for pt in surf]
+        centre = Q.native(qc, Q.surface_points(qc, [(k * 0.10, 1.83)], bones=CHEST, offset=0.012)[0])
+        strip = _ngon_object(f"{name}_lapel.{side}", world, centre, lapel, col=target_col)
+        Q.attach_part(qc, strip, "Torso", f"lapel.{side}")
+    # the pack's red "Band" material is both the belt (low) and the headband (high)
+    Q.assign(qc, L.toon2(f"{name}_belt", belt), materials=["Band"], z_range=(-1.0, 2.0))
+    hair_m = L.toon2(f"{name}_hair", hair)
+    if headband:
+        Q.assign(qc, L.toon2(f"{name}_band", headband), materials=["Band"], z_range=(2.0, 9.0))
+    else:
+        Q.assign(qc, hair_m, materials=["Band"], z_range=(2.0, 9.0))
+    Q.assign(qc, L.toon2(f"{name}_gloves", gloves), bones=["Fist.L", "Fist.R"])
+    Q.assign(qc, skin_m, bones=["Foot.L", "Foot.R"])            # barefoot
+    part = Q.take_part(qc, hair_file, "Hair", "hair", hair_m)
+    if hair_lift:
+        # raise the fringe so the brows (decals at z 2.47-2.75) stay visible; the crown moves less
+        for v in part.data.vertices:
+            if v.co.y < 0.0:                                 # front half only
+                t = max(0.0, min(1.0, (3.0 - v.co.z) / 0.8))  # 1 at the fringe, 0 at the crown
+                v.co.z += hair_lift * t
+        part.data.update()
+    Q.smooth(qc)
+    Q.outline(qc.body, 0.010)
+    Q.outline(part, 0.010)
+    return qc
+
+
+def build_ryu(col: bpy.types.Collection | None = None, skin: str = "skin") -> Q.QChar:
+    """Ryu parody: white gi, black belt, red headband, red gloves, dark spiky hair."""
+    return _fighter("ryu", gi="#efece2", lapel_hex="#cfc9b8", belt="#1b1b1f", hair_file="Casual3_Male.blend", hair="#2a1d16",
+                    headband="#d0262b", gloves="#b3261e", skin=SKIN["ryu"] if skin == "skin" else DUMMY,
+                    expression="stern", col=col)
+
+
+def build_ken(col: bpy.types.Collection | None = None, skin: str = "skin") -> Q.QChar:
+    """Ken parody: red gi, black belt, no headband, blond swept hair, dark gloves."""
+    return _fighter("ken", gi="#c8242b", lapel_hex="#94161c", belt="#1b1b1f", hair_file="Casual_Male.blend",
+                    hair="#f1c54a", hair_lift=0.22,
+                    headband=None, gloves="#2a2a2e", skin=SKIN["ken"] if skin == "skin" else DUMMY,
+                    expression="smug", col=col)
+
+
 CAST = {
     "batman": build_batman,
     "joker": build_joker,
+    "ryu": build_ryu,
+    "ken": build_ken,
+    "ryu_dummy": lambda col=None: build_ryu(col, skin="dummy"),
+    "ken_dummy": lambda col=None: build_ken(col, skin="dummy"),
 }
