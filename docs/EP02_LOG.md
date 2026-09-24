@@ -76,3 +76,14 @@ Joker's exit footsteps removed under the vengeance line and doubled landings ded
    Also: the higher throw camera landed inside a shelf (yaw 60 / lens 28 fixes it) → kit TODO: occlusion check in
    `shots.frame` (ray from the aim point to the camera).
 v17: QA PASS, 39.7 s.
+
+### Owner review of v17 → v18–v19
+1. Joker walked through the counter: straight path from (−2.1, −1.0) clipped the bagging base → starts at
+   (−2.6, 0.2), stops at (−0.95, 0.6) (clear of the counter, still outside Batman's close-up, walks into the OTS shot).
+2. "Why did the Joker take the milk?" — the theft didn't read → new line "Thanks for the milk, Bats!" (Joker clone,
+   ASR 1.00) as he leaves, Batman turns to watch his milk go, then back to the machine.
+3. Ending unreadable (grey boulders, unseen bomb, kiosk corner in the foreground) → visible black smoke bomb in his
+   hand, thrown at his feet; 26 small light puffs in a staggered burst (`smoke_puff` got size/colour/rise/stagger);
+   3/4 shot for the throw; reveal shot of him standing on the bagging scale by the red screen for the final line.
+Length back under 40 s: machine voice at speed 1.12 (Kokoro speed now honoured per request) + tighter gaps.
+v19: QA PASS, 39.9 s.

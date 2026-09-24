@@ -99,7 +99,7 @@ def narrate(lines: list[dict], voice: str, out_dir: str) -> dict[str, np.ndarray
         lid = l.get("id", f"l{i}")
         ids.append(lid)
         scenes.append({"id": lid, "speech": l["text"], "pauseAfter": 0.0})
-    req = {"voice": voice, "speed": 1.0, "scenes": scenes}
+    req = {"voice": voice, "speed": float(lines[0].get("speed", 1.0)) if lines else 1.0, "scenes": scenes}  # one speed per call
     req_path = os.path.join(out_dir, "request.json")
     with open(req_path, "w", encoding="utf-8") as fh:
         json.dump(req, fh)

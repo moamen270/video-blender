@@ -32,10 +32,10 @@ BAT_AT = (0.0, 0.45)
 PLACE_AT = (-0.50, 0.15)
 LAND_AT = (-0.55, 0.08)
 JOK_FAR = (-2.4, 9.5)
-JOK_WAIT = (-2.1, -1.0)  # out of view of Batman's close-up: he comes from the back (owner review v14)
-JOK_STOP = (-0.95, 0.40)
+JOK_WAIT = (-2.6, 0.2)  # out of Batman's close-up; the straight walk to JOK_STOP clears the bagging counter (owner v17)
+JOK_STOP = (-0.95, 0.60)
 JOK_EXIT = (-2.4, 6.0)
-KEYWORDS = {
+KEYWORDS = {"milk", 
     "unexpected",
     "item",
     "nothing",
@@ -65,6 +65,7 @@ def build() -> None:
     manifest_path = os.path.join(ROOT, "projects", "ep02", "voice", "manifest.json")
     with open(manifest_path, "r", encoding="utf-8") as fh:
         man = json.load(fh)["lines"]
+    CUT_DUR = next(w["end"] for w in man["m_unexpected"]["words"] if w["w"].lower().startswith("item"))
 
     def L(line_id: str) -> int:
         return math.ceil(man[line_id]["seconds"] * FPS)
@@ -75,15 +76,15 @@ def build() -> None:
     B_NOTH = M1 + L("m_unexpected") + 1
     TURN = B_NOTH + L("b_nothing") + 1
     M2 = TURN + 4
-    THROW = M2 + L("m_unexpected") - 12
-    B_SHOW = THROW + 22
+    THROW = M2 + L("m_unexpected") - 16
+    B_SHOW = THROW + 20
     PULL = B_SHOW + L("b_show") + 2
     M_PLACE = PULL + 4
     PLACE = M_PLACE + 18
     M_CUT = M_PLACE + L("m_place") + 1
-    GRAB = M_CUT + 30
+    GRAB = M_CUT + 26
     B_WHERE = GRAB + 6
-    M_WAIT = B_WHERE + L("b_where") + 3
+    M_WAIT = B_WHERE + L("b_where") + 1
     BEAT = M_WAIT + L("m_wait") + 1
     WHIP = BEAT + 8  # end of the silent beat: the Joker's first steps break it (no whip pan any more)
     JOK_WALK = WHIP
@@ -212,10 +213,12 @@ def build() -> None:
     J_TROUB = jw_end + 2
     SCAN = J_TROUB + L("j_trouble") + 2
     M_THANKS = SCAN + 20
-    AWAY = M_THANKS + 30
-    B_VENG = M_THANKS + L("m_thanks") + 4
-    SMOKE = B_VENG + L("b_vengeance") + 4
-    M_FINAL = SMOKE + 18
+    J_MILK = M_THANKS + L("m_thanks") - 8      # "Thanks for the milk, Bats!" - makes the theft explicit (owner v17)
+    AWAY = J_MILK - 4
+    B_VENG = J_MILK + L("j_milk") + 4
+    SMOKE = B_VENG + L("b_vengeance") + 2
+    BOMB_HIT = SMOKE + 9                         # the smoke bomb hits the floor
+    M_FINAL = SMOKE + 32                         # the reveal: he is standing in the bagging area
     END = M_FINAL + L("m_unexpected") + 1
     scene.frame_end = END
 
@@ -246,16 +249,30 @@ def build() -> None:
     checkout.screen_state(ck, SCAN + 18, "thanks")
     checkout.lamp(ck, SCAN + 18, "green")
     motion.walk_to(jok, AWAY, JOK_EXIT, action="Walk_Carry")
+    motion.turn_to(bat, J_MILK, heading(BAT_AT, JOK_EXIT), frames=10)  # Batman watches his milk leave
 
     # 11. "I am vengeance"
     motion.turn_to(bat, B_VENG - 10, 180.0, frames=8)
 
     # 12. Smoke bomb
+    # visible smoke bomb (owner v17: "what is this weird gray object"): in his hand, thrown at his feet,
+    # a burst of small light puffs, and he is teleported onto the bagging scale inside the cloud
     motion.play(bat, "Shoot_OneHanded", SMOKE, 13, blend_in=3)
     motion.play(bat, "Idle", SMOKE + 13, END + 10, blend_in=4)
-    props.smoke_puff("smoke", Vector((*BAT_AT, 0.0)), SMOKE + 6, count=11, radius=0.7, seed=3)
-    motion.key_root(bat, SMOKE + 13, loc=(*BAT_AT, 0.0), heading=180.0)
-    motion.key_root(bat, SMOKE + 14, loc=(-0.72, 0.0, 0.81), heading=0.0)
+    bomb = C.sphere("smoke_bomb", r=0.06, mat=look.toon2("bomb", "#15171d", rim=0.0))
+    C.visible(bomb, 1, False)
+    scene.frame_set(SMOKE - 10)
+    bpy.context.view_layer.update()
+    bomb.location = bat.arm.matrix_world @ bat.arm.pose.bones["Fist.R"].tail
+    held_bomb = motion.hold(bat, bomb, "R", SMOKE - 10)
+    fly_bomb = motion.release(held_bomb, SMOKE + 5)
+    motion.throw(fly_bomb, SMOKE + 5, BOMB_HIT, fly_bomb.matrix_world.translation.copy(),
+                 Vector((BAT_AT[0], BAT_AT[1] + 0.25, 0.06)), arc=0.05, spin=0.0)
+    C.visible(fly_bomb, BOMB_HIT + 1, False)
+    props.smoke_puff("smoke", Vector((BAT_AT[0], BAT_AT[1] + 0.1, 0.0)), BOMB_HIT, count=26, radius=0.55,
+                     seed=3, r_range=(0.10, 0.24), hex_="#dfe3ea", rise=0.6, height=1.7, stagger=1)
+    motion.key_root(bat, BOMB_HIT + 7, loc=(*BAT_AT, 0.0), heading=180.0)
+    motion.key_root(bat, BOMB_HIT + 8, loc=(-0.72, 0.0, 0.81), heading=0.0)
     checkout.screen_state(ck, M_FINAL - 2, "error")
     checkout.lamp(ck, M_FINAL - 2, "red")
 
@@ -267,7 +284,7 @@ def build() -> None:
     face.change_expression(bat.face, BEAT, "angry", "deadpan")
     face.change_expression(bat.face, J_TROUB, "deadpan", "suspicious")
     face.change_expression(bat.face, B_VENG - 6, "suspicious", "deadpan")
-    face.change_expression(bat.face, SMOKE + 30, "deadpan", "surprised")
+    face.change_expression(bat.face, M_FINAL - 6, "deadpan", "surprised")
 
     face.set_expression(jok.face, "smug", 1)
 
@@ -276,6 +293,7 @@ def build() -> None:
     face.apply_lipsync(bat.face, man["b_where"]["cues"], B_WHERE)
     face.apply_lipsync(bat.face, man["b_vengeance"]["cues"], B_VENG)
     face.apply_lipsync(jok.face, man["j_trouble"]["cues"], J_TROUB)
+    face.apply_lipsync(jok.face, man["j_milk"]["cues"], J_MILK)
 
     bat_blink_schedule = [
         (1, "stern"),
@@ -285,7 +303,7 @@ def build() -> None:
         (BEAT, "deadpan"),
         (J_TROUB, "suspicious"),
         (B_VENG - 6, "deadpan"),
-        (SMOKE + 30, "surprised"),
+        (M_FINAL - 6, "surprised"),
     ]
     face.auto_blink(bat.face, 1, END, bat_blink_schedule, seed=1)
     face.auto_blink(jok.face, JOK_WALK, END, [(1, "smug")], seed=2)
@@ -428,19 +446,17 @@ def build() -> None:
     shots.push(cam_veng, B_VENG - 6, SMOKE - 2, 0.12)
     C.cut(B_VENG - 6, cam_veng)
 
-    cam_end = shots.frame(
-        "cam_end",
-        [bat, ck.parts["ck_monitor"], ck.parts["ck_bag_base"]],
-        shot="wide",
-        yaw=-60.0,
-        pitch=12.0,
-        at=SMOKE - 2,
-    )
-    C.cut(SMOKE - 2, cam_end)
+    # smoke bomb: 3/4 front of Batman (the wide from yaw -60 had the kiosk corner as a dark shape in front)
+    cam_smoke = shots.frame("cam_smoke", bat, shot="full", yaw=-120.0, pitch=8.0, at=SMOKE - 2)
+    C.cut(SMOKE - 2, cam_smoke)
+    # the reveal: standing on the bagging scale next to the red screen as the machine repeats its line
+    cam_end = shots.frame("cam_end", [bat, ck.parts["ck_monitor"], ck.parts["ck_bag_base"]], shot="full",
+                          yaw=-20.0, pitch=8.0, at=M_FINAL)
+    C.cut(M_FINAL - 8, cam_end)
 
     # 15. Cape bake (LAST animation call)
-    cape.bake_cape(bat, 1, SMOKE + 13)
-    cape.bake_cape(bat, SMOKE + 14, END)
+    cape.bake_cape(bat, 1, BOMB_HIT + 7)
+    cape.bake_cape(bat, BOMB_HIT + 8, END)
 
     # 16. cues.json
     lines_cues = [
@@ -479,7 +495,7 @@ def build() -> None:
             "frame": M_CUT,
             "text": man["m_unexpected"]["text"],
             "wav": man["m_unexpected"]["wav"],
-            "dur": 1.40,  # "item" ends at 1.40 s (word timings); 1.45 let the start of "in" through
+            "dur": CUT_DUR,  # end of "item" from the word timings (cut before "in")
         },
         {
             "id": "b_where@B_WHERE",
@@ -506,6 +522,12 @@ def build() -> None:
             "wav": man["m_thanks"]["wav"],
         },
         {
+            "id": "j_milk@J_MILK",
+            "frame": J_MILK,
+            "text": man["j_milk"]["text"],
+            "wav": man["j_milk"]["wav"],
+        },
+        {
             "id": "b_vengeance@B_VENG",
             "frame": B_VENG,
             "text": man["b_vengeance"]["text"],
@@ -530,7 +552,7 @@ def build() -> None:
         {"frame": BEAT + 14, "sfx": "flicker"},
         {"frame": SCAN + 17, "sfx": "scan_beep", "gain": 1.6},
         {"frame": SCAN + 21, "sfx": "success", "gain": 1.5},
-        {"frame": SMOKE + 6, "sfx": "poof"},
+        {"frame": BOMB_HIT, "sfx": "poof"},
         {"frame": M_FINAL - 2, "sfx": "error_beep"},
     ]
 
@@ -553,10 +575,11 @@ def build() -> None:
         (M2, man["m_unexpected"]["words"]),
         (B_SHOW, man["b_show"]["words"]),
         (M_PLACE, man["m_place"]["words"]),
-        (M_CUT, [w for w in man["m_unexpected"]["words"] if w["start"] < 1.40]),
+        (M_CUT, [w for w in man["m_unexpected"]["words"] if w["start"] < CUT_DUR]),
         (B_WHERE, man["b_where"]["words"]),
         (M_WAIT, man["m_wait"]["words"]),
         (J_TROUB, man["j_trouble"]["words"]),
+        (J_MILK, man["j_milk"]["words"]),
         (M_THANKS, man["m_thanks"]["words"]),
         (B_VENG, man["b_vengeance"]["words"]),
         (M_FINAL, man["m_unexpected"]["words"]),

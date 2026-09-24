@@ -204,18 +204,26 @@ def smoke_puff(
     radius: float = 0.9,
     seed: int = 0,
     col: bpy.types.Collection | None = None,
+    r_range: tuple[float, float] = (0.25, 0.45),
+    hex_: str = "#9aa0ab",
+    rise: float = 0.25,
+    height: float = 1.3,
+    stagger: int = 1,
 ) -> list[bpy.types.Object]:
-    """Create animated smoke puff icospheres scaling and rising over time."""
+    """Create animated smoke puff icospheres scaling and rising over time.
+
+    `stagger` delays each puff's pop by i*stagger frames (a burst that grows instead of appearing at once).
+    """
     rng = random.Random(seed)
-    mat = L.toon2("smoke", "#9aa0ab", rim=0.0)
+    mat = L.toon2(f"smoke_{hex_}", hex_, rim=0.0)
     objs: list[bpy.types.Object] = []
     c_vec = Vector(center)
 
     for i in range(count):
-        r_sph = rng.uniform(0.25, 0.45)
+        r_sph = rng.uniform(*r_range)
         dx = rng.uniform(-radius, radius)
         dy = rng.uniform(-radius * 0.6, radius * 0.6)
-        dz = rng.uniform(0.1, 1.3)
+        dz = rng.uniform(0.05, height)
         loc = c_vec + Vector((dx, dy, dz))
 
         obj = C.icosphere(
@@ -233,15 +241,17 @@ def smoke_puff(
         toon.add_outline(obj, thickness=thickness)
 
         # Scale keys
+        d = (i * stagger) // max(count // 6, 1)
         C.key(obj, frame - 1, scale=(0.0, 0.0, 0.0))
-        C.key(obj, frame + 3, scale=(1.15, 1.15, 1.15))
-        C.key(obj, frame + 6, scale=(1.0, 1.0, 1.0))
+        C.key(obj, frame + d - 1, scale=(0.0, 0.0, 0.0))
+        C.key(obj, frame + d + 3, scale=(1.15, 1.15, 1.15))
+        C.key(obj, frame + d + 6, scale=(1.0, 1.0, 1.0))
         C.key(obj, frame + 30 + i, scale=(1.0, 1.0, 1.0))
         C.key(obj, frame + 42 + i, scale=(0.0, 0.0, 0.0))
 
         # Z location keys
         C.key(obj, frame, loc=(loc.x, loc.y, loc.z))
-        C.key(obj, frame + 42, loc=(loc.x, loc.y, loc.z + 0.25))
+        C.key(obj, frame + 42, loc=(loc.x, loc.y, loc.z + rise))
 
         objs.append(obj)
 

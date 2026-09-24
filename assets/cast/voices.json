@@ -20,7 +20,8 @@
     "machine": {
       "engine": "kokoro",
       "voice": "bf_emma",
-      "notes": "Self-checkout: flat British female (the UK 'unexpected item' meme). No reference download."
+      "notes": "Self-checkout: flat British female (the UK 'unexpected item' meme). No reference download.",
+      "speed": 1.12
     }
   }
 }

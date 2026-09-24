@@ -98,9 +98,9 @@ def main() -> None:
                 chatterbox_lines.append(l)
             else:
                 voice = l.get("voice", "bm_george")
-                kokoro_by_voice[voice].append(l)
+                kokoro_by_voice[(voice, float(l.get("speed", 1.0)))].append(l)  # Kokoro: one speed per request
 
-        for voice, v_lines in kokoro_by_voice.items():
+        for (voice, _speed), v_lines in kokoro_by_voice.items():
             audio.narrate(v_lines, voice, out_dir)
 
         if chatterbox_lines:

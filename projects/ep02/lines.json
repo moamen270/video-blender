@@ -1,12 +1,68 @@
 [
-  {"id": "m_unexpected", "character": "machine", "text": "Unexpected item in the bagging area."},
-  {"id": "m_place", "character": "machine", "text": "Please place the item in the bagging area."},
-  {"id": "m_wait", "character": "machine", "text": "Please wait. An assistant is coming to help."},
-  {"id": "m_thanks", "character": "machine", "text": "Thank you for shopping at Gotham Mart."},
-  {"id": "b_nothing", "character": "batman", "text": "There is nothing, in the bagging area.", "speed": 0.88, "seed": 11},
-  {"id": "b_show", "character": "batman", "text": "Show yourself.", "seed": 11},
-  {"id": "b_where", "character": "batman", "text": "Where. Is. The item.", "emotion": 0.5, "speed": 0.85, "seed": 11},
-  {"id": "b_vengeance", "character": "batman", "text": "I am vengeance. I am the night. I am paying in exact change.", "speed": 0.92, "seed": 23},
-  {"id": "b_cough", "character": "batman", "text": "[cough] Ahem. [cough]", "seed": 11},
-  {"id": "j_trouble", "character": "joker", "text": "Having trouble, Bats?", "seed": 23}
+  {
+    "id": "m_unexpected",
+    "character": "machine",
+    "text": "Unexpected item in the bagging area."
+  },
+  {
+    "id": "m_place",
+    "character": "machine",
+    "text": "Please place the item in the bagging area."
+  },
+  {
+    "id": "m_wait",
+    "character": "machine",
+    "text": "Please wait. An assistant is coming to help."
+  },
+  {
+    "id": "m_thanks",
+    "character": "machine",
+    "text": "Thank you for shopping at Gotham Mart."
+  },
+  {
+    "id": "b_nothing",
+    "character": "batman",
+    "text": "There is nothing, in the bagging area.",
+    "speed": 0.88,
+    "seed": 11
+  },
+  {
+    "id": "b_show",
+    "character": "batman",
+    "text": "Show yourself.",
+    "seed": 11
+  },
+  {
+    "id": "b_where",
+    "character": "batman",
+    "text": "Where. Is. The item.",
+    "emotion": 0.5,
+    "speed": 0.85,
+    "seed": 11
+  },
+  {
+    "id": "b_vengeance",
+    "character": "batman",
+    "text": "I am vengeance. I am the night. I am paying in exact change.",
+    "speed": 0.92,
+    "seed": 23
+  },
+  {
+    "id": "b_cough",
+    "character": "batman",
+    "text": "[cough] Ahem. [cough]",
+    "seed": 11
+  },
+  {
+    "id": "j_trouble",
+    "character": "joker",
+    "text": "Having trouble, Bats?",
+    "seed": 23
+  },
+  {
+    "id": "j_milk",
+    "character": "joker",
+    "text": "Thanks for the milk, Bats!",
+    "seed": 23
+  }
 ]
