@@ -32,7 +32,7 @@ BAT_AT = (0.0, 0.45)
 PLACE_AT = (-0.50, 0.15)
 LAND_AT = (-0.55, 0.08)
 JOK_FAR = (-2.4, 9.5)
-JOK_FROM = (-2.0, 2.4)
+JOK_WAIT = (-2.1, -1.0)  # out of view of Batman's close-up: he comes from the back (owner review v14)
 JOK_STOP = (-0.95, 0.40)
 JOK_EXIT = (-2.4, 6.0)
 KEYWORDS = {
@@ -76,7 +76,7 @@ def build() -> None:
     TURN = B_NOTH + L("b_nothing") + 1
     M2 = TURN + 4
     THROW = M2 + L("m_unexpected") - 12
-    B_SHOW = THROW + 20
+    B_SHOW = THROW + 22
     PULL = B_SHOW + L("b_show") + 2
     M_PLACE = PULL + 4
     PLACE = M_PLACE + 18
@@ -85,8 +85,8 @@ def build() -> None:
     B_WHERE = GRAB + 6
     M_WAIT = B_WHERE + L("b_where") + 3
     BEAT = M_WAIT + L("m_wait") + 1
-    WHIP = BEAT + 20
-    JOK_WALK = WHIP - 18
+    WHIP = BEAT + 8  # end of the silent beat: the Joker's first steps break it (no whip pan any more)
+    JOK_WALK = WHIP
     END = 1000  # Placeholder until computed in step 10
 
     # 1. Scene
@@ -101,8 +101,9 @@ def build() -> None:
     jok = cast.build_joker()
     motion.key_root(bat, 1, loc=(*BAT_AT, 0.0), heading=180.0)
     motion.key_root(jok, 1, loc=(*JOK_FAR, 0.0), heading=180.0)
-    motion.key_root(jok, JOK_WALK - 1, loc=(*JOK_FAR, 0.0))
-    motion.key_root(jok, JOK_WALK, loc=(*JOK_FROM, 0.0))
+    # teleport on the cut into Batman's close-up, to a spot outside that shot (v14 popped into view)
+    motion.key_root(jok, M_WAIT + 43, loc=(*JOK_FAR, 0.0))
+    motion.key_root(jok, M_WAIT + 44, loc=(*JOK_WAIT, 0.0))
     motion.setup_ik(bat)
     motion.setup_ik(jok)
     motion.play(bat, "Idle", 1, END + 10)
@@ -138,15 +139,20 @@ def build() -> None:
     # 5. Batarang throw
     motion.play(bat, "Punch", THROW, 18, blend_in=3)
     motion.play(bat, "Idle", THROW + 18, END + 10, blend_in=4)
+    # owner review v14: the batarang was never seen (5-frame flight, small, dark) -> 1.4x, in his hand
+    # during the wind-up, 8-frame spinning flight, and a cut to it stuck in the bagging area on the THUNK
     bt = props.batarang("batarang")
-    scene.frame_set(THROW + 7)
-    bpy.context.view_layer.update()
-    p0 = bat.arm.matrix_world @ bat.arm.pose.bones["Fist.R"].tail
-    p1 = Vector((*LAND_AT, 0.83))
-    motion.throw(bt, THROW + 7, THROW + 12, p0, p1, arc=0.15, spin=720.0)
-    C.key(bt, THROW + 12, rot=(60.0, 0.0, 20.0))
+    bt.scale = (1.4, 1.4, 1.4)
     C.visible(bt, 1, False)
-    C.visible(bt, THROW + 7, True)
+    scene.frame_set(THROW - 8)
+    bpy.context.view_layer.update()
+    bt.location = bat.arm.matrix_world @ bat.arm.pose.bones["Fist.R"].tail
+    held_bt = motion.hold(bat, bt, "R", THROW - 8)
+    bt_fly = motion.release(held_bt, THROW + 7)
+    p0 = bt_fly.matrix_world.translation.copy()
+    p1 = Vector((*LAND_AT, 0.83))
+    motion.throw(bt_fly, THROW + 7, THROW + 15, p0, p1, arc=0.25, spin=900.0)
+    C.key(bt_fly, THROW + 15, rot=(60.0, 0.0, 920.0))  # keep throw()'s 900 deg spin, then +20
 
     # 6. Pull the batarang out
     motion.turn_to(bat, PULL - 8, 150.0, frames=6)
@@ -160,7 +166,7 @@ def build() -> None:
         blend_in=5,
         blend_out=6,
     )
-    hb = motion.hold(bat, bt, "R", PULL)
+    hb = motion.hold(bat, bt_fly, "R", PULL)
     C.visible(hb, PULL + 14, False)
 
     # 7. Place the milk
@@ -199,23 +205,23 @@ def build() -> None:
     )
 
     # 10. The Joker
-    motion.key_root(jok, JOK_WALK, heading=heading(JOK_FROM, JOK_STOP))
+    motion.key_root(jok, JOK_WALK, heading=heading(JOK_WAIT, JOK_STOP))
     jw_end, jsteps = motion.walk_to(jok, JOK_WALK, JOK_STOP)
 
     # Compute timeline values that depend on jw_end
-    J_TROUB = max(WHIP + 8, jw_end - 12)
+    J_TROUB = jw_end + 2
     SCAN = J_TROUB + L("j_trouble") + 2
     M_THANKS = SCAN + 20
     AWAY = M_THANKS + 30
     B_VENG = M_THANKS + L("m_thanks") + 4
     SMOKE = B_VENG + L("b_vengeance") + 4
-    M_FINAL = SMOKE + 22
+    M_FINAL = SMOKE + 18
     END = M_FINAL + L("m_unexpected") + 1
     scene.frame_end = END
 
     # face Batman (both in profile for the two-shot); the milk is then at his right-front
     motion.turn_to(jok, jw_end, heading(JOK_STOP, BAT_AT), frames=6)
-    motion.turn_to(bat, J_TROUB - 4, heading(BAT_AT, JOK_STOP), frames=8)
+    motion.turn_to(bat, jw_end - 12, heading(BAT_AT, JOK_STOP), frames=10)  # slow turn as he arrives
 
     scene.frame_set(SCAN)
     bpy.context.view_layer.update()
@@ -321,18 +327,24 @@ def build() -> None:
         pitch=15.0,
         at=TURN,
     )
-    shots.push(cam_bag, TURN, THROW - 4, 0.15)
+    shots.push(cam_bag, TURN, THROW - 8, 0.15)
     C.cut(TURN, cam_bag)
 
     cam_throw = shots.frame(
         "cam_throw",
         [bat, ck.parts["ck_bag_plate"]],
         shot="full",
-        yaw=75.0,
-        pitch=5.0,
-        at=THROW - 4,
+        yaw=60.0,
+        pitch=12.0,
+        lens=28.0,  # yaw 75 / lens 35 put the camera inside the left aisle shelf
+        at=THROW - 8,
     )
-    C.cut(THROW - 4, cam_throw)
+    C.cut(THROW - 8, cam_throw)
+    # THUNK: the batarang stuck in the (still empty) bagging area; "Show yourself." is said to it off-screen.
+    # From the customer side - from cam_bag's side the hanging bag hid the batarang.
+    cam_thunk = shots.frame("cam_thunk", [p1, ck.parts["ck_bag_plate"]], shot="insert", yaw=40.0, pitch=45.0,
+                            at=THROW + 15)
+    C.cut(THROW + 15, cam_thunk)
 
     cam_2s = shots.frame(
         "cam_2s",
@@ -386,22 +398,6 @@ def build() -> None:
     )
     C.cut(M_WAIT + 44, cam_beat)
 
-    cam_whip = C.camera(
-        "cam_whip",
-        cam_beat.location.copy(),
-        cam_beat.location + Vector((0.0, 1.0, 0.0)),
-        lens=cam_beat.data.lens,
-    )
-    cam_whip.rotation_euler = cam_beat.rotation_euler.copy()
-    cam_whip.data.sensor_fit = cam_beat.data.sensor_fit
-    cam_whip.data.sensor_height = cam_beat.data.sensor_height
-
-    scene.frame_set(WHIP + 5)
-    bpy.context.view_layer.update()
-    target_whip = jok.root.matrix_world.translation.copy() + Vector((0.0, 0.0, 1.2))
-    shots.whip(cam_whip, WHIP, target_whip, frames=5)
-    C.cut(WHIP, cam_whip)
-
     cam_jok = shots.frame(
         "cam_jok",
         jok,
@@ -410,7 +406,12 @@ def build() -> None:
         pitch=3.0,
         at=J_TROUB,
     )
-    C.cut(WHIP + 6, cam_jok)
+    # The Joker's walk-in, over Batman's right shoulder (the close-up never saw him arrive); a normal cut
+    # after the held beat instead of the 5-frame whip pan (owner review v14: "camera shifting was very fast")
+    # 2.4 m behind Batman: his head sits at the right edge (~14 deg off-axis), the whole walk inside the frame
+    cam_arrive = C.camera("cam_arrive", (0.9, 1.9, 1.7), (-1.2, -0.3, 1.0), lens=35.0)
+    C.cut(WHIP + 14, cam_arrive)
+    C.cut(J_TROUB - 4, cam_jok)
 
     cam_2s_j = shots.frame(
         "cam_2s_j",
@@ -522,8 +523,8 @@ def build() -> None:
         {"frame": F_SLAM, "sfx": "slam"},
         {"frame": F_SLAM + 2, "sfx": "error_beep"},
         {"frame": M2 - 2, "sfx": "error_beep"},
-        {"frame": THROW + 7, "sfx": "swoosh"},
-        {"frame": THROW + 12, "sfx": "thunk"},
+        {"frame": THROW + 6, "sfx": "whoosh", "gain": 0.7},
+        {"frame": THROW + 15, "sfx": "thunk"},
         {"frame": GRAB, "sfx": "grab", "gain": 1.6},
         {"frame": BEAT + 3, "sfx": "flicker"},
         {"frame": BEAT + 14, "sfx": "flicker"},
@@ -575,7 +576,7 @@ def build() -> None:
             "start_s": 0,
             "gain": 0.25,
             "cut_frame": BEAT,
-            "resume_frame": WHIP,
+            "resume_frame": J_TROUB - 4,
             "end_frame": END,
         },
         "lines": lines_cues,
@@ -600,7 +601,7 @@ def build() -> None:
                 "alpha": 0.6,
             },
         ],
-        "beats": [[BEAT, WHIP]],
+        "beats": [[BEAT, WHIP + 12]],
     }
 
     cues_path = os.path.join(ROOT, "projects", "ep02", "cues.json")

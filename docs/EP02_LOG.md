@@ -64,3 +64,15 @@ Render ≈ 6 min at preview size (540x960, 942 frames).
 **v14** (audio review — Gemini could not open the audio this time, so measured in the mix): cut-off machine line
 trimmed at the end of "item" (1.40 s, from word timings; 1.45 leaked "in"), scanner beep / chime / grab gains up,
 Joker's exit footsteps removed under the vengeance line and doubled landings deduplicated. QA PASS, 39.2 s.
+
+### Owner review of v14 → v15–v17
+1. "This camera shifting was very fast" (Batman close-up → Joker): the 5-frame whip pan + immediate cut, and the
+   Joker popped into the background (teleported inside the shot). Now: held close-up through the silent beat, the
+   Joker's footsteps break it, a normal cut to an over-the-shoulder shot where he walks in from the back (~2 s,
+   teleported off-screen on an earlier cut), Batman turns slowly, then the cut to his line.
+2. "This had a sound like a knife and there were no weapons": the throw SFX was a sword swish and the batarang
+   was invisible (5-frame flight, small, dark). Now: soft air whoosh, batarang 1.4×, in his hand during the
+   wind-up, 8-frame spinning flight, an insert of it in the bagging area on the THUNK ("Show yourself." said to it).
+   Also: the higher throw camera landed inside a shelf (yaw 60 / lens 28 fixes it) → kit TODO: occlusion check in
+   `shots.frame` (ray from the aim point to the camera).
+v17: QA PASS, 39.7 s.
