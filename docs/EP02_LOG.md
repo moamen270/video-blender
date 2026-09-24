@@ -87,3 +87,30 @@ v17: QA PASS, 39.7 s.
    3/4 shot for the throw; reveal shot of him standing on the bagging scale by the red screen for the final line.
 Length back under 40 s: machine voice at speed 1.12 (Kokoro speed now honoured per request) + tighter gaps.
 v19: QA PASS, 39.9 s.
+
+## Owner review of the final (v21), 2026-09-24
+| area | score | note |
+|---|---|---|
+| story | **0/10** | very poor |
+| humour | **0/10** | "unexpected item" is not a joke on its own; the humour doesn't exist |
+| characters (style) | 4/10 | could use enhancements; workable for now |
+| building Batman/Joker in this style | 7/10 | done well |
+| overall | progress | |
+
+Visual issues he flagged (normal 3D behaviour, but not acceptable in a video):
+1. Hook: Batman's fist sinks into the milk carton (props attached to the fist bone with no grip pose / hand offset).
+2. Machine-POV shots: the near-clip plane that hides the monitor slices through his fists/forearms (hollow cut edges).
+3. PLEASE WAIT screen: text off-centre and close to the edge; the coloured plane overlaps the bezel.
+4. Joker's scan: his arm and the milk pass through Batman (no character-character collision check).
+5. 3/4 angles: decal eyes/brows float outside the head silhouette (flat decals in front of a rounded head).
+Performance note: "I am vengeance. I am the night." needed a different voice emotion (dramatic, rising) and face
+reaction, then the deadpan drop on "I am paying in exact change."
+
+Lessons for the next episode (senior):
+- The script, not the pipeline, is the weakest link: the premise must be funny *before* a single asset is built —
+  table reads scored 9/10 by Gemini were worthless; the owner judges. New gate: owner approves the script
+  (or 3 premise pitches) before production.
+- Add automatic checks for: prop-in-hand intersection, character-character intersection, decal-outside-silhouette
+  at the shot's camera, near-clip cutting a character, text centred in its panel.
+- Per-line performance direction: emotion/speed per sentence (split lines where the delivery changes) and matching
+  expressions keyed on the words.
