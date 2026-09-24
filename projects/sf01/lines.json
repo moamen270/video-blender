@@ -1,0 +1,82 @@
+[
+ {
+  "id": "r_h1",
+  "character": "ryu",
+  "text": "Hadouken!!",
+  "emotion": 0.9,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav",
+  "note": "full battle shout, same moment as Ken"
+ },
+ {
+  "id": "k_h1",
+  "character": "ken",
+  "text": "Hadouken!!",
+  "emotion": 0.9,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav",
+  "note": "full battle shout, same moment as Ryu"
+ },
+ {
+  "id": "r_mine",
+  "character": "ryu",
+  "text": "Mine was stronger.",
+  "emotion": 0.3,
+  "speed": 0.9,
+  "note": "calm, low, stated as fact"
+ },
+ {
+  "id": "k_mine",
+  "character": "ken",
+  "text": "No. Mine was.",
+  "emotion": 0.65,
+  "speed": 1.08,
+  "note": "cocky, cuts in fast"
+ },
+ {
+  "id": "r_h2",
+  "character": "ryu",
+  "text": "Hadouuuuuuken!",
+  "emotion": 0.8,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav",
+  "note": "charge: held vowel, then KEN"
+ },
+ {
+  "id": "k_h2",
+  "character": "ken",
+  "text": "Hadouuuuuuken!",
+  "emotion": 0.8,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav",
+  "note": "charge: held vowel, then KEN"
+ },
+ {
+  "id": "r_h3",
+  "character": "ryu",
+  "text": "Hadouuuuuuuuken!!",
+  "emotion": 0.85,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav",
+  "note": "mega charge: longest, maximum strain"
+ },
+ {
+  "id": "k_h3",
+  "character": "ken",
+  "text": "Hadouuuuuuuuken!!",
+  "emotion": 0.85,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav",
+  "note": "mega charge: longest, maximum strain"
+ },
+ {
+  "id": "k_mine2",
+  "character": "ken",
+  "text": "...Mine.",
+  "emotion": 0.25,
+  "speed": 0.9,
+  "note": "flat, panting"
+ },
+ {
+  "id": "r_mine2",
+  "character": "ryu",
+  "text": "Mine.",
+  "emotion": 0.25,
+  "speed": 0.9,
+  "note": "flat, panting"
+ }
+]

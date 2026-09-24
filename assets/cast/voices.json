@@ -1,27 +1,43 @@
 {
-  "_policy": "Owner voice policy (docs/PRODUCTION_PLAN.md 3.6): parody characters may clone a reference of the original performance, always modified, comedy framing, AI/altered-content label on upload. One entry per character so a complaint means one re-voice.",
-  "characters": {
-    "batman": {
-      "engine": "chatterbox",
-      "voiceRef": "assets/library/voices_ref/batman_ref.wav",
-      "emotion": 0.35,
-      "speed": 0.9,
-      "seed": 11,
-      "notes": "Reference: 8 Arkham Asylum lines (Kevin Conroy), 13.2 s, modified with rubberband pitch=0.93 formant=shifted (deeper, bigger). Gemini check 2026-09-24: noticeably deeper/smoother than the actor, still evokes the character. Tip: 'bagging area' slurs; write 'nothing, in the bagging area' and keep ASR read-back >= 0.97."
-    },
-    "joker": {
-      "engine": "chatterbox",
-      "voiceRef": "assets/library/voices_ref/joker_ref.wav",
-      "emotion": 0.6,
-      "speed": 1.0,
-      "seed": 23,
-      "notes": "Reference: dry face-to-face Arkham Asylum speech (Mark Hamill), 13.5 s, modified with rubberband pitch=1.04 formant=shifted. Gemini check: modified pitch, lacks the original grit, still theatrical and teasing."
-    },
-    "machine": {
-      "engine": "kokoro",
-      "voice": "bf_emma",
-      "notes": "Self-checkout: flat British female (the UK 'unexpected item' meme). No reference download.",
-      "speed": 1.12
-    }
+ "_policy": "Owner voice policy (docs/PRODUCTION_PLAN.md 3.6): parody characters may clone a reference of the original performance, always modified, comedy framing, AI/altered-content label on upload. One entry per character so a complaint means one re-voice.",
+ "characters": {
+  "batman": {
+   "engine": "chatterbox",
+   "voiceRef": "assets/library/voices_ref/batman_ref.wav",
+   "emotion": 0.35,
+   "speed": 0.9,
+   "seed": 11,
+   "notes": "Reference: 8 Arkham Asylum lines (Kevin Conroy), 13.2 s, modified with rubberband pitch=0.93 formant=shifted (deeper, bigger). Gemini check 2026-09-24: noticeably deeper/smoother than the actor, still evokes the character. Tip: 'bagging area' slurs; write 'nothing, in the bagging area' and keep ASR read-back >= 0.97."
+  },
+  "joker": {
+   "engine": "chatterbox",
+   "voiceRef": "assets/library/voices_ref/joker_ref.wav",
+   "emotion": 0.6,
+   "speed": 1.0,
+   "seed": 23,
+   "notes": "Reference: dry face-to-face Arkham Asylum speech (Mark Hamill), 13.5 s, modified with rubberband pitch=1.04 formant=shifted. Gemini check: modified pitch, lacks the original grit, still theatrical and teasing."
+  },
+  "machine": {
+   "engine": "kokoro",
+   "voice": "bf_emma",
+   "notes": "Self-checkout: flat British female (the UK 'unexpected item' meme). No reference download.",
+   "speed": 1.12
+  },
+  "ryu": {
+   "engine": "chatterbox",
+   "voiceRef": "assets/library/voices_ref/ryu_ref.wav",
+   "emotion": 0.45,
+   "speed": 1.0,
+   "seed": 31,
+   "notes": "Reference: 7 calm dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ryu), 15.1 s, supplied by the owner 2026-09-25; modified rubberband pitch=0.90 formant=shifted (deeper). Calm, serious; shouts at emotion 0.8-1.0. Shouts: ryu_shout_ref.wav (10 loudest SFxT combat clips, same modification). Pitch gap widened 2026-09-25: Gemini heard Ryu and Ken as too similar."
+  },
+  "ken": {
+   "engine": "chatterbox",
+   "voiceRef": "assets/library/voices_ref/ken_ref.wav",
+   "emotion": 0.6,
+   "speed": 1.03,
+   "seed": 41,
+   "notes": "Reference: 7 confident dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ken), 14.2 s, supplied by the owner 2026-09-25; modified rubberband pitch=1.10 formant=shifted (lighter). Cocky, quick. Shouts: ken_shout_ref.wav (11 loudest SFxT combat clips, same modification)."
   }
+ }
 }

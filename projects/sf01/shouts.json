@@ -1,0 +1,8 @@
+{
+ "r_h1": {"src": "r_h", "word": "Hadoken!", "text": "Hadouken"},
+ "k_h1": {"src": "k_h", "word": "Hadouken!", "text": "Hadouken"},
+ "r_h2": {"src": "r_h", "word": "Hadoken!", "text": "Hadouuuuu ken", "hold": 2.6, "rise": 1.12, "tail_src": "r_ken", "tail_word": "Hadouken!", "tail_split": true},
+ "k_h2": {"src": "k_h", "word": "Hadouken!", "text": "Hadouuuuu ken", "hold": 2.6, "rise": 1.12, "tail_src": "k_ken", "tail_word": "Ken!"},
+ "r_h3": {"src": "r_h", "word": "Hadoken!", "text": "Hadouuuuuuu ken", "hold": 3.0, "rise": 1.25, "crack": true, "tail_src": "r_ken", "tail_word": "Hadouken!", "tail_split": true, "tail_gain_db": 6},
+ "k_h3": {"src": "k_h", "word": "Hadouken!", "text": "Hadouuuuuuu ken", "hold": 3.0, "rise": 1.25, "crack": true, "tail_src": "k_ken", "tail_word": "Ken!", "tail_gain_db": 6}
+}

@@ -39,3 +39,18 @@ first, and render only as a clearly marked motion test.
 - `[laugh]`/`[cough]` tags need at least one spoken word in the line.
 - `tools/voice.py` re-synthesises only lines whose settings changed; `tools/audio.py` normalises every line to
   −16 dB RMS.
+
+## Shouts and made-up words (learned on sf01, Ryu/Ken, 2026-09-25)
+- Chatterbox copies the reference's ENERGY: a calm dialogue reference gives flat "shouts". Build a second
+  `<char>_shout_ref.wav` from the loudest combat/effort clips (same modification) and set `voiceRef` per shout line.
+- Very short or invented words at high emotion hallucinate ("Hadouken!" -> "hart wokin"). What worked:
+  respell ("Hadoken!"), double punctuation ("Hadouken!!"), or a carrier phrase ("Take this. Hadouken!") cut by word timing.
+- Held vowels: write them ("Hadouuuuuuken!") with the shout reference; generate 4-5 seeds and pick by ear.
+  Do NOT time-stretch speech (rubberband) - it sounds robotic. Splicing two takes is audible; reuse a clean take
+  with a small pitch/gain change instead.
+- ASR read-back scores are meaningless for held vowels and move names; Gemini listening scores drift between runs
+  on identical audio - use Gemini to shortlist, the owner's ear to decide.
+- A take much shorter than its text crashes the aligner ("targets length is too long for CTC") and kills the whole
+  batch: drop that spelling.
+- Voices must be clearly distinct: pitch the two references apart (Ryu 0.90, Ken 1.10) and check with a listener.
+- Build a script-order preview with `tools/voice_preview.py` (shared shouts end-aligned) and send it to the owner.
