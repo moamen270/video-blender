@@ -61,3 +61,6 @@ close, two-shot blocked by Batman. **v12** — POV camera moved behind the scree
 (the camera *is* the screen), Joker faces Batman and scans with his right hand. **v13** — monitor hidden during POV
 shots (edge line). QA: hook PASS (motion 10.96, audio −22.9 dBFS, text frame 1), dead time 0, length 39.2 s.
 Render ≈ 6 min at preview size (540x960, 942 frames).
+**v14** (audio review — Gemini could not open the audio this time, so measured in the mix): cut-off machine line
+trimmed at the end of "item" (1.40 s, from word timings; 1.45 leaked "in"), scanner beep / chime / grab gains up,
+Joker's exit footsteps removed under the vengeance line and doubled landings deduplicated. QA PASS, 39.2 s.

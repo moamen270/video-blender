@@ -478,7 +478,7 @@ def build() -> None:
             "frame": M_CUT,
             "text": man["m_unexpected"]["text"],
             "wav": man["m_unexpected"]["wav"],
-            "dur": 1.45,
+            "dur": 1.40,  # "item" ends at 1.40 s (word timings); 1.45 let the start of "in" through
         },
         {
             "id": "b_where@B_WHERE",
@@ -524,19 +524,24 @@ def build() -> None:
         {"frame": M2 - 2, "sfx": "error_beep"},
         {"frame": THROW + 7, "sfx": "swoosh"},
         {"frame": THROW + 12, "sfx": "thunk"},
-        {"frame": GRAB, "sfx": "grab"},
+        {"frame": GRAB, "sfx": "grab", "gain": 1.6},
         {"frame": BEAT + 3, "sfx": "flicker"},
         {"frame": BEAT + 14, "sfx": "flicker"},
-        {"frame": SCAN + 17, "sfx": "scan_beep"},
-        {"frame": SCAN + 19, "sfx": "success"},
+        {"frame": SCAN + 17, "sfx": "scan_beep", "gain": 1.6},
+        {"frame": SCAN + 21, "sfx": "success", "gain": 1.5},
         {"frame": SMOKE + 6, "sfx": "poof"},
         {"frame": M_FINAL - 2, "sfx": "error_beep"},
     ]
 
     jok_steps1 = motion.foot_events(jok, JOK_WALK, jw_end + 8)
-    jok_steps2 = motion.foot_events(jok, AWAY, END)
+    # exit steps only until Batman speaks (they cluttered the punchline); drop a foot landing within 4 frames
+    # of the previous one (both feet settle together when stopping) - measured in the v13 mix
+    jok_steps2 = [f for f in motion.foot_events(jok, AWAY, END) if f < B_VENG - 4]
+    last = -99
     for f in sorted(set(jok_steps1 + jok_steps2)):
-        sfx_cues.append({"frame": f, "sfx": "step_hard", "gain": 0.3})
+        if f - last >= 5:
+            sfx_cues.append({"frame": f, "sfx": "step_hard", "gain": 0.3})
+            last = f
 
     sfx_cues.sort(key=lambda s: s["frame"])
 
@@ -547,7 +552,7 @@ def build() -> None:
         (M2, man["m_unexpected"]["words"]),
         (B_SHOW, man["b_show"]["words"]),
         (M_PLACE, man["m_place"]["words"]),
-        (M_CUT, [w for w in man["m_unexpected"]["words"] if w["start"] < 1.45]),
+        (M_CUT, [w for w in man["m_unexpected"]["words"] if w["start"] < 1.40]),
         (B_WHERE, man["b_where"]["words"]),
         (M_WAIT, man["m_wait"]["words"]),
         (J_TROUB, man["j_trouble"]["words"]),
