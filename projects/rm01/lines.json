@@ -1,0 +1,5 @@
+[
+  {"id": "r1", "character": "rick_tmp", "voice": "am_michael", "speed": 0.95, "text": "Morty, hold this. And whatever you do, don't press the red button."},
+  {"id": "m1", "character": "morty_tmp", "voice": "am_puck", "speed": 1.08, "text": "W-wait, Rick, what does the red button do?"},
+  {"id": "r2", "character": "rick_tmp", "voice": "am_michael", "speed": 0.9, "text": "It's red, Morty. Red means don't."}
+]

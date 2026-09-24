@@ -88,6 +88,20 @@ def main() -> None:
         if (not os.path.isfile(wav_path)) or (prev.get("hash") != h):
             lines_to_synth.append(l)
 
+    align_tokens: dict[str, list[dict]] = {}
+
+    def collect_align(jname: str) -> None:
+        """align.json is rewritten by every Kokoro request: harvest it after each one."""
+        jpath = os.path.join(out_dir, jname)
+        if os.path.isfile(jpath):
+            try:
+                with open(jpath, "r", encoding="utf-8") as fh:
+                    for sc in json.load(fh).get("scenes", []):
+                        if sc.get("sceneId") and "tokens" in sc:
+                            align_tokens[sc["sceneId"]] = sc["tokens"]
+            except Exception:
+                pass
+
     # Synthesize changed lines grouped by engine
     if lines_to_synth:
         kokoro_by_voice: dict[str, list[dict]] = collections.defaultdict(list)
@@ -102,24 +116,14 @@ def main() -> None:
 
         for (voice, _speed), v_lines in kokoro_by_voice.items():
             audio.narrate(v_lines, voice, out_dir)
+            collect_align("align.json")
 
         if chatterbox_lines:
             audio.chatterbox(chatterbox_lines, out_dir)
 
-    # Load alignment tokens from align.json and chatterbox.json
-    align_tokens: dict[str, list[dict]] = {}
+    # Alignment tokens: harvested per Kokoro request above, plus the last align.json and chatterbox.json
     for jname in ("align.json", "chatterbox.json"):
-        jpath = os.path.join(out_dir, jname)
-        if os.path.isfile(jpath):
-            try:
-                with open(jpath, "r", encoding="utf-8") as fh:
-                    jdata = json.load(fh)
-                    for sc in jdata.get("scenes", []):
-                        sid = sc.get("sceneId")
-                        if sid and "tokens" in sc:
-                            align_tokens[sid] = sc["tokens"]
-            except Exception:
-                pass
+        collect_align(jname)
 
     # Rhubarb per line and build manifest
     new_manifest_lines = dict(prev_lines)

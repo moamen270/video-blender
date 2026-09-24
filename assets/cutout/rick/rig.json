@@ -1,0 +1,684 @@
+{
+ "name": "rick",
+ "units_per_px": 0.25,
+ "ground": 960.0,
+ "cx": 300.0,
+ "parts": [
+  {
+   "name": "leg.L",
+   "png": "leg.L.png",
+   "box": [
+    231.5,
+    697.5,
+    296.5,
+    927.5
+   ],
+   "pivot": [
+    264.0,
+    712
+   ],
+   "z": 10,
+   "parent": "hips",
+   "tags": []
+  },
+  {
+   "name": "shoe.L",
+   "png": "shoe.L.png",
+   "box": [
+    236.5,
+    917.5,
+    294.5,
+    962.5
+   ],
+   "pivot": [
+    264.0,
+    924
+   ],
+   "z": 11,
+   "parent": "leg.L",
+   "tags": []
+  },
+  {
+   "name": "leg.R",
+   "png": "leg.R.png",
+   "box": [
+    303.5,
+    697.5,
+    368.5,
+    927.5
+   ],
+   "pivot": [
+    336.0,
+    712
+   ],
+   "z": 10,
+   "parent": "hips",
+   "tags": []
+  },
+  {
+   "name": "shoe.R",
+   "png": "shoe.R.png",
+   "box": [
+    299.5,
+    917.5,
+    376.25,
+    962.5
+   ],
+   "pivot": [
+    336.0,
+    924
+   ],
+   "z": 11,
+   "parent": "leg.R",
+   "tags": []
+  },
+  {
+   "name": "hips",
+   "png": "hips.png",
+   "box": [
+    229.5,
+    677.5,
+    370.5,
+    724.5
+   ],
+   "pivot": [
+    300.0,
+    700
+   ],
+   "z": 12,
+   "parent": null,
+   "tags": []
+  },
+  {
+   "name": "torso",
+   "png": "torso.png",
+   "box": [
+    215.5,
+    449.5,
+    384.5,
+    702.5
+   ],
+   "pivot": [
+    300.0,
+    690
+   ],
+   "z": 13,
+   "parent": "hips",
+   "tags": []
+  },
+  {
+   "name": "coat.L",
+   "png": "coat.L.png",
+   "box": [
+    193.5,
+    451.5,
+    280.5,
+    810.5
+   ],
+   "pivot": [
+    240.0,
+    470
+   ],
+   "z": 17,
+   "parent": "torso",
+   "tags": []
+  },
+  {
+   "name": "coat.R",
+   "png": "coat.R.png",
+   "box": [
+    319.5,
+    451.5,
+    406.5,
+    810.5
+   ],
+   "pivot": [
+    360.0,
+    470
+   ],
+   "z": 17,
+   "parent": "torso",
+   "tags": []
+  },
+  {
+   "name": "forearm.L",
+   "png": "forearm.L.png",
+   "box": [
+    181.5,
+    577.5,
+    223.5,
+    692.5
+   ],
+   "pivot": [
+    206.0,
+    584
+   ],
+   "z": 18,
+   "parent": "sleeve.L",
+   "tags": []
+  },
+  {
+   "name": "hand.L:open",
+   "png": "hand.L__open.png",
+   "box": [
+    170.5,
+    685.5,
+    217.25,
+    745.75
+   ],
+   "pivot": [
+    198.0,
+    690
+   ],
+   "z": 19,
+   "parent": "forearm.L",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "hand.L:fist",
+   "png": "hand.L__fist.png",
+   "box": [
+    180.0,
+    685.5,
+    216.0,
+    724.5
+   ],
+   "pivot": [
+    198.0,
+    690
+   ],
+   "z": 19,
+   "parent": "forearm.L",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "hand.L:point",
+   "png": "hand.L__point.png",
+   "box": [
+    181.25,
+    685.5,
+    214.75,
+    755.5
+   ],
+   "pivot": [
+    198.0,
+    690
+   ],
+   "z": 19,
+   "parent": "forearm.L",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "sleeve.L",
+   "png": "sleeve.L.png",
+   "box": [
+    187.5,
+    471.5,
+    250.5,
+    594.5
+   ],
+   "pivot": [
+    224.0,
+    498
+   ],
+   "z": 16.5,
+   "parent": "torso",
+   "tags": []
+  },
+  {
+   "name": "forearm.R",
+   "png": "forearm.R.png",
+   "box": [
+    376.5,
+    577.5,
+    418.5,
+    692.5
+   ],
+   "pivot": [
+    394.0,
+    584
+   ],
+   "z": 18,
+   "parent": "sleeve.R",
+   "tags": []
+  },
+  {
+   "name": "hand.R:open",
+   "png": "hand.R__open.png",
+   "box": [
+    380.75,
+    685.5,
+    429.5,
+    745.75
+   ],
+   "pivot": [
+    402.0,
+    690
+   ],
+   "z": 19,
+   "parent": "forearm.R",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "hand.R:fist",
+   "png": "hand.R__fist.png",
+   "box": [
+    384.0,
+    685.5,
+    420.0,
+    724.5
+   ],
+   "pivot": [
+    402.0,
+    690
+   ],
+   "z": 19,
+   "parent": "forearm.R",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "hand.R:point",
+   "png": "hand.R__point.png",
+   "box": [
+    385.25,
+    685.5,
+    418.75,
+    755.5
+   ],
+   "pivot": [
+    402.0,
+    690
+   ],
+   "z": 19,
+   "parent": "forearm.R",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "sleeve.R",
+   "png": "sleeve.R.png",
+   "box": [
+    349.5,
+    471.5,
+    412.5,
+    594.5
+   ],
+   "pivot": [
+    376.0,
+    498
+   ],
+   "z": 16.5,
+   "parent": "torso",
+   "tags": []
+  },
+  {
+   "name": "neck",
+   "png": "neck.png",
+   "box": [
+    282.5,
+    417.5,
+    317.5,
+    468.5
+   ],
+   "pivot": [
+    300.0,
+    458
+   ],
+   "z": 12,
+   "parent": "torso",
+   "tags": []
+  },
+  {
+   "name": "head",
+   "png": "head.png",
+   "box": [
+    184.75,
+    179.5,
+    415.25,
+    438.5
+   ],
+   "pivot": [
+    300.0,
+    428
+   ],
+   "z": 20,
+   "parent": "neck",
+   "tags": []
+  },
+  {
+   "name": "hair_back",
+   "png": "hair_back.png",
+   "box": [
+    119.5,
+    19.5,
+    486.5,
+    312.5
+   ],
+   "pivot": [
+    300.0,
+    300
+   ],
+   "z": 19,
+   "parent": "head",
+   "tags": []
+  },
+  {
+   "name": "hair",
+   "png": "hair.png",
+   "box": [
+    201.5,
+    178.5,
+    398.5,
+    264.5
+   ],
+   "pivot": [
+    300.0,
+    230
+   ],
+   "z": 26,
+   "parent": "head",
+   "tags": []
+  },
+  {
+   "name": "eye.L",
+   "png": "eye.L.png",
+   "box": [
+    224.25,
+    260.5,
+    295.5,
+    332.25
+   ],
+   "pivot": [
+    268.0,
+    288
+   ],
+   "z": 21,
+   "parent": "head",
+   "tags": []
+  },
+  {
+   "name": "pupil.L",
+   "png": "pupil.L.png",
+   "box": [
+    266.0,
+    285.0,
+    274.0,
+    293.0
+   ],
+   "pivot": [
+    268.0,
+    288
+   ],
+   "z": 22,
+   "parent": "eye.L",
+   "tags": []
+  },
+  {
+   "name": "eye.R",
+   "png": "eye.R.png",
+   "box": [
+    304.5,
+    260.5,
+    375.75,
+    332.25
+   ],
+   "pivot": [
+    332.0,
+    288
+   ],
+   "z": 21,
+   "parent": "head",
+   "tags": []
+  },
+  {
+   "name": "pupil.R",
+   "png": "pupil.R.png",
+   "box": [
+    326.0,
+    285.0,
+    334.0,
+    293.0
+   ],
+   "pivot": [
+    332.0,
+    288
+   ],
+   "z": 22,
+   "parent": "eye.R",
+   "tags": []
+  },
+  {
+   "name": "brow",
+   "png": "brow.png",
+   "box": [
+    227.5,
+    242.75,
+    372.5,
+    264.5
+   ],
+   "pivot": [
+    300.0,
+    252
+   ],
+   "z": 23,
+   "parent": "head",
+   "tags": []
+  },
+  {
+   "name": "nose",
+   "png": "nose.png",
+   "box": [
+    291.5,
+    297.5,
+    316.25,
+    351.75
+   ],
+   "pivot": [
+    300.0,
+    330
+   ],
+   "z": 23,
+   "parent": "head",
+   "tags": []
+  },
+  {
+   "name": "mouth:X",
+   "png": "mouth__X.png",
+   "box": [
+    262.5,
+    385.5,
+    337.5,
+    393.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:A",
+   "png": "mouth__A.png",
+   "box": [
+    269.5,
+    386.5,
+    330.5,
+    391.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:B",
+   "png": "mouth__B.png",
+   "box": [
+    262.5,
+    381.5,
+    337.5,
+    396.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:C",
+   "png": "mouth__C.png",
+   "box": [
+    262.5,
+    377.5,
+    337.5,
+    416.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:D",
+   "png": "mouth__D.png",
+   "box": [
+    257.25,
+    372.5,
+    342.75,
+    430.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:E",
+   "png": "mouth__E.png",
+   "box": [
+    276.5,
+    379.5,
+    323.5,
+    412.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:F",
+   "png": "mouth__F.png",
+   "box": [
+    287.0,
+    382.5,
+    313.0,
+    398.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:G",
+   "png": "mouth__G.png",
+   "box": [
+    266.0,
+    380.5,
+    334.0,
+    394.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "mouth:H",
+   "png": "mouth__H.png",
+   "box": [
+    266.0,
+    377.5,
+    334.0,
+    412.5
+   ],
+   "pivot": [
+    300.0,
+    388
+   ],
+   "z": 24,
+   "parent": "head",
+   "tags": [
+    "swap"
+   ]
+  },
+  {
+   "name": "drool",
+   "png": "drool.png",
+   "box": [
+    324.0,
+    390.0,
+    338.25,
+    433.25
+   ],
+   "pivot": [
+    330.0,
+    392
+   ],
+   "z": 25,
+   "parent": "head",
+   "tags": []
+  }
+ ]
+}
