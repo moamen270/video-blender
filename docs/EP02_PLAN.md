@@ -558,18 +558,29 @@ All body animation goes into NLA strips (never `animation_data.action`, which is
 3. `key_root(qc, frame, *, loc=None, heading=None)` — keys `qc.root` location and/or rotation z (heading in
    degrees, 0 = facing world +Y, 90 = facing world −X; `rotation_euler.z = radians(heading)`), LINEAR
    interpolation on the keys it inserts (`C.set_interp_at`).
-4. `walk_to(qc, start, to_xy, *, action="Walk", turn_frames=6, blend=6) -> tuple[int, list[int]]`
-   - `p0` = root location at `start` (`scene.frame_set(start)`); `d = Vector(to_xy) − p0.xy`;
-     `heading = degrees(atan2(−d.x, d.y))` (the root's +Y then points along d); current heading =
-     `degrees(root.rotation_euler.z)`.
-   - `key_root(start, heading=current)`, `key_root(start + turn_frames, heading=heading)`;
-     `n = round(d.length / ground_speed(qc, action))`; `key_root(start, loc=p0)`,
-     `key_root(start + n, loc=(to_xy[0], to_xy[1], p0.z))`.
-   - `play(qc, action, start, n + blend, blend_in=blend)`; `play(qc, "Idle", start + n, 240, blend_in=blend)`.
-   - Step frames: in the Walk cycle measured in item 2, a foot lands on the first frame of each planted run;
-     for every frame `f` in `start … start + n` whose phase `(f − start) mod action_length` is a landing phase,
-     add `f`. Return `(start + n, step_frames)`.
-5. `turn_to(qc, frame, heading, frames=8)` — keys the current heading at `frame` and `heading` at `frame + frames`.
+4. `foot_track(qc, action) -> dict` — cached per `(qc.name, action)`: sample the action exactly like
+   `ground_speed` (mute NLA, active action, restore) and return `{"len": L, "L": [(y, z) for p in 0..L],
+   "R": [...]}` — native armature-space heads of `Foot.L` / `Foot.R` for every phase p = 0 … L (inclusive).
+   `ground_speed` may reuse it.
+   **Why (senior measurement 2026-09-24):** the Quaternius Walk is NOT a constant-speed cycle — the planted
+   foot slows down inside every step, so a constant root speed makes the feet skate up to 0.025 m/frame.
+   `walk_to` therefore extracts the root motion from the animation (the planted foot stays locked).
+5. `walk_to(qc, start, to_xy, *, action="Walk", turn_frames=6, blend=6) -> tuple[int, list[int]]`
+   - `had_tracks = len(qc.arm.animation_data.nla_tracks) > 0` (create animation data first).
+   - `p0` = root location at `start` (`scene.frame_set(start)`); `d = Vector(to_xy) − p0.xy`; `dist = d.length`;
+     `u = d.normalized()`; `heading = degrees(atan2(−d.x, d.y))`; current heading = `degrees(root.rotation_euler.z)`;
+     `key_root(start, heading=current)`, `key_root(start + turn_frames, heading=heading)`; `key_root(start, loc=p0)`.
+   - Root motion loop: `tr = foot_track(qc, action)`, `L = tr["len"]`, `cum = 0`, `f = start`, `prev_sup = None`,
+     `steps = []`. Repeat: `p = (f − start) % L`; `sup = "L" if tr["L"][p][1] <= tr["R"][p][1] else "R"`;
+     if `prev_sup` is not None and `sup != prev_sup`: `steps.append(f)`; `prev_sup = sup`;
+     `delta = max(0.0, tr[sup][p + 1][0] − tr[sup][p][0]) · qc.scale` (the planted foot moves toward native +Y =
+     backward, so the root advances by that amount); if `had_tracks` and `f − start < blend`:
+     `delta *= (f − start + 1) / blend` (ease in while the walk fades in); `cum += delta`; `f += 1`;
+     if `cum >= dist`: `key_root(f, loc=(to_xy[0], to_xy[1], p0.z))` and stop; else
+     `key_root(f, loc=p0 + u·cum)` (z = p0.z). Raise `RuntimeError` if `f − start > 20·L`.
+   - `n = f − start`; `play(qc, action, start, n + blend, blend_in=blend if had_tracks else 0)`;
+     `play(qc, "Idle", start + n, 240, blend_in=blend)`. Return `(start + n, steps)`.
+6. `turn_to(qc, frame, heading, frames=8)` — keys the current heading at `frame` and `heading` at `frame + frames`.
 
 ### 11.3 Voice, lip sync, blinks (task F3)
 
@@ -626,13 +637,17 @@ in world space; the solidify doubles vertices — use the vertex nearest to the 
 (4.5, 1.4, 1.0) → (0, 1.4, 0.9), lens 40, 540x960, `store_night`, `floor`) at frames 20, 48, 60, 72, 84, 100
 to `output/tests/F1/cape_<f>.png`.
 
-**t_motion.py (F2):** `qc = load_character("Suit_Male.blend", "walker")` (not `kit.cast` — F1 edits it in parallel), `end, steps = walk_to(qc, 1, (0, 3.0))`; assert
-`end == 1 + round(3.0 / ground_speed(qc, "Walk"))` and `0.035 < ground_speed < 0.08`; for frames
-`10 … end − 6`: whenever a foot is planted (its world z ≤ the lowest world z of that foot over those frames + 0.02)
-the foot's world horizontal speed between f and f+1 is < 0.015 m/frame; `len(steps) >= 4`; the top NLA track's
-strip action is the Joker's Idle action. Then `turn_to(qc, end + 12, 90)`; at `end + 20` the root heading is
-90° ± 0.5. Render frames 10, 20, 30, end, end + 20 (camera (4.0, 1.5, 1.1) → (0, 1.5, 0.9), lens 35,
-540x960, `store_night`, `floor`) to `output/tests/F2/`.
+**t_motion.py (F2):** `qc = load_character("Suit_Male.blend", "walker")` (not `kit.cast`);
+`play(qc, "Idle", 1, 30)`; `end, steps = walk_to(qc, 10, (0, 3.0))`. Assert:
+(a) at frame `end` the root world position is within 0.001 m of (0, 3.0); `30 < end − 10 < 80`;
+(b) foot lock — for every f in `17 … end − 2`: `lo` = the foot (`Foot.L` / `Foot.R`) with the lower WORLD z at
+f; if the same foot is also the lower one at f + 1, its horizontal world displacement between f and f + 1 is
+< 0.006 m (print the largest value);
+(c) `len(steps) >= 3`, strictly increasing, consecutive gaps between 10 and 20 frames;
+(d) the top NLA track's strip action is the walker's Idle action;
+(e) `turn_to(qc, end + 12, 90)`; at `end + 20` the root heading is 90° ± 0.5.
+Render frames 12, 24, 36, end, end + 20 (camera (4.0, 1.5, 1.1) → (0, 1.5, 0.9), lens 35, 540x960,
+`store_night`, `floor`) to `output/tests/F2/`.
 
 **t_lipsync.py (F3):** reads `projects/cp2/voice/manifest.json` (asserts lines `bat1` and `jok1` exist, seconds >
 0.5, ≥ 5 cues each, wav files exist); `qc = load_character("BaseCharacter.blend", "hero")`,
