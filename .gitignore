@@ -9,3 +9,6 @@ assets/library/*
 !assets/library/music/
 assets/library/music/*
 !assets/library/music/LICENSES.md
+
+# generated voice lines (cloned voices stay local)
+projects/*/voice/
