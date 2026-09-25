@@ -6,7 +6,8 @@ import math
 import os
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  # projects/tests/<name>/
+HERE = os.path.dirname(os.path.abspath(__file__))  # this project folder
 if not os.path.isdir(os.path.join(ROOT, "studio")):
     ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if ROOT not in sys.path:
@@ -49,7 +50,7 @@ def build() -> None:
     motion.key_root(jok, 1, loc=(*JOK_AT, 0), heading=0.0)
 
     # 3. Voice manifest
-    manifest_path = os.path.join(ROOT, "projects", "cp2", "voice", "manifest.json")
+    manifest_path = os.path.join(HERE, "voice", "manifest.json")
     with open(manifest_path, "r", encoding="utf-8") as fh:
         man = json.load(fh)["lines"]
     L1 = math.ceil(man["bat1"]["seconds"] * 24)
@@ -119,7 +120,7 @@ def build() -> None:
         "sfx": [{"frame": f, "sfx": "step_hard", "gain": 0.35} for f in motion.foot_events(bat, 1, walk_end + 20)],
         "overlays": [],
     }
-    cues_path = os.path.join(ROOT, "projects", "cp2", "cues.json")
+    cues_path = os.path.join(HERE, "cues.json")
     with open(cues_path, "w", encoding="utf-8") as fh:
         json.dump(cues, fh, indent=1)
 

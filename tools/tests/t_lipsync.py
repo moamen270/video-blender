@@ -19,8 +19,8 @@ from kit import face, look, qchar
 
 
 def main() -> None:
-    # 1. Read projects/cp2/voice/manifest.json
-    manifest_path = os.path.join(ROOT, "projects", "cp2", "voice", "manifest.json")
+    # 1. Read projects/batman-joker-screen-test/voice/manifest.json
+    manifest_path = os.path.join(ROOT, "projects", "tests", "batman-joker-screen-test", "voice", "manifest.json")
     assert os.path.isfile(manifest_path), f"Manifest file missing: {manifest_path}"
     with open(manifest_path, "r", encoding="utf-8") as fh:
         manifest = json.load(fh)

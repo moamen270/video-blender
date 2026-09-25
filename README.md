@@ -9,11 +9,12 @@ studio/          reusable library (the "asset pack")
   core.py        scene reset, materials, primitives, keyframes, cameras, cuts, render settings
   characters.py  build_character() rig + poses/cycles (walk, bounce, squash, eyes, mouth…)
   props.py       bow/arrow/shield/helmet/wings/halo/heart/star, trees/rocks/clouds/text
-projects/<name>/
+projects/<name>/   one folder per episode, named for the episode (kebab-case: ryu-vs-ken-last-hadouken)
   script.py      the story: a timeline of frame constants + calls into studio
   cues.json      audio cue sheet emitted by the build (frames → sfx / narration lines)
   social.json    upload text: title, hook, description, tags, hashtags, pinned comment, cover, checklist
   output/vN      scene.blend, video.mp4, mix.wav, final.mp4, sheet_4hz.png, social.md, render.log  (never overwritten)
+projects/tests/  screen tests, voice-take scratch and other non-episodes (same layout; --project tests/<name>)
 brand.json       channel identity (name, handle, links, default hashtags) used in every social.md
 tools/
   build.py       blender -b … : build scene, save scene.blend, render video.mp4
@@ -29,8 +30,8 @@ output/review    low-res contact sheets used while iterating
 ## Make a video
 
 ```sh
-sh tools/make.sh cupid preview     # ~3 min on a GTX 1660 S: projects/cupid/output/v<next>/final.mp4
-sh tools/make.sh cupid final       # 1080x1920, 64 samples
+sh tools/make.sh cupid-had-one-job preview     # ~3 min on a GTX 1660 S: projects/cupid-had-one-job/output/v<next>/final.mp4
+sh tools/make.sh cupid-had-one-job final       # 1080x1920, 64 samples
 ```
 
 ## Iterate with an agent (Blender MCP)
@@ -39,7 +40,7 @@ Blender open → sidebar "MCP for Blender" → Connect. Then from Claude Code / 
 
 ```python
 exec(open('F:/PoCs/blender-video/tools/live.py').read())
-load('projects/cupid/script.py')         # rebuilds the whole scene from code in the live session
+load('projects/cupid-had-one-job/script.py')         # rebuilds the whole scene from code in the live session
 look(frame=300)                          # camera view, material shading, jump to a frame
 contact([30, 125, 300], 'output/review/x')   # render stills through the cut cameras
 ```

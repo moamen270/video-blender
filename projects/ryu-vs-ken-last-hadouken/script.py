@@ -17,6 +17,7 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+HERE = os.path.dirname(os.path.abspath(__file__))  # this project folder
 if not os.path.isdir(os.path.join(ROOT, "studio")):
     ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if ROOT not in sys.path:
@@ -79,7 +80,7 @@ def build() -> None:
     for q in (ryu, ken):
         FT.prepare(q)
 
-    man = json.load(open(os.path.join(ROOT, "projects", "sf01", "voice", "manifest.json"), encoding="utf-8"))["lines"]
+    man = json.load(open(os.path.join(HERE, "voice", "manifest.json"), encoding="utf-8"))["lines"]
     used = ["r_h1", "k_h1", "r_mine", "k_mine", "r_h2", "k_h2", "r_h3", "k_h3", "k_mine2", "r_mine2"]
     span = {k: active_span(man[k]["wav"]) for k in used}
 
@@ -379,9 +380,9 @@ def build() -> None:
     ]
     cues = {"fps": FPS, "frames": END, "lines": cue_lines, "sfx": sfx, "overlays": hud,
             "beats": [[MEET1 + 4, L1 - 2], [MEET3 + 1, L3]]}
-    json.dump(cues, open(os.path.join(ROOT, "projects", "sf01", "cues.json"), "w", encoding="utf-8"), indent=1)
+    json.dump(cues, open(os.path.join(HERE, "cues.json"), "w", encoding="utf-8"), indent=1)
     json.dump({"REL1": REL1, "MEET1": MEET1, "L1": L1, "L2": L2, "CH2": CH2, "REL2": REL2, "MEET2": MEET2, "ECU_R": ECU_R,
                "ECU_K": ECU_K, "CH3": CH3, "REL3": REL3, "MEET3": MEET3, "L3": L3, "L4": L4, "SET": SET, "END": END},
-              open(os.path.join(ROOT, "projects", "sf01", "beats.json"), "w"), indent=1)
+              open(os.path.join(HERE, "beats.json"), "w"), indent=1)
     print(f"[sf01] END={END} ({END / FPS:.1f}s) REL1={REL1} MEET1={MEET1} L1={L1} L2={L2} CH2={CH2} REL2={REL2} "
           f"CH3={CH3} REL3={REL3} MEET3={MEET3} L3={L3} L4={L4}", flush=True)

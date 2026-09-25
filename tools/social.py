@@ -1,7 +1,7 @@
 """Write projects/<p>/output/v<N>/social.md: ready-to-paste upload text for every platform we publish on.
 
-    python tools/social.py sf01                # latest version
-    python tools/social.py sf01 --version 40
+    python tools/social.py ryu-vs-ken-last-hadouken                # latest version
+    python tools/social.py ryu-vs-ken-last-hadouken --version 40
 
 Source: projects/<p>/social.json (one title/description/tag set, written per episode) + brand.json
 (channel name, handle, links, default hashtags). Same layout as video-builder's `vb social`

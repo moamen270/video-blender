@@ -58,3 +58,9 @@ IK `reach`/`reach_path`, `hold`/`release`/`throw`, `foot_events`), `look` (toon2
 ## Known look limits
 Low-poly chibi dummies, decal faces float off the silhouette at 3/4 angles, canned Quaternius actions (stiff),
 EEVEE volume mist is noisy (use the ffmpeg `grade` in cues instead). See `docs/PHASE1_ASSESSMENT.md`.
+
+## Project folders
+- One folder per episode under `projects/`, named for the episode in kebab-case (`ryu-vs-ken-last-hadouken`,
+  `batman-unexpected-item`), never a code like ep02/sf01.
+- Screen tests, voice-take scratch and anything that is not an episode go in `projects/tests/<name>` (`--project tests/<name>`).
+- Scripts find their own folder with `HERE = os.path.dirname(os.path.abspath(__file__))`; never hard-code the project name in a path.

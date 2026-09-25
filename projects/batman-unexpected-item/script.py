@@ -7,6 +7,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+HERE = os.path.dirname(os.path.abspath(__file__))  # this project folder
 if not os.path.isdir(os.path.join(ROOT, "studio")):
     ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if ROOT not in sys.path:
@@ -62,7 +63,7 @@ def heading(from_xy: tuple[float, float] | Vector, to_xy: tuple[float, float] | 
 
 def build() -> None:
     """Build the full Unexpected Item episode scene."""
-    manifest_path = os.path.join(ROOT, "projects", "ep02", "voice", "manifest.json")
+    manifest_path = os.path.join(HERE, "voice", "manifest.json")
     with open(manifest_path, "r", encoding="utf-8") as fh:
         man = json.load(fh)["lines"]
     CUT_DUR = next(w["end"] for w in man["m_unexpected"]["words"] if w["w"].lower().startswith("item"))
@@ -630,7 +631,7 @@ def build() -> None:
         "grade": "eq=contrast=1.10:brightness=-0.04:saturation=1.10,colorbalance=rs=-0.04:bs=0.06:rm=-0.02:bm=0.04:rh=0.02,vignette=angle=PI/4.5",
     }
 
-    cues_path = os.path.join(ROOT, "projects", "ep02", "cues.json")
+    cues_path = os.path.join(HERE, "cues.json")
     with open(cues_path, "w", encoding="utf-8") as fh:
         json.dump(cues, fh, indent=1)
 

@@ -19,20 +19,20 @@ from kit import captions
 
 
 def test_manifest_words() -> None:
-    manifest_path = os.path.join(ROOT, "projects", "ep02", "voice", "manifest.json")
+    manifest_path = os.path.join(ROOT, "projects", "batman-unexpected-item", "voice", "manifest.json")
     assert os.path.isfile(manifest_path), f"Manifest file missing: {manifest_path}"
     with open(manifest_path, "r", encoding="utf-8") as fh:
         manifest = json.load(fh)
 
     lines = manifest.get("lines", {})
-    assert lines, "No lines in ep02 manifest"
+    assert lines, "No lines in batman-unexpected-item manifest"
 
     # If manifest does not have words yet (e.g. voice.py not run beforehand),
     # populate words from alignment files without synthesizing audio
     if any("words" not in entry for entry in lines.values()):
         import voice
         old_argv = sys.argv
-        sys.argv = ["voice.py", "--project", "ep02"]
+        sys.argv = ["voice.py", "--project", "batman-unexpected-item"]
         try:
             voice.main()
         finally:
@@ -42,7 +42,7 @@ def test_manifest_words() -> None:
         lines = manifest.get("lines", {})
 
     for lid, entry in lines.items():
-        assert "words" in entry, f"Line '{lid}' missing 'words' in ep02 manifest"
+        assert "words" in entry, f"Line '{lid}' missing 'words' in batman-unexpected-item manifest"
         words = entry["words"]
         assert isinstance(words, list), f"Line '{lid}' words must be a list"
         assert len(words) > 0, f"Line '{lid}' has empty 'words'"
@@ -54,11 +54,11 @@ def test_manifest_words() -> None:
 
 
 def test_groups_b_vengeance() -> None:
-    manifest_path = os.path.join(ROOT, "projects", "ep02", "voice", "manifest.json")
+    manifest_path = os.path.join(ROOT, "projects", "batman-unexpected-item", "voice", "manifest.json")
     with open(manifest_path, "r", encoding="utf-8") as fh:
         manifest = json.load(fh)
     lines = manifest["lines"]
-    assert "b_vengeance" in lines, "Line 'b_vengeance' not found in ep02 manifest"
+    assert "b_vengeance" in lines, "Line 'b_vengeance' not found in batman-unexpected-item manifest"
     b_words = lines["b_vengeance"]["words"]
 
     grps = captions.groups(b_words, start_frame=100, fps=24, keywords=("vengeance", "night"))

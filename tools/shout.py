@@ -3,7 +3,7 @@ made-up word on its own): trim a word out of a carrier phrase, split it at the s
 ("Hadou|ken" at the silent 'k' closure), time-stretch the first part with a rising pitch, glue a
 "KEN!" onto it, and write Rhubarb lip-sync cues for every result.
 
-    uv run --project F:/PoCs/video-builder/py python tools/shout.py --project sf01
+    uv run --project F:/PoCs/video-builder/py python tools/shout.py --project ryu-vs-ken-last-hadouken
 
 Reads projects/<p>/shouts.json:
   {"id": {"src": "<line id>", "word": "Hadouken!",            # word to cut from the take

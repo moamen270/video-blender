@@ -13,7 +13,8 @@ import math
 import os
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  # projects/tests/<name>/
+HERE = os.path.dirname(os.path.abspath(__file__))  # this project folder
 if not os.path.isdir(os.path.join(ROOT, "studio")):
     ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 if ROOT not in sys.path:
@@ -34,7 +35,7 @@ def build() -> None:
     morty = K.Puppet("morty", loc=(MORTY_X, 0.0), depth=-0.3)
     rick = K.Puppet("rick", loc=(RICK_X, 0.0), depth=0.0)
 
-    man = json.load(open(os.path.join(ROOT, "projects", "rm01", "voice", "manifest.json"), encoding="utf-8"))["lines"]
+    man = json.load(open(os.path.join(HERE, "voice", "manifest.json"), encoding="utf-8"))["lines"]
 
     def n_frames(lid: str) -> int:
         return math.ceil(man[lid]["seconds"] * FPS)
@@ -272,5 +273,5 @@ def build() -> None:
                 {"frame": P4, "sfx": "portal_close", "gain": 0.7}],
         "overlays": [],
     }
-    with open(os.path.join(ROOT, "projects", "rm01", "cues.json"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(HERE, "cues.json"), "w", encoding="utf-8") as fh:
         json.dump(cues, fh, indent=1)

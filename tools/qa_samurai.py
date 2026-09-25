@@ -1,7 +1,7 @@
 """Samurai animation QA checks (Task T10).
 
 Runs inside Blender headless on the built scene:
-    blender -b output/vN/scene.blend --python tools/qa_samurai.py -- --cues projects/samurai/cues.json --out output/vN/qa.json
+    blender -b output/vN/scene.blend --python tools/qa_samurai.py -- --cues projects/samurai-duel/cues.json --out output/vN/qa.json
 """
 from __future__ import annotations
 

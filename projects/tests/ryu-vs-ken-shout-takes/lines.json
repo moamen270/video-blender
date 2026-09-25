@@ -1,0 +1,82 @@
+[
+ {
+  "id": "ryu_0",
+  "character": "ryu",
+  "text": "Hadouuuuuuuken!!",
+  "emotion": 0.9,
+  "seed": 101,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_1",
+  "character": "ryu",
+  "text": "Hadouuuuuuuken!!",
+  "emotion": 0.9,
+  "seed": 202,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_2",
+  "character": "ryu",
+  "text": "HADOUUUUUUKEN!!",
+  "emotion": 0.9,
+  "seed": 303,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_3",
+  "character": "ryu",
+  "text": "Hadouuuuuuuken!!",
+  "emotion": 0.8,
+  "seed": 404,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_4",
+  "character": "ryu",
+  "text": "Hadouuuuuuuuuken!",
+  "emotion": 0.85,
+  "seed": 505,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ken_0",
+  "character": "ken",
+  "text": "Hadouuuuuuuken!!",
+  "emotion": 0.9,
+  "seed": 101,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_1",
+  "character": "ken",
+  "text": "Hadouuuuuuuken!!",
+  "emotion": 0.9,
+  "seed": 202,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_2",
+  "character": "ken",
+  "text": "HADOUUUUUUKEN!!",
+  "emotion": 0.9,
+  "seed": 303,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_3",
+  "character": "ken",
+  "text": "Hadouuuuuuuken!!",
+  "emotion": 0.8,
+  "seed": 404,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_4",
+  "character": "ken",
+  "text": "Hadouuuuuuuuuken!",
+  "emotion": 0.85,
+  "seed": 505,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ }
+]

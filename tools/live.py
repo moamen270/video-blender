@@ -2,7 +2,7 @@
 
 Usage from execute_blender_code:
     exec(open('F:/PoCs/blender-video/tools/live.py').read())
-    load('tools/smoke.py')          # or 'projects/cupid/script.py'
+    load('tools/smoke.py')          # or 'projects/cupid-had-one-job/script.py'
     look(frame=30)                  # camera view + material shading, jump to frame
 """
 import importlib

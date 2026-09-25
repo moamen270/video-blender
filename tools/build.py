@@ -1,6 +1,6 @@
 """Headless build + render.
 
-    blender -b --python tools/build.py -- --project cupid --out projects/cupid/output/v3 --quality preview
+    blender -b --python tools/build.py -- --project cupid-had-one-job --out projects/cupid-had-one-job/output/v3 --quality preview
 
 Writes into --out:
     scene.blend        the built scene (open it in Blender to tweak by hand)

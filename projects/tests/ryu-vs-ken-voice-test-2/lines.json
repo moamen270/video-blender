@@ -1,0 +1,93 @@
+[
+ {
+  "id": "ryu_a",
+  "character": "ryu",
+  "text": "Hadoken!",
+  "emotion": 0.6,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_b",
+  "character": "ryu",
+  "text": "Hadoken!",
+  "emotion": 0.85,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_c",
+  "character": "ryu",
+  "text": "Take this. Hadouken!",
+  "emotion": 0.75,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_d",
+  "character": "ryu",
+  "text": "Hadouuuuuuken!",
+  "emotion": 0.75,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_e",
+  "character": "ryu",
+  "text": "Haaa... doooooou... KEN!",
+  "emotion": 0.75,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_f",
+  "character": "ryu",
+  "text": "Ken!",
+  "emotion": 0.8,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ryu_g",
+  "character": "ryu",
+  "text": "Hadouken!!",
+  "emotion": 0.9,
+  "voiceRef": "assets/library/voices_ref/ryu_shout_ref.wav"
+ },
+ {
+  "id": "ken_a",
+  "character": "ken",
+  "text": "Hadoken!",
+  "emotion": 0.6,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_b",
+  "character": "ken",
+  "text": "Hadoken!",
+  "emotion": 0.85,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_c",
+  "character": "ken",
+  "text": "Take this. Hadouken!",
+  "emotion": 0.75,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_d",
+  "character": "ken",
+  "text": "Hadouuuuuuken!",
+  "emotion": 0.75,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_f",
+  "character": "ken",
+  "text": "Ken!",
+  "emotion": 0.8,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ },
+ {
+  "id": "ken_g",
+  "character": "ken",
+  "text": "Hadouken!!",
+  "emotion": 0.9,
+  "voiceRef": "assets/library/voices_ref/ken_shout_ref.wav"
+ }
+]

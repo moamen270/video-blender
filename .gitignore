@@ -1,5 +1,5 @@
 output/
-projects/*/output/
+projects/**/output/
 __pycache__/
 *.pyc
 *.blend1
@@ -12,4 +12,4 @@ assets/library/music/*
 !assets/library/music/LICENSES.md
 
 # generated voice lines (cloned voices stay local)
-projects/*/voice/
+projects/**/voice/

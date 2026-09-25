@@ -1,11 +1,11 @@
 {
   "ignore": [
     "output",
-    "projects/*/output",
+    "projects/**/output",
     "assets/library",
-    "projects/*/cues.json",
+    "projects/**/cues.json",
     "**/*.blend1",
-    "projects/*/voice"
+    "projects/**/voice"
   ],
   "skills": [
     "blender-kit"

@@ -1,0 +1,98 @@
+[
+ {
+  "id": "ryu_a",
+  "character": "ryu",
+  "text": "Hadouken!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ryu_b",
+  "character": "ryu",
+  "text": "Ha-doh-ken!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ryu_c",
+  "character": "ryu",
+  "text": "Hah! Doh! Ken!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ryu_d",
+  "character": "ryu",
+  "text": "Hadoken!",
+  "emotion": 0.7
+ },
+ {
+  "id": "ryu_e",
+  "character": "ryu",
+  "text": "Take this. Hadouken!",
+  "emotion": 0.65
+ },
+ {
+  "id": "ryu_f",
+  "character": "ryu",
+  "text": "Haa-doooooh... KEN!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ryu_g",
+  "character": "ryu",
+  "text": "Kenn!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ryu_h",
+  "character": "ryu",
+  "text": "Ken!",
+  "emotion": 0.5
+ },
+ {
+  "id": "ken_a",
+  "character": "ken",
+  "text": "Hadouken!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ken_b",
+  "character": "ken",
+  "text": "Ha-doh-ken!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ken_c",
+  "character": "ken",
+  "text": "Hah! Doh! Ken!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ken_d",
+  "character": "ken",
+  "text": "Hadoken!",
+  "emotion": 0.7
+ },
+ {
+  "id": "ken_e",
+  "character": "ken",
+  "text": "Take this. Hadouken!",
+  "emotion": 0.65
+ },
+ {
+  "id": "ken_f",
+  "character": "ken",
+  "text": "Haa-doooooh... KEN!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ken_g",
+  "character": "ken",
+  "text": "Kenn!",
+  "emotion": 0.6
+ },
+ {
+  "id": "ken_h",
+  "character": "ken",
+  "text": "Ken!",
+  "emotion": 0.5
+ }
+]

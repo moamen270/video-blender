@@ -1,7 +1,7 @@
 """Script-order voice preview: shared shouts mixed with their ENDS aligned (both 'KEN!' land together),
 Ryu panned left, Ken right, trailing silence trimmed. -> review/<p>/voices_preview.mp3 + an index json.
 
-python tools/voice_preview.py --project sf01 --order "r_h1+k_h1,r_mine,k_mine,r_h2+k_h2,r_h3+k_h3,k_mine2,r_mine2" --scratch F:/PoCs/agy_scratch/sffinal
+python tools/voice_preview.py --project ryu-vs-ken-last-hadouken --order "r_h1+k_h1,r_mine,k_mine,r_h2+k_h2,r_h3+k_h3,k_mine2,r_mine2" --scratch F:/PoCs/agy_scratch/sffinal
 """
 import argparse, json, os, subprocess
 

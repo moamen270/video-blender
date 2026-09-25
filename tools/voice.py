@@ -1,7 +1,7 @@
 """Voice lines synthesis and Rhubarb lip sync manifest generator (Task F3).
 
 Run:
-    uv run --project F:/PoCs/video-builder/py python tools/voice.py --project cp2
+    uv run --project F:/PoCs/video-builder/py python tools/voice.py --project batman-joker-screen-test
 """
 from __future__ import annotations
 
