@@ -1,0 +1,18 @@
+{
+  "name": "__TITLE__",
+  "title": "",
+  "hook": "",
+  "description": "",
+  "disclaimer": "A cartoon parody. Characters are comedic impressions (voice impressions, AI-altered); not affiliated with or endorsed by the rights holders.",
+  "credits": [],
+  "tags": [],
+  "hashtags": ["#shorts", "#parody", "#comedy", "#dummysticky"],
+  "pinnedComment": "",
+  "coverText": "",
+  "checklist": [
+    "Turn on the platform's AI / altered-or-synthetic-content label (cloned, modified voices).",
+    "Keep the parody / not-affiliated line in the description (voice policy).",
+    "Register the post ids in analytics/posts.json and run python tools/stats.py."
+  ],
+  "published": {}
+}

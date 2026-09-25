@@ -4,6 +4,28 @@ Code-first 3D comedy Shorts for the **Dummy Sticky** channel (owner: Moamen). Ev
 keyframe is Python run headless in Blender 5.2; every render is a new immutable version.
 Read this file first, then the skill for the work at hand. Nothing below depends on chat memory.
 
+## Start of every session (and after every compaction)
+1. Read this file. 2. Run `python tools/board.py` — the Kanban board of all episodes: status, the gate waiting on
+the owner, the `next` action, open owner notes, definition-of-done gaps. 3. Open the active episode's
+`projects/<slug>/state.json` and continue from its `next`. The chat is not the memory; the files are.
+
+## How we work — the pipeline (`docs/PIPELINE.md`)
+Phases (the `status` in `state.json`), each with fixed input/output files and an owner gate:
+`idea` → `pitch` (**G1** premise + pitch PoC) → `script` (**G2**) → `design` (**G3** look, new items only) → `voice`
+(timing locked) → `animatic` (**G4** staging) → `animation` → `sound` → `qa` (**G5** final) → `package` →
+`awaiting-upload` → `published` → `learn` → `done` (also `dropped`, `archived`).
+- **Write it down immediately:** every owner decision, approval or note goes into `state.json` (`gates`,
+  `owner_notes` with the phase that must fix it, `decisions`, `next`, `history`, `updated`) *before* acting on it.
+  Update `status`/`next` on every phase change. This is what survives compaction and lets a weaker model continue.
+- **Send a note back to the earliest phase that caused it** (staging → `animatic`, joke → `pitch`) and redo from there.
+- **Components before episodes:** characters, poses, motions, props, FX, sets, sounds are built/approved as reusable
+  library items (`kit/`, `assets/`), then used; every finished video is harvested back (`state.harvested`).
+- New episode: `python tools/new_episode.py <descriptive-slug> "Title" --why-now "..." --deadline YYYY-MM-DD`
+  (templates in `templates/episode/`: state.json, pitch.md, script.md, design.md, lines.json, social.json),
+  then `git checkout -b ep/<slug>`.
+- Lanes besides episodes: Research (events, trends, tech radar), Library (components), Platform (tools/checks).
+  Weekly: research + pick ideas, `python tools/stats.py`, retro (notes → checks/skill rules, harvest).
+
 ## Owner rules (always)
 - **A question gets an answer, not an action.** Explain/propose, then wait for the go-ahead.
 - No permission prompts for work the owner asked for: decide, do, report. Creative choices (premise, look) go to the owner.
@@ -16,13 +38,16 @@ Read this file first, then the skill for the work at hand. Nothing below depends
 - Loops continue through the action (last frame = setup of frame 1); never a white/black flash.
 - Every milestone render → GitHub release on `moamen270/video-blender` (skill `publish-release`).
 - **Done = published on all 4 platforms** (post URLs recorded) + GitHub release + **merged to `main`** + analytics
-  logged + reusable parts harvested. Full definition and branch rules: skill `publish-release`.
+  logged + reusable parts harvested. Full definition: `docs/PIPELINE.md` §5; branch rules: skill `publish-release`.
 - Branches: `main` = finished work; work on `ep/<episode-slug>` or `kit/<topic>`, merge when done.
 - Record every owner correction as a skill rule (and in `docs/` logs) so it is never repeated.
 
 ## Important files
 | file | what it is |
 |---|---|
+| `docs/PIPELINE.md` | **the process**: phases, inputs/outputs, gates, lanes, definition of done, `state.json` schema, teams, what exists vs planned |
+| `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
+| `tools/board.py`, `tools/new_episode.py`, `templates/episode/` | Kanban board of episodes; new-episode scaffold; phase templates |
 | `README.md` | layout, `make.sh`, live Blender-MCP loop |
 | `.claude/skills/blender-episode/SKILL.md` | **how to make an episode** + skill map (hook-script, character-build, voice-casting, motion-acting, shot-design, sound-design, vfx-sets, episode-review, publish-release) |
 | `docs/PLAN_STATUS.md` | checklist of the production plan: what is done / partial / missing |
@@ -41,14 +66,15 @@ Read this file first, then the skill for the work at hand. Nothing below depends
 | `.agy/BRIEF.md`, `.agy/skills/` | standing rules for the Gemini (agy) worker |
 
 ## Projects
-`projects/<episode-slug>/`: `script.py` (timeline + build), `lines.json`, `social.json`, `output/vN/` (git-ignored),
+`projects/<episode-slug>/`: `state.json`, `pitch.md`, `script.md`, `design.md`, `script.py` (timeline + build), `lines.json`, `social.json`, `output/vN/` (git-ignored),
 `voice/` (git-ignored). Non-episodes live in `projects/tests/<name>`.
+Live status is in each `state.json` (`python tools/board.py`); summary:
 | project | status |
 |---|---|
-| `ryu-vs-ken-last-hadouken` | latest (Street Fighter loop, 18 s). Final v40 = release v0.3.4. Owner: "not bad, I like it" |
-| `batman-unexpected-item` | EP02, final v21; owner story 0/10, humour 0/10, style 4/10 |
-| `cupid-had-one-job` | first pipeline test, v0.1.0 |
-| `samurai-duel` | early 3D test |
+| `ryu-vs-ken-last-hadouken` | `awaiting-upload` — Street Fighter loop, 18 s, final v40 = release v0.3.4. Owner: "not bad, I like it" |
+| `batman-unexpected-item` | `published` 2026-09-24 — final v21; owner story 0/10, humour 0/10, style 4/10; Facebook flagged a border |
+| `cupid-had-one-job` | `archived` — first pipeline test, v0.1.0 |
+| `samurai-duel` | `archived` — early 3D test |
 | `tests/rick-and-morty-screen-test` | 2D cut-out trial, v0.2.0, **rejected** (direction: 3D) |
 
 ## Commands
@@ -57,6 +83,9 @@ uv run --project F:/PoCs/video-builder/py python tools/voice.py --project <p>   
 sh tools/make.sh <p> preview|final        # -> projects/<p>/output/v<next>/
 python tools/social.py <p> [--version N]  # regenerate social.md from social.json
 python tools/stats.py                     # snapshot numbers for every video in analytics/posts.json
+python tools/board.py                     # episode board: status, next action, DoD gaps
+python tools/new_episode.py <slug> "Title" # scaffold a new episode from templates/episode
+uv run --project F:/PoCs/video-builder/py python tools/qa_episode.py --out projects/<p>/output/vN   # QA incl. border
 gh release create vX.Y.Z -R moamen270/video-blender --target <branch> ...
 ```
 Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Super).
@@ -73,7 +102,9 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
   4 platforms vs 554–1,438 for each stickman video in 4–8 days. TikTok gave Wolverine/Jhin/Dodgeball 1–2 views
   (likely restricted — owner to check TikTok Studio). Retention/avg watch need creator dashboards/APIs (not public).
   `analytics/` is the canonical log for the whole channel (video-builder's sheet is superseded).
-- Open proposals awaiting the owner: a phased production process (research → pitch PoC → script → design →
-  voice → animatic → animation → sound → QA → publish → learn), a reusable component/asset/set library,
-  per-episode `state.json`, analytics pulled from the platforms.
+- 2026-09-26: Facebook flagged Batman EP02 "video has a border" (open set top = black band) → `qa_episode.py`
+  border check (FAIL on black/white edge band ≥ 5 %). Owner chose only the check; no set rule or checklist change.
+- 2026-09-26: the pipeline is in place (`docs/PIPELINE.md`, `state.json` per episode, board, scaffold, templates).
+  Planned next (owner's list): library catalog with previews + harvest, research lane (events calendar, tech radar,
+  asset scouting), pitch PoC tooling, animatic spec + compiler + staging checks, per-team subagents, creator analytics.
 - Ryu vs Ken v40 is ready but not uploaded yet (as far as the repo knows).

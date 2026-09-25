@@ -1,0 +1,25 @@
+{
+  "slug": "__SLUG__",
+  "title": "__TITLE__",
+  "status": "idea",
+  "branch": "ep/__SLUG__",
+  "updated": "__DATE__",
+  "next": "Write pitch.md (3 pitches + pitch PoC) and show it to the owner (gate G1).",
+  "why_now": "",
+  "deadline": "",
+  "gates": {
+    "G1": {"status": "pending", "date": "", "note": "premise"},
+    "G2": {"status": "pending", "date": "", "note": "script"},
+    "G3": {"status": "pending", "date": "", "note": "look of new characters/sets (skipped if all reused)"},
+    "G4": {"status": "pending", "date": "", "note": "animatic: staging and timing"},
+    "G5": {"status": "pending", "date": "", "note": "final"}
+  },
+  "files": {"pitch": "pitch.md", "script": "script.md", "design": "design.md", "lines": "lines.json",
+            "build": "script.py", "social": "social.json"},
+  "final": {"version": null, "release": null},
+  "owner_notes": [],
+  "decisions": [],
+  "known_issues": [],
+  "lessons": [],
+  "history": [{"date": "__DATE__", "status": "idea", "note": "created with tools/new_episode.py"}]
+}

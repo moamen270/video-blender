@@ -1,0 +1,20 @@
+{
+  "slug": "cupid-had-one-job",
+  "title": "Cupid Had One Job",
+  "status": "archived",
+  "branch": "main",
+  "updated": "2026-09-26",
+  "next": "Nothing: archived test. Reuse its parts from kit/ if needed.",
+  "gates": {},
+  "owner_notes": [],
+  "decisions": [],
+  "known_issues": [],
+  "lessons": [],
+  "history": [
+    {
+      "date": "2026-09-26",
+      "status": "archived",
+      "note": "first pipeline test (release v0.1.0); never published"
+    }
+  ]
+}

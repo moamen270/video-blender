@@ -1,0 +1,20 @@
+{
+  "slug": "samurai-duel",
+  "title": "Samurai Duel",
+  "status": "archived",
+  "branch": "main",
+  "updated": "2026-09-26",
+  "next": "Nothing: archived test. Reuse its parts from kit/ if needed.",
+  "gates": {},
+  "owner_notes": [],
+  "decisions": [],
+  "known_issues": [],
+  "lessons": [],
+  "history": [
+    {
+      "date": "2026-09-26",
+      "status": "archived",
+      "note": "early 3D test (v3-v6); never published; its black night sky would FAIL the border check"
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "slug": "ryu-vs-ken-last-hadouken",
+  "title": "Ryu vs Ken — Who Gets the Last Hadouken",
+  "status": "awaiting-upload",
+  "branch": "main",
+  "updated": "2026-09-26",
+  "next": "Owner uploads output/v40/final.mp4 to YouTube, TikTok, Instagram and Facebook with output/v40/social.md; then Claude adds the post ids to analytics/posts.json and runs python tools/stats.py at 24 h / 72 h / 7 d.",
+  "why_now": "Street Fighter live-action film listed for 16 Oct 2026 (verify the date).",
+  "deadline": "2026-10-16",
+  "gates": {
+    "G1": {
+      "status": "approved",
+      "date": "2026-09-25",
+      "note": "owner wrote the premise: 'Who Gets the Last Hadouken', increasingly ridiculous Hadoukens, as a loop"
+    },
+    "G2": {
+      "status": "approved",
+      "date": "2026-09-25",
+      "note": "owner: 'Proceed'"
+    },
+    "G3": {
+      "status": "approved",
+      "date": "2026-09-25",
+      "note": "Ryu/Ken turnaround (release v0.3.0 character-sheet.png); natural skin chosen"
+    },
+    "G4": {
+      "status": "skipped",
+      "date": "",
+      "note": "animatic phase did not exist yet; staging was fixed in v37-v39 from owner notes instead"
+    },
+    "G5": {
+      "status": "approved",
+      "date": "2026-09-25",
+      "note": "owner asked for the upload text of the final version (v40)"
+    }
+  },
+  "files": {
+    "premise": "owner (chat, 2026-09-25)",
+    "lines": "lines.json",
+    "shouts": "shouts.json",
+    "build": "script.py",
+    "social": "social.json"
+  },
+  "final": {
+    "version": 40,
+    "release": "v0.3.4",
+    "seconds": 18.2
+  },
+  "owner_notes": [
+    {
+      "date": "2026-09-25",
+      "version": 30,
+      "note": "Natural skin is better; hands/arms looked like horse legs",
+      "phase": "design",
+      "status": "fixed",
+      "fixed_in": 31
+    },
+    {
+      "date": "2026-09-25",
+      "version": 30,
+      "note": "Ryu/Ken had no real voice; use the supplied Street Fighter X Tekken clips",
+      "phase": "voice",
+      "status": "fixed",
+      "fixed_in": 35
+    },
+    {
+      "date": "2026-09-25",
+      "version": 35,
+      "note": "Characters are too close to each other",
+      "phase": "animatic",
+      "status": "fixed",
+      "fixed_in": 37
+    },
+    {
+      "date": "2026-09-25",
+      "version": 35,
+      "note": "Fireballs are charged over their bodies",
+      "phase": "animatic",
+      "status": "fixed",
+      "fixed_in": 37
+    },
+    {
+      "date": "2026-09-25",
+      "version": 35,
+      "note": "Not a real loop; the white flash is useless and very bad",
+      "phase": "script",
+      "status": "fixed",
+      "fixed_in": 37
+    },
+    {
+      "date": "2026-09-25",
+      "version": 35,
+      "note": "The collision sound is a liquid splash and does not fit",
+      "phase": "sound",
+      "status": "fixed",
+      "fixed_in": 37
+    },
+    {
+      "date": "2026-09-25",
+      "version": 37,
+      "note": "Arms and hands go behind their backs while charging",
+      "phase": "animation",
+      "status": "fixed",
+      "fixed_in": 38
+    },
+    {
+      "date": "2026-09-25",
+      "version": 37,
+      "note": "Fireball should start small and grow as the arms move away from the body",
+      "phase": "animation",
+      "status": "fixed",
+      "fixed_in": 38
+    },
+    {
+      "date": "2026-09-25",
+      "version": 37,
+      "note": "Add leaves and wind (autumn maple, orange/red)",
+      "phase": "design",
+      "status": "fixed",
+      "fixed_in": 38
+    },
+    {
+      "date": "2026-09-25",
+      "version": 37,
+      "note": "Camera on their faces while charging the strong one; keep the camera style and the overall shot",
+      "phase": "animatic",
+      "status": "fixed",
+      "fixed_in": 38
+    },
+    {
+      "date": "2026-09-25",
+      "version": 38,
+      "note": "The characters are not facing each other",
+      "phase": "animatic",
+      "status": "fixed",
+      "fixed_in": 39
+    },
+    {
+      "date": "2026-09-25",
+      "version": 39,
+      "note": "Replace the 99 timer with the infinity symbol",
+      "phase": "design",
+      "status": "fixed",
+      "fixed_in": 40
+    },
+    {
+      "date": "2026-09-25",
+      "version": 40,
+      "note": "Upload text (social.md) missing for the final version",
+      "phase": "package",
+      "status": "fixed",
+      "fixed_in": 40
+    }
+  ],
+  "decisions": [
+    {
+      "date": "2026-09-25",
+      "decision": "3D (Blender), not 2D cut-out",
+      "why": "the Rick and Morty 2D trial was rejected"
+    },
+    {
+      "date": "2026-09-25",
+      "decision": "Chatterbox parody clones, shouts from separate shouting references",
+      "why": "Kokoro cannot act; normal references garbled the shouts"
+    },
+    {
+      "date": "2026-09-25",
+      "decision": "Loop ends on the frame-1 wind-up pose and camera, no flash",
+      "why": "owner: a loop continues through the action"
+    }
+  ],
+  "known_issues": [
+    "Hands stay fists during the Hadouken (no open palms)",
+    "Ken's mega-charge voice reuses an earlier take (pitched)",
+    "No dedicated wind sound",
+    "Mega wide shot: balls partly overlap Ken's lower body",
+    "qa_episode length FAIL by design (18 s loop < 25 s)",
+    "qa flat-edge warning: plain floor strip at the bottom (~10 %)"
+  ],
+  "lessons": [
+    "Loops are made of the action, never a transition effect",
+    "Keep fighters ~2.4 m apart and effects off the bodies",
+    "Shouts need a shouting reference; align shared shouts on the measured 'ken' onset"
+  ],
+  "harvested": "partial: Ryu/Ken builders (kit/cast.py), fight poses, fireballs, rooftop sunset, maple leaves (kit/fight.py), bloom (kit/post.py); not yet catalogued",
+  "history": [
+    {
+      "date": "2026-09-25",
+      "status": "pitch",
+      "note": "owner premise"
+    },
+    {
+      "date": "2026-09-25",
+      "status": "qa",
+      "note": "v35 first full version, release v0.3.0"
+    },
+    {
+      "date": "2026-09-25",
+      "status": "package",
+      "note": "v40 final, release v0.3.4, social.md"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "awaiting-upload",
+      "note": "state.json backfilled (pipeline introduced)"
+    }
+  ]
+}

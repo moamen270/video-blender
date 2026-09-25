@@ -8,6 +8,10 @@ description: "How to produce an episode in blender-video with the kit (voice →
 Gate first: the premise/script is approved by the owner (skill `comedy-pitch`). Style direction: **3D**
 (the 2D cut-out trial, v0.2.0, was rejected). Plan and status: `docs/PRODUCTION_PLAN.md`, `docs/PLAN_STATUS.md`.
 
+**Process:** `docs/PIPELINE.md` (phases, gates, definition of done). Every episode has `projects/<p>/state.json`:
+read it first, write every owner decision/note into it immediately, update `status` and `next` on each phase change.
+New episode: `python tools/new_episode.py <slug> "Title"`; board: `python tools/board.py`.
+
 ## Skill map (load the one for the work at hand)
 | work | skill |
 |---|---|

@@ -1,0 +1,101 @@
+{
+  "slug": "batman-unexpected-item",
+  "title": "Unexpected Item (Batman vs the self-checkout)",
+  "status": "published",
+  "branch": "main",
+  "updated": "2026-09-26",
+  "next": "Run python tools/stats.py on 2026-09-27 (72 h) and 2026-10-01 (7 d); ask the owner whether a GitHub release of v21 is wanted (none exists).",
+  "why_now": "",
+  "deadline": "",
+  "gates": {
+    "G1": {
+      "status": "approved",
+      "date": "2026-09-24",
+      "note": "approved at the time; the owner later scored story 0/10, humour 0/10 (a Gemini table read had scored it 9/10)"
+    },
+    "G2": {
+      "status": "approved",
+      "date": "2026-09-24",
+      "note": "content/scripts/02-unexpected-item.md"
+    },
+    "G3": {
+      "status": "approved",
+      "date": "2026-09-24",
+      "note": "checkpoint 1 character sheets (output/character-sheets): style 4/10, Batman/Joker build 7/10"
+    },
+    "G4": {
+      "status": "approved",
+      "date": "2026-09-24",
+      "note": "checkpoint 3 animatic"
+    },
+    "G5": {
+      "status": "approved",
+      "date": "2026-09-24",
+      "note": "final v21 published as a phase-one test; the owner does not like the result"
+    }
+  },
+  "files": {
+    "script": "content/scripts/02-unexpected-item.md",
+    "lines": "lines.json",
+    "build": "script.py",
+    "social": "social.json",
+    "log": "docs/EP02_LOG.md"
+  },
+  "final": {
+    "version": 21,
+    "release": null,
+    "seconds": 39.9
+  },
+  "owner_notes": [
+    {
+      "date": "2026-09-24",
+      "version": 21,
+      "note": "Story 0/10, humour 0/10: 'unexpected item' is not a joke on its own",
+      "phase": "pitch",
+      "status": "wontfix",
+      "fixed_in": null
+    },
+    {
+      "date": "2026-09-24",
+      "version": 21,
+      "note": "Character style 4/10",
+      "phase": "design",
+      "status": "open",
+      "fixed_in": null
+    }
+  ],
+  "decisions": [
+    {
+      "date": "2026-09-24",
+      "decision": "Published as a phase-one test",
+      "why": "test Blender + the kit end to end"
+    }
+  ],
+  "known_issues": [
+    "Open set top renders as a black band (up to 24 % of the height): Facebook flagged 'Your video has a border' and limited distribution; the qa_episode border check FAILs it",
+    "Low 20-second view rate on Facebook (40 s video)"
+  ],
+  "lessons": [
+    "Model comedy scores are worthless; the owner judges the joke (comedy-pitch gate)",
+    "The 3D look pulled 5,947 views in day 1 on 4 platforms vs 554-1,438 for each stickman video in 4-8 days",
+    "Facebook limits videos with a border: no flat black/white band at the frame edges (qa check added)"
+  ],
+  "harvested": "partial: Batman/Joker builders (kit/cast.py), Gotham Mart set (kit/sets.py, kit/checkout.py), spring cape (kit/cape.py); not yet catalogued",
+  "history": [
+    {
+      "date": "2026-09-24",
+      "status": "published",
+      "note": "posted on 4 platforms"
+    },
+    {
+      "date": "2026-09-25",
+      "status": "published",
+      "note": "day-1 stats backfilled"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "published",
+      "note": "Facebook insights (owner screenshots): border issue, low 20-s view rate, 1,303 views, 10 engagements, 1 follow"
+    }
+  ]
+}
