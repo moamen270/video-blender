@@ -1,7 +1,7 @@
-"""QA check for a rendered episode: hook, dead time, and length.
+"""QA check for a rendered episode: hook, dead time, length, and border (flat band at a frame edge).
 
 Usage:
-    python tools/qa_episode.py --out output/vN [--report <path>]
+    python tools/qa_episode.py --out projects/<p>/output/vN [--report <path>]
 """
 from __future__ import annotations
 
@@ -81,6 +81,27 @@ def compute_audio_rms(mix_path: str, total_frames: int, fps: int = 24) -> tuple[
             audio_rms[f] = 20.0 * math.log10(rms_f) if rms_f > 1e-9 else -120.0
 
     return audio_rms, dbfs_03
+
+
+def border_depths(frame: np.ndarray, tol: int = 4) -> dict[str, tuple[int, float]]:
+    """Depth (pixels of this frame) of a flat band at each edge: rows/columns from the edge inward while the
+    whole band so far stays one flat tone (2nd-98th percentile spread <= tol grey levels).
+
+    A flat band at an edge reads as a letterbox/border; Facebook limits reach of "videos with a border"
+    (owner, batman-unexpected-item: open set top rendered as a black band 8-17 % of the height). A sky
+    gradient or a textured floor is not flat, so it does not count. Returns {edge: (depth, mean grey)}.
+    """
+    views = {"top": frame, "bottom": frame[::-1], "left": frame.T, "right": frame.T[::-1]}
+    out = {}
+    for edge, img in views.items():
+        depth, mean = 0, 0.0
+        for d in range(1, img.shape[0] // 2):
+            lo, hi = np.percentile(img[:d], [2, 98])
+            if hi - lo > tol:
+                break
+            depth, mean = d, float(img[:d].mean())
+        out[edge] = (depth, mean)
+    return out
 
 
 def in_beats(frame_idx: int, beats: list) -> bool:
@@ -210,8 +231,32 @@ def main() -> None:
     duration_s = total_frames / fps
     length_pass = bool(25.0 <= duration_s <= 40.0)
 
+    # 6. Border check (checked every 1/4 s, a window must last >= 1 s):
+    #    FAIL = near-black/near-white flat band >= 5 % at an edge (reads as a letterbox: EP02's open set top);
+    #    WARN = any other flat band >= 10 % (plain sky/grass/floor - legit, but texture it if it looks empty).
+    h, w = frames.shape[1], frames.shape[2]
+    step = max(1, fps // 4)
+
+    def edge_windows(pred) -> list[dict]:
+        wins, runs = [], {}
+        for i in range(0, total_frames, step):
+            for edge, (depth, mean) in border_depths(frames[i]).items():
+                frac = depth / (h if edge in ("top", "bottom") else w)
+                if pred(frac, mean):
+                    r = runs.setdefault(edge, [i + 1, i + 1, 0.0, mean])
+                    r[1], r[2] = i + 1, max(r[2], frac)
+                elif edge in runs:
+                    wins.append(runs.pop(edge) + [edge])
+        wins += [r + [e] for e, r in runs.items()]
+        return [{"edge": e, "from": a, "to": b, "max_pct": round(100 * f, 1), "tone": round(m)}
+                for a, b, f, m, e in wins if (b - a + step) >= fps]
+
+    border_windows = edge_windows(lambda frac, mean: frac >= 0.05 and (mean <= 24 or mean >= 235))
+    flat_windows = edge_windows(lambda frac, mean: frac >= 0.10 and 24 < mean < 235)
+    border_pass = not border_windows
+
     # Overall pass
-    overall_pass = bool(hook_pass and dead_time_pass and length_pass)
+    overall_pass = bool(hook_pass and dead_time_pass and length_pass and border_pass)
 
     report_data = {
         "hook": {
@@ -225,6 +270,8 @@ def main() -> None:
         },
         "dead_time": dead_windows,
         "length": round(float(duration_s), 2),
+        "border": border_windows,
+        "flat_edge_warnings": flat_windows,
         "pass": bool(overall_pass),
     }
 
@@ -248,6 +295,16 @@ def main() -> None:
     print(f"[qa] dead_time {dt_status} ({dt_detail})", flush=True)
 
     print(f"[qa] length {len_status} ({duration_s:.1f}s)", flush=True)
+    if border_pass:
+        print("[qa] border PASS (no black/white band >= 5 % at any edge)", flush=True)
+    else:
+        worst = ", ".join(f"{b['edge']} {b['max_pct']}% f{b['from']}-{b['to']}" for b in border_windows[:6])
+        print(f"[qa] border FAIL ({len(border_windows)} windows: {worst}) - fill the frame (ceiling/wall/sky), "
+              "platforms limit reach of bordered videos", flush=True)
+    if flat_windows:
+        worst = ", ".join(f"{b['edge']} {b['max_pct']}% tone {b['tone']} f{b['from']}-{b['to']}" for b in flat_windows[:4])
+        print(f"[qa] flat-edge WARN ({len(flat_windows)} windows: {worst}) - plain band at the edge; add detail if it looks empty",
+              flush=True)
     print(f"[qa] {overall_status}", flush=True)
 
 

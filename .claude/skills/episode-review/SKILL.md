@@ -8,7 +8,7 @@ description: Review checklist for every rendered version in blender-video before
 The owner watches on a phone in one pass; anything that reads as a glitch is a bug.
 
 ## 1. Automatic
-- `tools/qa_episode.py --out projects/<p>/output/vN` must PASS (hook motion + sound + text by frame 3, no dead time, length).
+- `tools/qa_episode.py --out projects/<p>/output/vN` must PASS (hook motion + sound + text by frame 3, no dead time, length, **no border**: no black/white flat band ≥ 5 % at a frame edge — Facebook limited EP02 for "video has a border"; flat-edge warnings = plain sky/floor worth texturing).
 - `projects/<p>/output/vN/sheet_4hz.png` exists (owner rule) — open it first: story readable muted? rows of identical tiles =
   dead time; cut rhythm; captions never over a face at a punchline.
 
