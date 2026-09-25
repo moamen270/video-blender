@@ -273,10 +273,12 @@ def main() -> None:
             if os.path.exists(candidate):
                 music_file = candidate
                 break
-    if not music_file or not os.path.exists(music_file):
-        raise FileNotFoundError("music file required (synthesis is disabled)")
+    if not music_cfg:
+        music_file = None                                # a cue sheet without "music" = no music bed
+    elif not music_file or not os.path.exists(music_file):
+        raise FileNotFoundError("music file not found (synthesis is disabled)")
 
-    raw_music = load_audio(music_file)
+    raw_music = load_audio(music_file) if music_file else np.zeros(SR, dtype=np.float32)
     start_s = music_cfg.get("start_s", 0)
     if start_s and start_s > 0:
         raw_music = raw_music[int(start_s * SR):]
@@ -336,6 +338,8 @@ def main() -> None:
         placement_gain = entry_gain * cue_gain
 
         clip = sfx_clip(raw_name, occ)
+        if "dur" in c:                                   # long beds (hiss, rumble) cut to the beat they cover
+            clip = trim_clip(clip, float(c["dur"]))
         place(mix, clip, c["frame"] / fps, placement_gain)
 
     print(f"[audio] sfx bank: {len(BANK['sounds'])} sounds, {len(files_used)} files used", flush=True)
@@ -394,6 +398,11 @@ def main() -> None:
             if kind == "fill":
                 color = o["color"]
                 filters.append(f"drawbox=x=0:y=0:w=iw:h=ih:color={color}@1:t=fill:enable='between(n,{a},{b})'")
+            elif kind == "box":                          # rectangle in frame fractions (HUD bars, panels)
+                bx, by, bw_, bh = (o[k] for k in ("x", "y", "w", "h"))
+                t = "fill" if o.get("fill", True) else str(max(2, round(o.get("border", 4) * H / 1920)))
+                filters.append(f"drawbox=x=iw*{bx}:y=ih*{by}:w=iw*{bw_}:h=ih*{bh}:color={o['color']}@{o.get('alpha', 1)}:"
+                               f"t={t}:enable='between(n,{a},{b})'")
             elif kind == "text":
                 t = o["text"]
                 t = t.replace("\\", "\\\\")

@@ -183,6 +183,49 @@
    "files": [
     "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserRetro_000.ogg"
    ]
+  },
+  "hado_fire": {
+   "gain": 0.8,
+   "files": [
+    "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserLarge_000.ogg",
+    "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserLarge_001.ogg"
+   ]
+  },
+  "fizzle": {
+   "gain": 0.6,
+   "files": [
+    "assets/library/kenney/kenney_sci-fi-sounds/Audio/slime_000.ogg"
+   ]
+  },
+  "bubble_pop": {
+   "gain": 0.8,
+   "files": [
+    "assets/library/kenney/kenney_interface-sounds/Audio/pluck_001.ogg"
+   ]
+  },
+  "charge_hum": {
+   "gain": 0.6,
+   "files": [
+    "assets/library/kenney/kenney_sci-fi-sounds/Audio/forceField_000.ogg"
+   ]
+  },
+  "mega_rumble": {
+   "gain": 0.8,
+   "files": [
+    "assets/library/kenney/kenney_sci-fi-sounds/Audio/spaceEngineLarge_000.ogg"
+   ]
+  },
+  "pip": {
+   "gain": 1.0,
+   "files": [
+    "assets/library/kenney/kenney_interface-sounds/Audio/pluck_002.ogg"
+   ]
+  },
+  "drum_hit": {
+   "gain": 0.8,
+   "files": [
+    "assets/library/kenney/kenney_impact-sounds/Audio/impactBell_heavy_000.ogg"
+   ]
   }
  }
 }

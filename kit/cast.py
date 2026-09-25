@@ -317,7 +317,17 @@ def _fighter(name: str, *, gi: str, lapel_hex: str, belt: str, hair_file: str, h
     Q.assign(qc, L.toon2(f"{name}_belt", belt), materials=["Band"], z_range=(-1.0, 2.0))
     hair_m = L.toon2(f"{name}_hair", hair)
     if headband:
-        Q.assign(qc, L.toon2(f"{name}_band", headband), materials=["Band"], z_range=(2.0, 9.0))
+        band_m = L.toon2(f"{name}_band", headband)
+        Q.assign(qc, band_m, materials=["Band"], z_range=(2.0, 9.0))
+        # the pack's headband tails stand straight up (they read as bunny ears): remove them
+        bm = bmesh.new()
+        bm.from_mesh(qc.body.data)
+        bi = list(qc.body.data.materials).index(band_m)
+        tails = [f for f in bm.faces if f.material_index == bi and f.calc_center_median().z > 2.98]
+        bmesh.ops.delete(bm, geom=tails, context="FACES")
+        bm.to_mesh(qc.body.data)
+        bm.free()
+        qc.body.data.update()
     else:
         Q.assign(qc, hair_m, materials=["Band"], z_range=(2.0, 9.0))
     shape_arms(qc)
