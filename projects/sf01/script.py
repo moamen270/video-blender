@@ -373,7 +373,7 @@ def build() -> None:
         {"kind": "box", "x": 0.57, "y": 0.055, "w": 0.38, "h": 0.024, "color": dark, "from": 1, "to": END},
         {"kind": "box", "x": 0.055, "y": 0.058, "w": 0.37, "h": 0.018, "color": gold, "from": 1, "to": END},
         {"kind": "box", "x": 0.575, "y": 0.058, "w": 0.37, "h": 0.018, "color": gold, "from": 1, "to": END},
-        {"kind": "text", "text": "99", "size": 64, "y": 0.068, "from": 1, "to": END},
+        {"kind": "text", "text": "∞", "size": 150, "y": 0.066, "from": 1, "to": END},   # endless round (owner)
         {"kind": "text", "text": "0 DAMAGE", "size": 96, "y": 0.30, "from": MEET1 + 3, "to": MEET1 + 30},
         {"kind": "text", "text": "0 DAMAGE", "size": 96, "y": 0.30, "from": MEET2 + 3, "to": MEET2 + 9},
     ]
