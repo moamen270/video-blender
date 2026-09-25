@@ -19,6 +19,6 @@ Blender 5.2 facts
 - ffmpeg 9: no glob input, -vsync is -fps_mode, -filter_script is gone (use -/vf <file>).
 
 Owner rules
-- Never overwrite or delete anything in output/ (every render is a new output/vN).
+- Never overwrite or delete anything in output/ or projects/*/output/ (every render is a new projects/<p>/output/vN).
 - No synthesized audio, ever: sounds come only from assets/sfx_bank.json, music from licensed files.
 - Every downloaded asset needs a licence entry in assets/library/LICENSES.md.

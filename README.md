@@ -2,7 +2,7 @@
 
 Code-first 3D shorts in Blender, built so humans and AI agents can work on the same assets
 with the same tools. Every character, prop, camera cut and keyframe is Python; every render
-is a new `output/vN/` that is never overwritten.
+is a new `projects/<name>/output/vN/` that is never overwritten, with a `social.md` ready to paste on every platform.
 
 ```
 studio/          reusable library (the "asset pack")
@@ -12,21 +12,24 @@ studio/          reusable library (the "asset pack")
 projects/<name>/
   script.py      the story: a timeline of frame constants + calls into studio
   cues.json      audio cue sheet emitted by the build (frames → sfx / narration lines)
+  social.json    upload text: title, hook, description, tags, hashtags, pinned comment, cover, checklist
+  output/vN      scene.blend, video.mp4, mix.wav, final.mp4, sheet_4hz.png, social.md, render.log  (never overwritten)
+brand.json       channel identity (name, handle, links, default hashtags) used in every social.md
 tools/
   build.py       blender -b … : build scene, save scene.blend, render video.mp4
   audio.py       narration (Kokoro via video-builder/py) + SFX + music → mix.wav → final.mp4
   live.py        helpers for the live Blender MCP session: load(), look(), contact()
   sheet.sh       tile review frames into a contact sheet
-  make.sh        one-shot: next version dir → build+render → audio → final.mp4
+  make.sh        one-shot: next version dir → build+render → audio → final.mp4 → social.md
+  social.py      projects/<p>/social.json + brand.json → output/vN/social.md (YouTube, TikTok, Instagram, Facebook)
 assets/sfx       wav library (some synthesized on first use by audio.py)
-output/vN        scene.blend, video.mp4, mix.wav, final.mp4, render.log   (never overwritten)
 output/review    low-res contact sheets used while iterating
 ```
 
 ## Make a video
 
 ```sh
-sh tools/make.sh cupid preview     # ~3 min on a GTX 1660 S: output/v<next>/final.mp4
+sh tools/make.sh cupid preview     # ~3 min on a GTX 1660 S: projects/cupid/output/v<next>/final.mp4
 sh tools/make.sh cupid final       # 1080x1920, 64 samples
 ```
 
@@ -42,7 +45,7 @@ contact([30, 125, 300], 'output/review/x')   # render stills through the cut cam
 ```
 
 Edit `script.py` / `studio/*`, re-run `load()`, screenshot, repeat. A human can open
-`output/vN/scene.blend` and pose/tweak anything in the UI — the rig is plain parented objects
+`projects/<name>/output/vN/scene.blend` and pose/tweak anything in the UI — the rig is plain parented objects
 with Empties as joints, camera cuts are timeline markers, the bow string is an animated curve point.
 
 ## Conventions

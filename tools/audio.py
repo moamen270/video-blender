@@ -1,6 +1,6 @@
 """Narration + SFX + music mix, then mux onto the rendered video.
 
-    uv run --project F:/PoCs/video-builder/py python tools/audio.py --project cupid --out output/v3
+    uv run --project F:/PoCs/video-builder/py python tools/audio.py --project cupid --out projects/cupid/output/v3
 
 Reads projects/<project>/cues.json (written by the scene build) so audio timing always
 matches the animation frames. Produces in --out:

@@ -31,8 +31,8 @@ Gate first: the premise/script is approved by the owner (skill `comedy-pitch`). 
 3. `projects/<p>/script.py` `build()`: timeline constants computed from line lengths (`ceil(seconds·24)`),
    set → characters → motion → faces/lip sync/blinks → cameras → cape bake LAST → `cues.json`
    (lines with `wav`, sfx from the bank, captions via `kit.captions.groups`, overlays, music, beats, grade).
-4. `sh tools/make.sh <p> preview|final` → new `output/vN` (never overwrite): video, mix, final.mp4, `sheet_4hz.png`.
-5. `uv run ... python tools/qa_episode.py --out output/vN` (hook, dead time, 25–40 s). Then skill `episode-review`.
+4. `sh tools/make.sh <p> preview|final` → new `projects/<p>/output/vN` (never overwrite): video, mix, final.mp4, `sheet_4hz.png`, `social.md` (from `projects/<p>/social.json`).
+5. `uv run ... python tools/qa_episode.py --out projects/<p>/output/vN` (hook, dead time, 25–40 s). Then skill `episode-review`.
 
 ## Kit map
 `qchar` (Quaternius loader, recolour, parts, native()), `face` (decal eyes/brows, mouths, expressions, lip sync,

@@ -1,0 +1,26 @@
+{
+  "name": "Ryu vs Ken — Who Gets the Last Hadouken",
+  "title": "Who gets the last Hadouken? 🔥 Ryu vs Ken (endless round)",
+  "hook": "Who gets the last Hadouken? 🔥",
+  "description": "Ryu and Ken. One endless round. Neither of them will let the other have the last word… or the last Hadouken. ∞\n\nEvery Hadouken is bigger than the last one. Nobody wins. Watch it loop.",
+  "disclaimer": "A cartoon parody. Characters are comedic impressions of Ryu and Ken (voice impressions, AI-altered); not affiliated with or endorsed by Capcom.",
+  "credits": ["Sound effects: Kenney (kenney.nl), CC0."],
+  "tags": ["street fighter", "street fighter parody", "ryu", "ken", "ryu vs ken", "hadouken", "street fighter animation", "street fighter movie", "capcom parody", "fighting game parody", "3d animation", "blender animation", "funny animation", "animated shorts", "comedy shorts", "loop", "dummy sticky"],
+  "hashtags": ["#shorts", "#streetfighter", "#ryu", "#ken", "#hadouken", "#parody", "#comedy", "#dummysticky"],
+  "pinnedComment": "Whose Hadouken was stronger — Ryu's or Ken's? 👇",
+  "coverText": "WHO GETS THE LAST HADOUKEN?",
+  "checklist": [
+    "Turn on the platform's AI / altered-or-synthetic-content label (cloned, modified voices).",
+    "Keep the parody line and \"not affiliated with Capcom\" in the description (voice policy).",
+    "No music in the mix: if an in-app track is added, keep it under the voices and check its reuse terms.",
+    "Cover = frame 1 (both fighters in the Hadouken wind-up, health bars + ∞).",
+    "Turn on loop/replay where the platform offers it: the last frame leads straight back into frame 1."
+  ],
+  "published": {
+    "35": "https://github.com/moamen270/video-blender/releases/download/v0.3.0/ryu-vs-ken-last-hadouken-v35.mp4",
+    "37": "https://github.com/moamen270/video-blender/releases/download/v0.3.1/ryu-vs-ken-last-hadouken-v37.mp4",
+    "38": "https://github.com/moamen270/video-blender/releases/download/v0.3.2/ryu-vs-ken-last-hadouken-v38.mp4",
+    "39": "https://github.com/moamen270/video-blender/releases/download/v0.3.3/ryu-vs-ken-last-hadouken-v39.mp4",
+    "40": "https://github.com/moamen270/video-blender/releases/download/v0.3.4/ryu-vs-ken-last-hadouken-v40.mp4"
+  }
+}

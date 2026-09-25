@@ -14,7 +14,13 @@ description: How to publish a blender-video milestone — push the branch, GitHu
    Claude Code footer.
 4. Verify: `gh release view vX.Y.Z --json assets` shows every asset `uploaded`. Give the owner the URL.
 
-## Upload text (`output/vN/social.md`)
+## Upload text (`projects/<p>/output/vN/social.md`, every platform)
+- Written once per episode in `projects/<p>/social.json` (title, hook, description, disclaimer, credits, tags,
+  hashtags, pinnedComment, coverText, checklist, published{N: release mp4 URL}); `make.sh` renders it into each
+  version's `social.md` with `brand.json` (handle, links, default hashtags). After editing social.json or
+  publishing, rerun `python tools/social.py <p> [--version N]` and attach `social.md` to the release.
+- Sections: YouTube Shorts (title ≤100, description, tags ≤500 chars), TikTok, Instagram Reels, Facebook Reels,
+  pinned comment, cover text, before-upload checklist. Same layout as video-builder's `vb social`.
 - Title = the hook sentence = the cover text. `#shorts` first on YouTube, `#fyp` on TikTok.
 - Parody framing in every description for famous characters; turn on the platform's AI/altered-content label
   when voices are cloned (voice policy).

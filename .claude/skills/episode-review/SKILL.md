@@ -8,8 +8,8 @@ description: Review checklist for every rendered version in blender-video before
 The owner watches on a phone in one pass; anything that reads as a glitch is a bug.
 
 ## 1. Automatic
-- `tools/qa_episode.py --out output/vN` must PASS (hook motion + sound + text by frame 3, no dead time, length).
-- `output/vN/sheet_4hz.png` exists (owner rule) — open it first: story readable muted? rows of identical tiles =
+- `tools/qa_episode.py --out projects/<p>/output/vN` must PASS (hook motion + sound + text by frame 3, no dead time, length).
+- `projects/<p>/output/vN/sheet_4hz.png` exists (owner rule) — open it first: story readable muted? rows of identical tiles =
   dead time; cut rhythm; captions never over a face at a punchline.
 
 ## 2. Dense strips (ffmpeg select+tile) around every

@@ -1,0 +1,16 @@
+{
+  "name": "Dummy Sticky",
+  "handle": "@DummySticky",
+  "tagline": "Serious faces. Ridiculous problems.",
+  "defaultHashtags": [
+    "#shorts",
+    "#animation",
+    "#3danimation"
+  ],
+  "links": {
+    "youtube": "https://www.youtube.com/@DummySticky",
+    "tiktok": "https://www.tiktok.com/@dummysticky",
+    "instagram": "https://www.instagram.com/dummysticky",
+    "facebook": "https://www.facebook.com/DummySticky"
+  }
+}
