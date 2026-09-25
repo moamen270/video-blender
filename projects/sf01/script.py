@@ -37,7 +37,9 @@ import studio.core as C
 
 FPS = 24
 RYU_AT, KEN_AT = Vector((-0.75, -0.55, 0.0)), Vector((0.65, 1.45, 0.0))   # 2.4 m apart, mostly in depth   # staged on a diagonal: Ryu front-left
-RYU_FACE, KEN_FACE = -15.0, 250.0   # world facing (deg): toward each other, cheated 45 deg toward the camera
+_AXIS_DEG = math.degrees(math.atan2(KEN_AT.y - RYU_AT.y, KEN_AT.x - RYU_AT.x))
+RYU_FACE, KEN_FACE = _AXIS_DEG, _AXIS_DEG + 180.0   # square to each other (owner: no cheat toward camera);
+                                                    # wide shots read over Ryu's shoulder
 
 
 def active_span(wav: str) -> tuple[float, float]:
@@ -323,11 +325,11 @@ def build() -> None:
     both = [ryu, ken]
     cam_open = SH.frame("cam_open", both, shot="full", yaw=172, pitch=6, at=REL1 + 2, lens=30, side_offset=0.12)
     cam_wide = SH.frame("cam_wide", both, shot="full", yaw=176, pitch=8, at=MEET1 + 14, lens=30, side_offset=0.12)
-    cam_cu_r = SH.frame("cam_cu_ryu", ryu, shot="close", yaw=-105, pitch=4, at=L1 + 4)
-    cam_cu_k = SH.frame("cam_cu_ken", ken, shot="close", yaw=162, pitch=4, at=L2 + 4)
+    cam_cu_r = SH.frame("cam_cu_ryu", ryu, shot="close", yaw=-65, pitch=4, at=L1 + 4)
+    cam_cu_k = SH.frame("cam_cu_ken", ken, shot="close", yaw=155, pitch=4, at=L2 + 4)
     cam_ch2 = SH.frame("cam_ch2", both, shot="full", yaw=172, pitch=10, at=REL2 - 2, lens=30, side_offset=0.12)
-    cam_ecu_r = SH.frame("cam_ecu_ryu", ryu, shot="ecu", yaw=-102, pitch=2, at=ECU_R + 2)
-    cam_ecu_k = SH.frame("cam_ecu_ken", ken, shot="ecu", yaw=160, pitch=2, at=ECU_K + 2)
+    cam_ecu_r = SH.frame("cam_ecu_ryu", ryu, shot="ecu", yaw=-62, pitch=2, at=ECU_R + 2)
+    cam_ecu_k = SH.frame("cam_ecu_ken", ken, shot="ecu", yaw=153, pitch=2, at=ECU_K + 2)
     cam_mega = SH.frame("cam_mega", [ryu, ken, rb.shell, kb.shell], shot="full", yaw=174, pitch=22, at=REL3 - 3, lens=26, side_offset=0.12)
     cam_end = SH.frame("cam_end", both, shot="full", yaw=176, pitch=6, at=L3 + 4, lens=32, side_offset=0.12)
     C.cut(1, cam_open)
@@ -340,8 +342,8 @@ def build() -> None:
     C.cut(CH3 - 1, cam_mega)                              # wide: both start charging, the ground starts to crack
     span3 = REL3 - CH3
     FACE_R, FACE_K, BACK_WIDE = CH3 + int(0.34 * span3), CH3 + int(0.56 * span3), CH3 + int(0.78 * span3)
-    cam_scream_r = SH.frame("cam_scream_ryu", ryu, shot="close", yaw=-105, pitch=4, at=FACE_R + 6)
-    cam_scream_k = SH.frame("cam_scream_ken", ken, shot="close", yaw=162, pitch=4, at=FACE_K + 6)
+    cam_scream_r = SH.frame("cam_scream_ryu", ryu, shot="close", yaw=-65, pitch=4, at=FACE_R + 6)
+    cam_scream_k = SH.frame("cam_scream_ken", ken, shot="close", yaw=155, pitch=4, at=FACE_K + 6)
     C.cut(FACE_R, cam_scream_r)                           # "HADOUUUU..." on Ryu's straining face
     C.cut(FACE_K, cam_scream_k)                           # ...then Ken's
     C.cut(BACK_WIDE, cam_mega)                            # back wide for the giant balls, cracks and "...KEN!"
