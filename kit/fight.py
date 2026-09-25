@@ -35,11 +35,22 @@ STANCE = Pose(foot_l=(0.40, -0.38, 0.02), foot_r=(-0.34, 0.34, 0.02), hips=(0.0,
 STANCE_LOW = Pose(foot_l=(0.40, -0.38, 0.02), foot_r=(-0.34, 0.34, 0.02), hips=(0.0, 0.0, -0.30),
                   hand_l=(0.30, -0.78, 1.64), hand_r=(0.02, -0.60, 1.44), torso=(10, 0, -12))
 CHARGE = Pose(foot_l=(0.44, -0.46, 0.02), foot_r=(-0.40, 0.40, 0.02), hips=(0.0, 0.10, -0.32),
-              hand_l=(-0.30, 0.18, 1.34), hand_r=(-0.42, 0.28, 1.14), torso=(-6, 0, 28), head=(0, 0, -14))
+              hand_l=(-0.62, 0.22, 1.30), hand_r=(-0.74, 0.30, 1.10), torso=(-6, 0, 28), head=(0, 0, -14))
+def mirror(p: Pose) -> Pose:
+    """Same pose on the other side (hands, twist and head turn mirrored; feet kept so the stance stays)."""
+    mx = lambda v: None if v is None else (-v[0], v[1], v[2])
+    return Pose(foot_l=p.foot_l, foot_r=p.foot_r, hips=p.hips, hand_l=mx(p.hand_r), hand_r=mx(p.hand_l),
+                torso=(p.torso[0], -p.torso[1], -p.torso[2]), head=(p.head[0], -p.head[1], -p.head[2]))
+
+
 THRUST = Pose(foot_l=(0.44, -0.50, 0.02), foot_r=(-0.40, 0.44, 0.02), hips=(0.0, -0.12, -0.30),
               hand_l=(0.06, -1.30, 1.66), hand_r=(-0.06, -1.30, 1.50), torso=(16, 0, -6))
+CHARGE_FAR = None   # set below (CHARGE mirrored): the foreground fighter charges on the side away from camera
 TIRED = Pose(foot_l=(0.38, -0.20, 0.02), foot_r=(-0.34, 0.24, 0.02), hips=(0.0, 0.0, -0.26),
              hand_l=(0.36, -0.38, 0.95), hand_r=(-0.30, -0.36, 0.95), torso=(24, 0, 0), head=(-6, 0, 0))
+
+
+CHARGE_FAR = mirror(CHARGE)
 
 
 def _arm_to_world(qc: Q.QChar, p) -> Vector:

@@ -36,8 +36,8 @@ from kit import look as L
 import studio.core as C
 
 FPS = 24
-RYU_AT, KEN_AT = Vector((-0.70, -0.30, 0.0)), Vector((0.70, 0.50, 0.0))   # staged on a diagonal: Ryu front-left
-RYU_FACE, KEN_FACE = -20.0, 250.0   # world facing (deg): toward each other, cheated 45 deg toward the camera
+RYU_AT, KEN_AT = Vector((-0.75, -0.55, 0.0)), Vector((0.65, 1.45, 0.0))   # 2.4 m apart, mostly in depth   # staged on a diagonal: Ryu front-left
+RYU_FACE, KEN_FACE = -15.0, 250.0   # world facing (deg): toward each other, cheated 45 deg toward the camera
 
 
 def active_span(wav: str) -> tuple[float, float]:
@@ -111,7 +111,8 @@ def build() -> None:
     MEET3 = REL3 + tail("r_h3", "k_h3") + 1               # the collision after "KEN!!" ends -> true silence
     L3 = MEET3 + 22                                        # Ken: "...Mine."
     L4 = L3 + f(span["k_mine2"][1] - span["k_mine2"][0]) + 6   # Ryu: "Mine."
-    END = L4 + f(span["r_mine2"][1]) + 9
+    SET = L4 + f(span["r_mine2"][1]) + 8                  # both square up for another round...
+    END = SET + 14                                        # ...ending on the frame-1 wind-up: the replay IS the next round
     bpy.context.scene.frame_end = END
 
     # ------------------------------------------------------------ poses
@@ -119,23 +120,27 @@ def build() -> None:
         for i, fr in enumerate(range(a, b + 1, period // 2)):
             FT.key_pose(q, fr, pose, bob=amp if i % 2 == 0 else -amp)
 
+    charge_of = {ryu.name: FT.CHARGE_FAR, ken.name: FT.CHARGE}   # Ryu (foreground) charges on his far side
     for q in (ryu, ken):
-        FT.key_pose(q, 1, FT.CHARGE)                      # frame 1: already winding up (hook = action)
-        FT.key_pose(q, REL1 - 4, FT.CHARGE)
+        CH = charge_of[q.name]
+        FT.key_pose(q, 1, CH)                             # frame 1: already winding up (hook = action)
+        FT.key_pose(q, REL1 - 4, CH)
         FT.key_pose(q, REL1, FT.THRUST)
         FT.key_pose(q, MEET1 + 4, FT.THRUST)
         stance_bob(q, MEET1 + 12, CH2 - 2)
-        FT.key_pose(q, CH2 + 6, FT.CHARGE)
-        FT.key_pose(q, REL2 - 3, FT.CHARGE, bob=-0.05)
+        FT.key_pose(q, CH2 + 6, CH)
+        FT.key_pose(q, REL2 - 3, CH, bob=-0.05)
         FT.key_pose(q, REL2, FT.THRUST)
         FT.key_pose(q, MEET2 + 4, FT.THRUST)
         stance_bob(q, MEET2 + 10, CH3 - 2, pose=FT.STANCE_LOW)
-        FT.key_pose(q, CH3 + 6, FT.CHARGE)
+        FT.key_pose(q, CH3 + 6, CH)
         for i, fr in enumerate(range(CH3 + 8, REL3 - 2, 3)):     # straining tremble
-            FT.key_pose(q, fr, FT.CHARGE, bob=-0.06 + (0.025 if i % 2 else -0.025))
+            FT.key_pose(q, fr, CH, bob=-0.06 + (0.025 if i % 2 else -0.025))
         FT.key_pose(q, REL3, FT.THRUST)
         FT.key_pose(q, MEET3 + 3, FT.THRUST)
-        stance_bob(q, MEET3 + 10, END, amp=0.06, period=8, pose=FT.TIRED)    # panting
+        stance_bob(q, MEET3 + 10, SET - 4, amp=0.06, period=8, pose=FT.TIRED)    # panting
+        FT.key_pose(q, SET, CH)                    # identical to frame 1 -> seamless loop
+        FT.key_pose(q, END, CH)
     # the stare at the fizzle: heads dip toward the smoke, then turn back to each other
     for q in (ryu, ken):
         stare = FT.Pose(**{**FT.THRUST.__dict__, "head": (18, 0, 0)})
@@ -152,11 +157,9 @@ def build() -> None:
             sched[q.name].append((frame, name))
             F.set_expression(face, name, frame)
     E = _E
-    E.set_expression(ryu.face, "stern", 1)
-    E.set_expression(ken.face, "smug", 1)
-    for q, expr in ((ryu, "angry"), (ken, "angry")):
-        E.set_expression(q.face, expr, 2)
-        E.set_expression(q.face, expr, REL1 + 2)
+    for q in (ryu, ken):                                  # frame 1 and the last frames share one face
+        E.set_expression(q.face, "angry", 1)
+        E.set_expression(q.face, "angry", REL1 + 2)
     E.set_expression(ryu.face, "deadpan", MEET1 + 6)
     E.set_expression(ken.face, "deadpan", MEET1 + 6)
     E.set_expression(ryu.face, "stern", L1 - 2)
@@ -169,13 +172,15 @@ def build() -> None:
     E.set_expression(ken.face, "angry", ECU_K)
     E.set_expression(ryu.face, "deadpan", MEET3 + 6)
     E.set_expression(ken.face, "deadpan", MEET3 + 6)
+    for q in (ryu, ken):
+        E.set_expression(q.face, "angry", SET - 2)
     lines = [("r_h1", ryu, S_R1), ("k_h1", ken, S_K1), ("r_mine", ryu, L1), ("k_mine", ken, L2),
              ("r_h2", ryu, S_R2), ("k_h2", ken, S_K2), ("r_h3", ryu, S_R3), ("k_h3", ken, S_K3),
              ("k_mine2", ken, L3), ("r_mine2", ryu, L4)]
     for lid, q, start in lines:
         F.apply_lipsync(q.face, man[lid]["cues"], max(1, start), fps=FPS)
-    F.auto_blink(ryu.face, 1, END, sorted(sched[ryu.name]), seed=5)
-    F.auto_blink(ken.face, 1, END, sorted(sched[ken.name]), seed=9)
+    F.auto_blink(ryu.face, 1, SET - 4, sorted(sched[ryu.name]), seed=5)    # no blink across the loop seam
+    F.auto_blink(ken.face, 1, SET - 4, sorted(sched[ken.name]), seed=9)
 
     # ------------------------------------------------------------ fireballs
     rb = FT.Fireball("ryu_ball", "#eaf6ff", "#4aa8ff")
@@ -188,20 +193,26 @@ def build() -> None:
         for fr in range(a, b + 1, 2):
             t = (fr - a) / max(1, b - a)
             p = FT.between_hands(q, fr)
+            size = s0 + (s1 - s0) * (t ** 1.6)
+            torso = q.root.location + Vector((0, 0, 0.8))
+            out = Vector((p.x - torso.x, p.y - torso.y, 0.0))
+            if out.length > 1e-4:
+                p = p + out.normalized() * (size * 1.25 + 0.04)    # the whole ball stays outside the body
             if pull is not None:
                 p = p.lerp(pull, t * 0.85)
-            ball.key(fr, p, s0 + (s1 - s0) * (t ** 1.6))
+            ball.key(fr, p, size)
 
     def fly(ball, q, rel: int, meet: int, centre: Vector, size: float) -> None:
         ball.key(rel, FT.between_hands(q, rel), size)
         ball.key(meet, centre, size)
 
+    axis = (KEN_AT - RYU_AT).normalized()                 # fireballs meet along the line between the fighters
     centre = (FT.between_hands(ryu, REL1) + FT.between_hands(ken, REL1)) / 2
     # 1: normal hadoukens, meet and fizzle
     grow_at_hands(rb, ryu, 2, REL1 - 1, 0.03, 0.13)
     grow_at_hands(kb, ken, 2, REL1 - 1, 0.03, 0.13)
-    fly(rb, ryu, REL1, MEET1, centre + Vector((-0.12, 0, 0)), 0.13)
-    fly(kb, ken, REL1, MEET1, centre + Vector((0.12, 0, 0)), 0.13)
+    fly(rb, ryu, REL1, MEET1, centre - axis * 0.12, 0.13)
+    fly(kb, ken, REL1, MEET1, centre + axis * 0.12, 0.13)
     for b in (rb, kb):
         b.key(MEET1 + 4, b.root.location, 0.0)
     puff = props.smoke_puff("fizzle", centre - Vector((0, 0, 0.25)), MEET1, count=6, radius=0.12, r_range=(0.05, 0.10),
@@ -214,8 +225,8 @@ def build() -> None:
     grow_at_hands(rb, ryu, CH2 + 6, REL2 - 1, 0.02, 0.30)
     grow_at_hands(kb, ken, CH2 + 6, REL2 - 1, 0.02, 0.30)
     c2 = (FT.between_hands(ryu, REL2) + FT.between_hands(ken, REL2)) / 2
-    fly(rb, ryu, REL2, MEET2, c2 + Vector((-0.28, 0, 0)), 0.30)
-    fly(kb, ken, REL2, MEET2, c2 + Vector((0.28, 0, 0)), 0.30)
+    fly(rb, ryu, REL2, MEET2, c2 - axis * 0.28, 0.30)
+    fly(kb, ken, REL2, MEET2, c2 + axis * 0.28, 0.30)
     for b in (rb, kb):
         b.key(MEET2 + 1, b.root.location, 0.34)
         b.key(MEET2 + 3, b.root.location, 0.0)
@@ -233,10 +244,10 @@ def build() -> None:
     sp.keyframe_insert("scale", frame=MEET2 + 20)
     # 3: giant balls bulging into each other; everything cuts at the meet; one tiny spark drifts down
     c3 = (FT.between_hands(ryu, REL3) + FT.between_hands(ken, REL3)) / 2
-    grow_at_hands(rb, ryu, CH3 + 6, REL3 - 1, 0.02, 0.58, pull=c3 + Vector((-0.45, 0, 0.25)))
-    grow_at_hands(kb, ken, CH3 + 6, REL3 - 1, 0.02, 0.58, pull=c3 + Vector((0.45, 0, 0.25)))
-    rb.key(MEET3, c3 + Vector((-0.34, 0, 0.25)), 0.62)
-    kb.key(MEET3, c3 + Vector((0.34, 0, 0.25)), 0.62)
+    grow_at_hands(rb, ryu, CH3 + 6, REL3 - 1, 0.02, 0.40, pull=c3 - axis * 0.40 + Vector((0, 0, 0.35)))
+    grow_at_hands(kb, ken, CH3 + 6, REL3 - 1, 0.02, 0.40, pull=c3 + axis * 0.40 + Vector((0, 0, 0.35)))
+    rb.key(MEET3, c3 - axis * 0.34 + Vector((0, 0, 0.35)), 0.44)
+    kb.key(MEET3, c3 + axis * 0.34 + Vector((0, 0, 0.35)), 0.44)
     for b in (rb, kb):
         b.key(MEET3 + 1, b.root.location, 0.0)
     tiny = C.icosphere("tiny_spark", r=0.018, subdiv=1, mat=spark_m)
@@ -278,10 +289,10 @@ def build() -> None:
     both = [ryu, ken]
     cam_open = SH.frame("cam_open", both, shot="full", yaw=172, pitch=6, at=REL1 + 2, lens=30, side_offset=0.12)
     cam_wide = SH.frame("cam_wide", both, shot="full", yaw=176, pitch=8, at=MEET1 + 14, lens=30, side_offset=0.12)
-    cam_cu_r = SH.frame("cam_cu_ryu", ryu, shot="close", yaw=-112, pitch=4, at=L1 + 4)
+    cam_cu_r = SH.frame("cam_cu_ryu", ryu, shot="close", yaw=-105, pitch=4, at=L1 + 4)
     cam_cu_k = SH.frame("cam_cu_ken", ken, shot="close", yaw=162, pitch=4, at=L2 + 4)
     cam_ch2 = SH.frame("cam_ch2", both, shot="full", yaw=172, pitch=10, at=REL2 - 2, lens=30, side_offset=0.12)
-    cam_ecu_r = SH.frame("cam_ecu_ryu", ryu, shot="ecu", yaw=-108, pitch=2, at=ECU_R + 2)
+    cam_ecu_r = SH.frame("cam_ecu_ryu", ryu, shot="ecu", yaw=-102, pitch=2, at=ECU_R + 2)
     cam_ecu_k = SH.frame("cam_ecu_ken", ken, shot="ecu", yaw=160, pitch=2, at=ECU_K + 2)
     cam_mega = SH.frame("cam_mega", [ryu, ken, rb.shell, kb.shell], shot="full", yaw=174, pitch=14, at=REL3 - 3, lens=26, side_offset=0.12)
     cam_end = SH.frame("cam_end", both, shot="full", yaw=176, pitch=6, at=L3 + 4, lens=32, side_offset=0.12)
@@ -294,14 +305,11 @@ def build() -> None:
     C.cut(ECU_K, cam_ecu_k)
     C.cut(CH3 - 1, cam_mega)
     C.cut(MEET3 + 8, cam_end)
+    C.cut(SET - 1, cam_open)                              # same shot as frame 1
     fx.shake(cam_mega, CH3 + 10, MEET3, amp=0.05, seed=7)
 
     # ------------------------------------------------------------ post: glow + loop flash
-    mix = post.setup(threshold=0.9, strength=0.55, size=0.35)
-    post.flash(mix, 1, 1.0)
-    post.flash(mix, 7, 0.0)
-    post.flash(mix, END - 7, 0.0)
-    post.flash(mix, END, 1.0)
+    post.setup(threshold=0.9, strength=0.55, size=0.35)   # glow only: the loop is the action, no flash
 
     # ------------------------------------------------------------ cue sheet (voices, SFX, HUD)
     cue_lines = [{"id": lid, "frame": max(1, st), "text": man[lid]["text"], "wav": man[lid]["wav"]} for lid, _, st in lines]
@@ -328,7 +336,7 @@ def build() -> None:
             "beats": [[MEET1 + 4, L1 - 2], [MEET3 + 1, L3]]}
     json.dump(cues, open(os.path.join(ROOT, "projects", "sf01", "cues.json"), "w", encoding="utf-8"), indent=1)
     json.dump({"REL1": REL1, "MEET1": MEET1, "L1": L1, "L2": L2, "CH2": CH2, "REL2": REL2, "MEET2": MEET2, "ECU_R": ECU_R,
-               "ECU_K": ECU_K, "CH3": CH3, "REL3": REL3, "MEET3": MEET3, "L3": L3, "L4": L4, "END": END},
+               "ECU_K": ECU_K, "CH3": CH3, "REL3": REL3, "MEET3": MEET3, "L3": L3, "L4": L4, "SET": SET, "END": END},
               open(os.path.join(ROOT, "projects", "sf01", "beats.json"), "w"), indent=1)
     print(f"[sf01] END={END} ({END / FPS:.1f}s) REL1={REL1} MEET1={MEET1} L1={L1} L2={L2} CH2={CH2} REL2={REL2} "
           f"CH3={CH3} REL3={REL3} MEET3={MEET3} L3={L3} L4={L4}", flush=True)

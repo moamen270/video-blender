@@ -17,7 +17,9 @@ signal (a Gemini read scored EP02 9/10, the owner 0/10). Only the owner judges t
 
 ## Structure
 setup → 2–3 escalations → turn → payoff (a NEW surprise, not a repeat of the setup) → ending that loops to
-frame 1 or lands exactly one CTA. The CTA is spoken and in character. Nothing is drawn over the character in the CTA frame.
+frame 1 or lands exactly one CTA.
+A loop is made of the action itself: the last beat sets up the first (same pose, camera, expression and props as
+frame 1), with no transition effect. A white/black flash as the bridge was rejected by the owner (sf01). The CTA is spoken and in character. Nothing is drawn over the character in the CTA frame.
 - 25–40 s. Every second advances the joke or the action. Lines ≤ ~8 words.
 - At most 1–2 deliberate held beats (`beats` in cues.json, the deadpan pause); zero unintended dead time.
 - The joke lives in the characters' choices, not in a repeated sound or line.
