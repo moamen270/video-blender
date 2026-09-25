@@ -120,27 +120,39 @@ def build() -> None:
         for i, fr in enumerate(range(a, b + 1, period // 2)):
             FT.key_pose(q, fr, pose, bob=amp if i % 2 == 0 else -amp)
 
-    charge_of = {ryu.name: FT.CHARGE_FAR, ken.name: FT.CHARGE}   # Ryu (foreground) charges on his far side
+    # palms cupped at the hip, pushed forward while the ball grows (both balls grow in the gap between them):
+    # Ryu (foreground) on his side away from the camera, Ken (behind, facing us) on his side toward Ryu
+    hip_of = {ryu.name: FT.CHARGE_HIP, ken.name: FT.mirror(FT.CHARGE_HIP)}
+    out_of = {ryu.name: FT.CHARGE_OUT, ken.name: FT.mirror(FT.CHARGE_OUT)}
+
+    def charge(q, a: int, b: int, tremble: bool = False) -> None:
+        """Hip -> arms pushed out over a..b (eased); optional straining tremble for the mega charge."""
+        hip, out = hip_of[q.name], out_of[q.name]
+        FT.key_pose(q, a, hip)
+        step = 3 if tremble else 6
+        for i, fr in enumerate(range(a + step, b, step)):
+            t = ((fr - a) / (b - a)) ** 1.3
+            bob = (-0.04 + (0.022 if i % 2 else -0.022)) if tremble else 0.0
+            FT.key_pose(q, fr, FT.blend(hip, out, t), bob=bob)
+        FT.key_pose(q, b, out)
+
     for q in (ryu, ken):
-        CH = charge_of[q.name]
-        FT.key_pose(q, 1, CH)                             # frame 1: already winding up (hook = action)
-        FT.key_pose(q, REL1 - 4, CH)
+        HIP = hip_of[q.name]
+        FT.key_pose(q, 1, HIP)                            # frame 1: already winding up (hook = action)
+        charge(q, 2, REL1 - 3)
         FT.key_pose(q, REL1, FT.THRUST)
         FT.key_pose(q, MEET1 + 4, FT.THRUST)
         stance_bob(q, MEET1 + 12, CH2 - 2)
-        FT.key_pose(q, CH2 + 6, CH)
-        FT.key_pose(q, REL2 - 3, CH, bob=-0.05)
+        charge(q, CH2 + 6, REL2 - 3)
         FT.key_pose(q, REL2, FT.THRUST)
         FT.key_pose(q, MEET2 + 4, FT.THRUST)
         stance_bob(q, MEET2 + 10, CH3 - 2, pose=FT.STANCE_LOW)
-        FT.key_pose(q, CH3 + 6, CH)
-        for i, fr in enumerate(range(CH3 + 8, REL3 - 2, 3)):     # straining tremble
-            FT.key_pose(q, fr, CH, bob=-0.06 + (0.025 if i % 2 else -0.025))
+        charge(q, CH3 + 6, REL3 - 3, tremble=True)
         FT.key_pose(q, REL3, FT.THRUST)
         FT.key_pose(q, MEET3 + 3, FT.THRUST)
         stance_bob(q, MEET3 + 10, SET - 4, amp=0.06, period=8, pose=FT.TIRED)    # panting
-        FT.key_pose(q, SET, CH)                    # identical to frame 1 -> seamless loop
-        FT.key_pose(q, END, CH)
+        FT.key_pose(q, SET, HIP)                          # identical to frame 1 -> seamless loop
+        FT.key_pose(q, END, HIP)
     # the stare at the fizzle: heads dip toward the smoke, then turn back to each other
     for q in (ryu, ken):
         stare = FT.Pose(**{**FT.THRUST.__dict__, "head": (18, 0, 0)})
@@ -179,6 +191,11 @@ def build() -> None:
              ("k_mine2", ken, L3), ("r_mine2", ryu, L4)]
     for lid, q, start in lines:
         F.apply_lipsync(q.face, man[lid]["cues"], max(1, start), fps=FPS)
+    # held screams: Rhubarb barely opens the mouth on a sustained vowel -> hold it wide open until "KEN"
+    for q, lid, start in ((ryu, "r_h2", S_R2), (ken, "k_h2", S_K2), (ryu, "r_h3", S_R3), (ken, "k_h3", S_K3)):
+        a0, k0 = start + f(span[lid][0]) + 4, start + f(kon[lid]) - 2
+        for fr in range(a0, k0, 3):
+            F.key_mouth(q.face, fr, "D")
     F.auto_blink(ryu.face, 1, SET - 4, sorted(sched[ryu.name]), seed=5)    # no blink across the loop seam
     F.auto_blink(ken.face, 1, SET - 4, sorted(sched[ken.name]), seed=9)
 
@@ -189,17 +206,16 @@ def build() -> None:
         b.key(1, (0, 0, -5), 0.0)
         b.spin(1, END)
 
-    def grow_at_hands(ball, q, a: int, b: int, s0: float, s1: float, pull: Vector | None = None) -> None:
+    def grow_at_hands(ball, q, a: int, b: int, s0: float, s1: float) -> None:
+        """The ball sits just in front of the cupped palms, pushed outward by its own size: it grows only as
+        far as the arms carry it away from the body, so it never covers the fighter (owner, sf01)."""
         for fr in range(a, b + 1, 2):
             t = (fr - a) / max(1, b - a)
-            p = FT.between_hands(q, fr)
+            palms = FT.between_hands(q, fr)
             size = s0 + (s1 - s0) * (t ** 1.6)
             torso = q.root.location + Vector((0, 0, 0.8))
-            out = Vector((p.x - torso.x, p.y - torso.y, 0.0))
-            if out.length > 1e-4:
-                p = p + out.normalized() * (size * 1.25 + 0.04)    # the whole ball stays outside the body
-            if pull is not None:
-                p = p.lerp(pull, t * 0.85)
+            out = Vector((palms.x - torso.x, palms.y - torso.y, 0.0))
+            p = palms + (out.normalized() * (size * 0.95 + 0.03) if out.length > 1e-4 else Vector())
             ball.key(fr, p, size)
 
     def fly(ball, q, rel: int, meet: int, centre: Vector, size: float) -> None:
@@ -222,13 +238,13 @@ def build() -> None:
             o.hide_render = hide
             o.keyframe_insert("hide_render", frame=fr)
     # 2: beach balls, soap-bubble pop, one falling sparkle
-    grow_at_hands(rb, ryu, CH2 + 6, REL2 - 1, 0.02, 0.30)
-    grow_at_hands(kb, ken, CH2 + 6, REL2 - 1, 0.02, 0.30)
+    grow_at_hands(rb, ryu, CH2 + 6, REL2 - 1, 0.02, 0.24)
+    grow_at_hands(kb, ken, CH2 + 6, REL2 - 1, 0.02, 0.24)
     c2 = (FT.between_hands(ryu, REL2) + FT.between_hands(ken, REL2)) / 2
-    fly(rb, ryu, REL2, MEET2, c2 - axis * 0.28, 0.30)
-    fly(kb, ken, REL2, MEET2, c2 + axis * 0.28, 0.30)
+    fly(rb, ryu, REL2, MEET2, c2 - axis * 0.22, 0.24)
+    fly(kb, ken, REL2, MEET2, c2 + axis * 0.22, 0.24)
     for b in (rb, kb):
-        b.key(MEET2 + 1, b.root.location, 0.34)
+        b.key(MEET2 + 1, b.root.location, 0.28)
         b.key(MEET2 + 3, b.root.location, 0.0)
     spark_m = FT.emit_mat("sparkle", "#fffbe0", 3.0)
     sp = C.icosphere("sparkle2", r=0.025, subdiv=1, mat=spark_m)
@@ -244,10 +260,10 @@ def build() -> None:
     sp.keyframe_insert("scale", frame=MEET2 + 20)
     # 3: giant balls bulging into each other; everything cuts at the meet; one tiny spark drifts down
     c3 = (FT.between_hands(ryu, REL3) + FT.between_hands(ken, REL3)) / 2
-    grow_at_hands(rb, ryu, CH3 + 6, REL3 - 1, 0.02, 0.40, pull=c3 - axis * 0.40 + Vector((0, 0, 0.35)))
-    grow_at_hands(kb, ken, CH3 + 6, REL3 - 1, 0.02, 0.40, pull=c3 + axis * 0.40 + Vector((0, 0, 0.35)))
-    rb.key(MEET3, c3 - axis * 0.34 + Vector((0, 0, 0.35)), 0.44)
-    kb.key(MEET3, c3 + axis * 0.34 + Vector((0, 0, 0.35)), 0.44)
+    grow_at_hands(rb, ryu, CH3 + 6, REL3 - 1, 0.02, 0.34)
+    grow_at_hands(kb, ken, CH3 + 6, REL3 - 1, 0.02, 0.34)
+    rb.key(MEET3, c3 - axis * 0.30 + Vector((0, 0, 0.30)), 0.36)
+    kb.key(MEET3, c3 + axis * 0.30 + Vector((0, 0, 0.30)), 0.36)
     for b in (rb, kb):
         b.key(MEET3 + 1, b.root.location, 0.0)
     tiny = C.icosphere("tiny_spark", r=0.018, subdiv=1, mat=spark_m)
@@ -282,6 +298,24 @@ def build() -> None:
     lan.default_value = 1.6
     lan.keyframe_insert("default_value", frame=MEET3 + 1)
 
+    # ------------------------------------------------------------ wind + autumn maple leaves (energy of the charges)
+    def ramp(fr, a, b, lo, hi):
+        return lo + (hi - lo) * min(1.0, max(0.0, (fr - a) / max(1, b - a))) ** 1.5 if a <= fr <= b else None
+
+    def burst(fr, at, amp, length):
+        return amp * max(0.0, 1 - (fr - at) / length) if at <= fr <= at + length else 0.0
+
+    def energy(fr: int) -> float:
+        e = 0.35
+        for a, b, hi in ((2, REL1, 0.9), (CH2 + 6, REL2, 1.9), (CH3 + 6, REL3, 3.4)):
+            r = ramp(fr, a, b, 0.35, hi)
+            if r is not None:
+                e = r + (0.35 * math.sin(fr * 1.7) if hi > 3 else 0.0)
+        e += burst(fr, MEET1, 0.6, 10) + burst(fr, MEET2, 1.6, 12) + burst(fr, MEET3, 5.0, 26)
+        return max(0.2, e)
+
+    FT.Leaves(n=40, size=(0.065, 0.11)).animate(energy, 1, END)
+
     # ------------------------------------------------------------ cameras (auto-framed on the pose at that frame)
     from kit import shots as SH
     sc = bpy.context.scene
@@ -294,7 +328,7 @@ def build() -> None:
     cam_ch2 = SH.frame("cam_ch2", both, shot="full", yaw=172, pitch=10, at=REL2 - 2, lens=30, side_offset=0.12)
     cam_ecu_r = SH.frame("cam_ecu_ryu", ryu, shot="ecu", yaw=-102, pitch=2, at=ECU_R + 2)
     cam_ecu_k = SH.frame("cam_ecu_ken", ken, shot="ecu", yaw=160, pitch=2, at=ECU_K + 2)
-    cam_mega = SH.frame("cam_mega", [ryu, ken, rb.shell, kb.shell], shot="full", yaw=174, pitch=14, at=REL3 - 3, lens=26, side_offset=0.12)
+    cam_mega = SH.frame("cam_mega", [ryu, ken, rb.shell, kb.shell], shot="full", yaw=174, pitch=22, at=REL3 - 3, lens=26, side_offset=0.12)
     cam_end = SH.frame("cam_end", both, shot="full", yaw=176, pitch=6, at=L3 + 4, lens=32, side_offset=0.12)
     C.cut(1, cam_open)
     C.cut(MEET1 + 6, cam_wide)
@@ -303,7 +337,16 @@ def build() -> None:
     C.cut(CH2 - 2, cam_ch2)
     C.cut(ECU_R, cam_ecu_r)
     C.cut(ECU_K, cam_ecu_k)
-    C.cut(CH3 - 1, cam_mega)
+    C.cut(CH3 - 1, cam_mega)                              # wide: both start charging, the ground starts to crack
+    span3 = REL3 - CH3
+    FACE_R, FACE_K, BACK_WIDE = CH3 + int(0.34 * span3), CH3 + int(0.56 * span3), CH3 + int(0.78 * span3)
+    cam_scream_r = SH.frame("cam_scream_ryu", ryu, shot="close", yaw=-105, pitch=4, at=FACE_R + 6)
+    cam_scream_k = SH.frame("cam_scream_ken", ken, shot="close", yaw=162, pitch=4, at=FACE_K + 6)
+    C.cut(FACE_R, cam_scream_r)                           # "HADOUUUU..." on Ryu's straining face
+    C.cut(FACE_K, cam_scream_k)                           # ...then Ken's
+    C.cut(BACK_WIDE, cam_mega)                            # back wide for the giant balls, cracks and "...KEN!"
+    fx.shake(cam_scream_r, FACE_R, FACE_K - 1, amp=0.012, seed=3)
+    fx.shake(cam_scream_k, FACE_K, BACK_WIDE - 1, amp=0.012, seed=5)
     C.cut(MEET3 + 8, cam_end)
     C.cut(SET - 1, cam_open)                              # same shot as frame 1
     fx.shake(cam_mega, CH3 + 10, MEET3, amp=0.05, seed=7)

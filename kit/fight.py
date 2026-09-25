@@ -8,6 +8,7 @@ empties (kit.motion.setup_ik). key_pose() keys everything at one frame, so a tim
 from __future__ import annotations
 
 import math
+import random
 from dataclasses import dataclass, field
 
 import bpy
@@ -51,6 +52,21 @@ TIRED = Pose(foot_l=(0.38, -0.20, 0.02), foot_r=(-0.34, 0.24, 0.02), hips=(0.0, 
 
 
 CHARGE_FAR = mirror(CHARGE)
+
+# The real hadouken charge: palms cupped together at the side of the hip (NOT behind the back - owner, sf01),
+# then pushed forward as the ball grows; the thrust throws it. +x side here; mirror() for the other side.
+CHARGE_HIP = Pose(foot_l=(0.44, -0.46, 0.02), foot_r=(-0.40, 0.40, 0.02), hips=(0.0, 0.06, -0.32),
+                  hand_l=(0.50, -0.14, 1.30), hand_r=(0.52, -0.06, 1.12), torso=(-4, 0, -22), head=(0, 0, 16))
+CHARGE_OUT = Pose(foot_l=(0.44, -0.50, 0.02), foot_r=(-0.40, 0.42, 0.02), hips=(0.0, -0.04, -0.31),
+                  hand_l=(0.36, -0.92, 1.24), hand_r=(0.38, -0.86, 1.08), torso=(6, 0, -8), head=(0, 0, 6))
+
+
+def blend(a: Pose, b: Pose, t: float) -> Pose:
+    """Pose part-way from a to b (t = 0..1)."""
+    lerp = lambda x, y: None if x is None or y is None else tuple(u + (v - u) * t for u, v in zip(x, y))
+    return Pose(foot_l=lerp(a.foot_l, b.foot_l), foot_r=lerp(a.foot_r, b.foot_r), hips=lerp(a.hips, b.hips),
+                hand_l=lerp(a.hand_l, b.hand_l), hand_r=lerp(a.hand_r, b.hand_r), torso=lerp(a.torso, b.torso),
+                head=lerp(a.head, b.head))
 
 
 def _arm_to_world(qc: Q.QChar, p) -> Vector:
@@ -261,3 +277,90 @@ def sunset_lights(target=(0, 0, 1.0)) -> dict:
     C.point_at(fill, target)
     C._set_enum(bpy.context.scene.view_settings, "view_transform", ["Standard"])
     return {"key": key, "fill": fill}
+
+
+# ---------------------------------------------------------------- wind + maple leaves (loop-exact)
+def _maple_mesh(name: str) -> bpy.types.Mesh:
+    """Flat 5-lobed maple leaf (unit size, in the XZ plane) with a short stem."""
+    pts = []
+    for i in range(20):
+        a = math.pi / 2 + i * 2 * math.pi / 20
+        lobe = (1.0, 0.55, 0.78, 0.42, 1.0)[i // 4 % 5] if i % 4 == 0 else 0.5
+        r = [1.0, 0.45, 0.72, 0.45][i % 4] * (0.8 if i in (8, 12) else 1.0)
+        pts.append((math.cos(a) * r, 0.0, math.sin(a) * r))
+    pts.append((0.0, 0.0, -1.25))                      # stem tip
+    verts = [(0.0, 0.0, 0.0)] + pts
+    n = len(pts)
+    faces = [(0, 1 + i, 1 + (i + 1) % (n - 1)) for i in range(n - 1)]
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [(0, n)], faces)
+    me.update()
+    return me
+
+
+class Leaves:
+    """Autumn maple leaves blown by a wind whose strength follows the fireball energy.
+
+    Positions wrap inside a box along the wind: the cumulative wind distance over the whole clip is snapped
+    to a whole number of box lengths and every spin/flutter is a whole number of cycles, so the last frame
+    equals the first (a seamless loop)."""
+
+    COLORS = ("#d8431f", "#b8281c", "#e8742a", "#c2521a", "#9e2418")
+
+    def __init__(self, n: int = 36, box=((-4.2, 4.2), (-2.0, 2.6), (0.08, 2.4)), size=(0.05, 0.085), seed: int = 11):
+        from kit import look as L
+        rng = random.Random(seed)
+        self.box = box
+        self.leaves = []
+        mats = [L.toon2(f"maple_{i}", c, rim=0.0) for i, c in enumerate(self.COLORS)]
+        for m in mats:
+            m.use_backface_culling = False
+        for i in range(n):
+            me = _maple_mesh(f"maple{i}")
+            me.materials.append(mats[i % len(mats)])
+            ob = bpy.data.objects.new(f"maple{i}", me)
+            bpy.context.scene.collection.objects.link(ob)
+            s = rng.uniform(*size)
+            ob.scale = (s, s, s)
+            ob.rotation_mode = "XYZ"
+            self.leaves.append({"ob": ob, "u": rng.random(), "y": rng.uniform(*box[1]), "z": rng.uniform(*box[2]),
+                                "spin": rng.choice((-3, -2, -1, 1, 2, 3)), "tilt": rng.uniform(0.3, 1.2),
+                                "flut": rng.choice((3, 4, 5, 6)), "ph": rng.random() * 2 * math.pi})
+
+    def animate(self, energy, start: int, end: int, *, speed: float = 0.05, lift: float = 0.35, step: int = 2) -> None:
+        """energy(frame) -> 0..~5; wind speed = energy * speed metres/frame along +x."""
+        (x0, x1), _, (z0, z1) = self.box
+        Lx = x1 - x0
+        frames = list(range(start, end + 1))
+        dist = [0.0]
+        for f in frames[1:]:
+            dist.append(dist[-1] + energy(f) * speed)
+        total = dist[-1]
+        k = max(1, round(total / Lx))
+        scale = k * Lx / total if total > 0 else 1.0          # snap: whole number of wraps over the loop
+        T = end - start
+        for lf in self.leaves:
+            ob = lf["ob"]
+            for i, f in enumerate(frames):
+                if (f - start) % step and f != end:
+                    continue
+                d = dist[i] * scale
+                x = x0 + ((lf["u"] * Lx + d) % Lx)
+                ph = 2 * math.pi * (f - start) / T
+                e = energy(f)
+                z = lf["z"] + 0.12 * math.sin(lf["flut"] * ph + lf["ph"]) + lift * min(e, 3.0) * math.sin(ph * 2 + lf["ph"]) * 0.3
+                z = min(max(z, z0), z1)
+                ob.location = (x, lf["y"] + 0.15 * math.sin(lf["flut"] * ph + lf["ph"] * 0.7), z)
+                ob.rotation_euler = (lf["tilt"] * math.sin(lf["flut"] * ph + lf["ph"]),
+                                     2 * math.pi * lf["spin"] * d / (k * Lx),
+                                     lf["spin"] * ph)
+                ob.keyframe_insert("location", frame=f)
+                ob.keyframe_insert("rotation_euler", frame=f)
+            # wrap jumps happen while a leaf is outside the frame (the box is wider than the shot): step through them
+            from studio import core as C
+            for fc in C.fcurves(ob):
+                if fc.data_path == "location" and fc.array_index == 0:
+                    kps = fc.keyframe_points
+                    for a, b in zip(kps[:-1], kps[1:]):
+                        if b.co.y < a.co.y - Lx / 2:
+                            a.interpolation = "CONSTANT"
