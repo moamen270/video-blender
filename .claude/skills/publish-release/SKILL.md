@@ -43,6 +43,8 @@ A GitHub release alone is a milestone, not done. Until the owner has uploaded, t
 - One pinned-comment question.
 
 ## After upload
-- Log into `analytics/videos.csv` (same columns as video-builder's) at upload, 24 h / 72 h / 7 d: views,
+- Add the video to `analytics/posts.json` (post id per platform) as soon as it is uploaded, then run
+  `python tools/stats.py` at 24 h / 72 h / 7 d (it also reports posts it finds that are not registered).
+- `analytics/videos.csv` (same columns as video-builder's) holds every snapshot: views,
   3-s retention, average watch, completion, likes, comments, shares, saves, followers. Every upload is a lesson:
   write the lesson down (skill rule / `docs/` log).

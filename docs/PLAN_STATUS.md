@@ -40,7 +40,8 @@ Each factor has a skill with its rules (see the skill map in `.claude/skills/ble
 | × | Packaging (`publish-release`) | GitHub releases | ✅ v0.1.0, v0.2.0 |
 | | | auto `social.md` (all 4 platforms, `tools/social.py`) | ✅ 2026-09-25 |
 | | | definition of done = published + merged + analytics (skill `publish-release`) | ✅ rule written 2026-09-25 |
-| × | Analytics | per-upload log | 🟡 `analytics/videos.csv` created, no rows yet |
+| × | Analytics | public numbers for all 4 platforms (`tools/stats.py`, `analytics/posts.json`) | ✅ 2026-09-25 (6 videos backfilled) |
+| | | retention / avg watch / completion (creator APIs) | ❌ |
 | × | Episode compiler | spec → episode | ❌ |
 
 ## EP02 owner-flagged defects → automatic checks

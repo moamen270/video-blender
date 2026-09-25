@@ -32,7 +32,8 @@ Read this file first, then the skill for the work at hand. Nothing below depends
 | `content/IDEAS.md`, `content/scripts/` | idea bank and written scripts |
 | `brand.json` | channel name, handle, platform links, default hashtags |
 | `assets/cast/voices.json` | voice casting (engine, reference wav, pitch) per character |
-| `analytics/videos.csv` | upload log per platform (upload, 24 h, 72 h, 7 d) |
+| `analytics/posts.json`, `analytics/videos.csv` | every published video's post ids (all channel videos, both repos) and the numbers log |
+| `tools/stats.py` | pulls public views/likes from YouTube, TikTok, Instagram, Facebook (no login) → appends to `videos.csv` |
 | `assets/sfx_bank.json`, `assets/library/LICENSES.md` | sound bank (ids → CC0 files) and every asset licence |
 | `kit/` | the library: `qchar` (Quaternius rigs), `cast` (character builders: Batman, Joker, Ryu, Ken…), `fight` (poses, fireballs, rooftop, leaves), `shots` (auto-framed cameras), `face`, `motion` (IK), `captions`, `post` (bloom), `sets`, `fx` |
 | `tools/make.sh` | one command: build → render → mix → `final.mp4` → 4 Hz sheet → `social.md` |
@@ -55,6 +56,7 @@ Read this file first, then the skill for the work at hand. Nothing below depends
 uv run --project F:/PoCs/video-builder/py python tools/voice.py --project <p>   # voices (cached)
 sh tools/make.sh <p> preview|final        # -> projects/<p>/output/v<next>/
 python tools/social.py <p> [--version N]  # regenerate social.md from social.json
+python tools/stats.py                     # snapshot numbers for every video in analytics/posts.json
 gh release create vX.Y.Z -R moamen270/video-blender --target <branch> ...
 ```
 Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Super).
@@ -67,8 +69,10 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
 
 ## Current state (update when it changes)
 - 2026-09-25: all work merged to `main` (housekeeping). Old branches removed.
-- `analytics/videos.csv` exists but is empty: the published videos (5 stickman from video-builder + Batman EP02,
-  all platforms) still have to be logged — next step "numbers".
+- 2026-09-25: numbers backfilled (`python tools/stats.py`, day 1–8): Batman EP02 (3D) 5,947 views in 1 day on
+  4 platforms vs 554–1,438 for each stickman video in 4–8 days. TikTok gave Wolverine/Jhin/Dodgeball 1–2 views
+  (likely restricted — owner to check TikTok Studio). Retention/avg watch need creator dashboards/APIs (not public).
+  `analytics/` is the canonical log for the whole channel (video-builder's sheet is superseded).
 - Open proposals awaiting the owner: a phased production process (research → pitch PoC → script → design →
   voice → animatic → animation → sound → QA → publish → learn), a reusable component/asset/set library,
   per-episode `state.json`, analytics pulled from the platforms.

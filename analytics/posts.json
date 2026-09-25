@@ -1,0 +1,25 @@
+{
+  "_doc": "Every published video: where it lives and its post id per platform. tools/stats.py reads this. Add a row when a video is uploaded (DoD).",
+  "channel": {"youtube": "https://www.youtube.com/@DummySticky", "tiktok": "https://www.tiktok.com/@dummysticky",
+              "instagram": "https://www.instagram.com/dummysticky", "facebook": "https://www.facebook.com/DummySticky"},
+  "videos": [
+    {"slug": "wolverine-watermelons", "repo": "video-builder", "version": 5, "uploaded": "2026-09-17",
+     "hook": "Everyone thinks I'm just a guy with claws.",
+     "youtube": "MjEhe3_JeVI", "tiktok": "7686629304935107860", "instagram": "DdZUCmngCpe", "facebook": "922728377155225"},
+    {"slug": "jhin-four-shots", "repo": "video-builder", "version": 9, "uploaded": "2026-09-18",
+     "hook": "Four shots. One masterpiece.",
+     "youtube": "diXjjRuZy6g", "tiktok": "7686829958353751316", "instagram": "DdbSXmHtFCq", "facebook": "4118920251734774"},
+    {"slug": "batman-alley", "repo": "video-builder", "version": 8, "uploaded": "2026-09-19",
+     "hook": "Three villains. One bat.",
+     "youtube": "HGtjVpY_HxI", "tiktok": "7687185533763669268", "instagram": "DddwKHZtg6I", "facebook": "2675168592893969"},
+    {"slug": "dodgeball-duel", "repo": "video-builder", "version": 17, "uploaded": "2026-09-20",
+     "hook": "Nobody can hit Noodle.",
+     "youtube": "f9spX8TKias", "tiktok": "7687667199678385428", "instagram": "DdhGxmst0tX", "facebook": "2612524129216111"},
+    {"slug": "the-shapeshifter", "repo": "video-builder", "version": 9, "uploaded": "2026-09-21",
+     "hook": "One actor. Five voices.",
+     "youtube": "iKbhNfXdxoE", "tiktok": "7688040379140099349", "instagram": "DdjsPquNkQi", "facebook": "1088180817339729"},
+    {"slug": "batman-unexpected-item", "repo": "blender-video", "version": 21, "uploaded": "2026-09-24",
+     "hook": "His deadliest enemy yet.",
+     "youtube": "NlIhB1Kt4Yw", "tiktok": "7689111949921013012", "instagram": "DdrHtbsNK9W", "facebook": "1640101280959094"}
+  ]
+}
