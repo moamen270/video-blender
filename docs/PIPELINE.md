@@ -26,7 +26,7 @@ Work flows as cards on a board; several videos can be in flight (one renders whi
 | lane | what moves in it | where it lives |
 |---|---|---|
 | **Research** (continuous) | events calendar (releases, holidays, viral moments, last month's trends), idea cards, tech radar, asset scouting | `content/` (IDEAS.md; EVENTS.md and TECH_RADAR.md planned) |
-| **Library** (continuous) | reusable components: characters, poses, motions, props, FX, sets/environments, sounds, music, voices | `kit/`, `assets/` (catalog with previews planned) |
+| **Library** (continuous) | reusable components: characters, poses, motions, props, FX, sets/environments, sounds, music, voices | `library/catalog.json` + `library/CATALOG.md` (previews) → code in `kit/`, files in `assets/`; `tools/catalog.py` |
 | **Episodes** | one card per video, phases 1–11 below | `projects/<slug>/` + `state.json` |
 | **Platform** | tools, checks, compiler, MCP servers | `tools/`, `kit/`, skills |
 
@@ -41,7 +41,7 @@ Status values in `state.json` are the phase ids in the first column.
 | 0 | `idea` | Research — Gemini (web) + Claude | events calendar, analytics, idea bank | idea card in `content/IDEAS.md` (premise, why now, deadline) → `tools/new_episode.py` creates the folder | card has a "why now" |
 | 1 | `pitch` | Writers — Claude (skill `comedy-pitch`) | idea card, owner taste | `pitch.md` (3 pitches: logline, why funny, punchline written out, first frame, risk) + **pitch PoC** (storyboard stills or a stickman clip with the key line) | **G1 — owner approves one premise** |
 | 2 | `script` | Writers — Claude (skill `hook-script`) | approved pitch | `script.md` (beats with target seconds, hook text, loop/CTA plan, performance direction), `lines.json`, `social.json` draft | **G2 — owner approves the script** |
-| 3 | `design` | Art — Claude / platform | script, library | `design.md`: cast, set, props, FX, poses/motions needed — each marked *reuse* (library) or *build* (Library lane first); turnaround/set stills for new items | all components exist; **G3 — owner approves the look of new characters/sets** (skipped if all reused) |
+| 3 | `design` | Art — Claude / platform | script, library (`tools/catalog.py search`) | `design.md`: cast, set, props, FX, poses/motions needed — each marked *reuse* (catalog id) or *build* (Library lane first, then a catalog entry); turnaround/set stills for new items | all components exist; **G3 — owner approves the look of new characters/sets** (skipped if all reused) |
 | 4 | `voice` | Voice — scripts + Gemini Pro listening (skill `voice-casting`) | `lines.json`, `assets/cast/voices.json` | `voice/manifest.json` (takes, timings, lip-sync, words), voice preview mp3 | ASR read-back ≥ 0.97, clean takes; **timing locked** |
 | 5 | `animatic` | Layout — Claude now; compiler later | script, locked voice, components | `script.py` blocking pass: positions, facing, cameras per beat; draft render (`make.sh <p> draft`) + 4 Hz sheet | staging checks pass; **G4 — owner approves staging & timing** |
 | 6 | `animation` | Animation — Claude (skill `motion-acting`, `shot-design`) | approved animatic | full `script.py`: motion, acting, lip sync, FX; preview render | motion/contact review passes (skill `episode-review`) |
@@ -67,7 +67,7 @@ Side exits: `dropped` (premise rejected or abandoned — keep the reason), `arch
 2. GitHub release of the final with `social.md` attached.
 3. Branch merged to `main` (branch per episode `ep/<slug>`, per tool change `kit/<topic>`).
 4. `analytics/videos.csv` has the 24 h, 72 h and 7 d snapshots (`python tools/stats.py`).
-5. Harvest: new components reusable from `kit/`/`assets/`; every owner correction is a skill rule or a check.
+5. Harvest: new components reusable from `kit/`/`assets/` and in `library/catalog.json` with a preview (`tools/catalog.py harvest` = 0); every owner correction is a skill rule or a check.
 
 ## 6. `state.json` (one per episode; the handoff and the memory)
 ```json
@@ -114,7 +114,8 @@ main context small) come when a phase has a contract and a checker a weaker mode
 | QA: hook, dead time, length, border | ✅ |
 | upload text for 4 platforms, releases, public stats | ✅ |
 | events calendar, tech radar, asset scouting routine | ❌ planned (Research lane) |
-| library catalog with previews (characters, poses, motions, sets, props, FX, sounds, music) + harvest step | ❌ planned (Library lane) |
+| library catalog with previews + search/check/harvest/gallery (`tools/catalog.py`, `tools/catalog_preview.py`) | ✅ 2026-09-26 (182 items) |
+| asset scouting into the library (Poly Haven, Kenney, Quaternius, CMU mocap…), motion clips, more sets | ❌ planned |
 | pitch PoC tooling (storyboard stills / stickman clip via video-builder) | ❌ planned |
 | animatic spec (`shots.json`) + compiler + staging checks (facing, distance, FX over bodies, frame edges) | ❌ planned — biggest win |
 | per-team subagents, blender-video MCP tools | ❌ planned |

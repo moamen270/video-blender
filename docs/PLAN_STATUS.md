@@ -48,7 +48,8 @@ Each factor has a skill with its rules (see the skill map in `.claude/skills/ble
 | item | status |
 |---|---|
 | phases, gates, DoD, `state.json` per episode, board, new-episode scaffold, templates | ✅ 2026-09-26 |
-| library catalog + harvest, research lane (events, tech radar, scouting), pitch PoC, animatic compiler, subagents | ❌ planned |
+| library catalog with previews, search/check/harvest/gallery | ✅ 2026-09-26 (182 items) |
+| research lane (events, tech radar, scouting), pitch PoC, animatic compiler, subagents | ❌ planned |
 
 ## EP02 owner-flagged defects → automatic checks
 | defect | check | status |

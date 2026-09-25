@@ -182,7 +182,7 @@
     "Keep fighters ~2.4 m apart and effects off the bodies",
     "Shouts need a shouting reference; align shared shouts on the measured 'ken' onset"
   ],
-  "harvested": "partial: Ryu/Ken builders (kit/cast.py), fight poses, fireballs, rooftop sunset, maple leaves (kit/fight.py), bloom (kit/post.py); not yet catalogued",
+  "harvested": "partial: Ryu/Ken builders (kit/cast.py), fight poses, fireballs, rooftop sunset, maple leaves (kit/fight.py), bloom (kit/post.py); catalogued in library/catalog.json 2026-09-26",
   "history": [
     {
       "date": "2026-09-25",
@@ -203,6 +203,11 @@
       "date": "2026-09-26",
       "status": "awaiting-upload",
       "note": "state.json backfilled (pipeline introduced)"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "awaiting-upload",
+      "note": "components catalogued in the library"
     }
   ]
 }

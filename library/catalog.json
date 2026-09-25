@@ -1,0 +1,4335 @@
+{
+ "_doc": "Component library (docs/PIPELINE.md Library lane). One entry per reusable component. Edit by hand or via tools/catalog.py; previews via tools/catalog_preview.py; gallery: library/CATALOG.md. 'internal' = helper functions reviewed in a harvest and deliberately not catalogued (they are used through catalogued components).",
+ "kinds": [
+  "character",
+  "character-part",
+  "rig",
+  "pose",
+  "motion",
+  "prop",
+  "fx",
+  "set",
+  "set-part",
+  "camera",
+  "sfx",
+  "music",
+  "voice"
+ ],
+ "statuses": {
+  "approved": "owner-approved or used in a published/final video",
+  "draft": "works, not approved / old style",
+  "deprecated": "do not use (reason in notes)"
+ },
+ "items": [
+  {
+   "id": "character/batman",
+   "kind": "character",
+   "name": "Batman (parody)",
+   "description": "Caped crusader parody on the Quaternius base: cowl with ears, cape (spring), belt, bat emblem, decal face (stern/angry/deadpan).",
+   "tags": [
+    "hero",
+    "dc",
+    "parody",
+    "cape",
+    "dark"
+   ],
+   "source": {
+    "kit": "kit.cast:build_batman",
+    "cast": "batman"
+   },
+   "licence": "CC0 (Quaternius Ultimate Animated Character) + own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "character",
+    "cast": "batman",
+    "image": "library/previews/character__batman.jpg"
+   },
+   "notes": "owner: build 7/10, style 4/10"
+  },
+  {
+   "id": "character/joker",
+   "kind": "character",
+   "name": "Joker (parody)",
+   "description": "Joker parody: purple suit, green hair, white face, red grin.",
+   "tags": [
+    "villain",
+    "dc",
+    "parody"
+   ],
+   "source": {
+    "kit": "kit.cast:build_joker",
+    "cast": "joker"
+   },
+   "licence": "CC0 (Quaternius Ultimate Animated Character) + own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "character",
+    "cast": "joker",
+    "image": "library/previews/character__joker.jpg"
+   }
+  },
+  {
+   "id": "character/ryu",
+   "kind": "character",
+   "name": "Ryu (parody)",
+   "description": "Street Fighter Ryu parody: sleeveless white gi, V-neck, lapels, red headband, black belt, shaped arms, wrist wraps, barefoot, natural skin.",
+   "tags": [
+    "fighter",
+    "street-fighter",
+    "capcom",
+    "parody",
+    "martial-arts"
+   ],
+   "source": {
+    "kit": "kit.cast:build_ryu",
+    "cast": "ryu"
+   },
+   "licence": "CC0 (Quaternius Ultimate Animated Character) + own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "character",
+    "cast": "ryu",
+    "image": "library/previews/character__ryu.jpg"
+   },
+   "notes": "owner approved natural skin (2026-09-25)"
+  },
+  {
+   "id": "character/ken",
+   "kind": "character",
+   "name": "Ken (parody)",
+   "description": "Street Fighter Ken parody: sleeveless red gi, blond hair, black belt, smug expression, natural skin.",
+   "tags": [
+    "fighter",
+    "street-fighter",
+    "capcom",
+    "parody",
+    "martial-arts"
+   ],
+   "source": {
+    "kit": "kit.cast:build_ken",
+    "cast": "ken"
+   },
+   "licence": "CC0 (Quaternius Ultimate Animated Character) + own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "character",
+    "cast": "ken",
+    "image": "library/previews/character__ken.jpg"
+   }
+  },
+  {
+   "id": "character/ryu-dummy",
+   "kind": "character",
+   "name": "Ryu (dummy skin)",
+   "description": "Ryu with the channel's grey dummy skin (alternative look).",
+   "tags": [
+    "fighter",
+    "dummy-skin"
+   ],
+   "source": {
+    "kit": "kit.cast:CAST['ryu_dummy']",
+    "cast": "ryu_dummy"
+   },
+   "licence": "CC0 (Quaternius Ultimate Animated Character) + own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [],
+   "status": "draft",
+   "preview": {
+    "recipe": "character",
+    "cast": "ryu_dummy",
+    "image": "library/previews/character__ryu-dummy.jpg"
+   },
+   "notes": "owner preferred natural skin"
+  },
+  {
+   "id": "character/ken-dummy",
+   "kind": "character",
+   "name": "Ken (dummy skin)",
+   "description": "Ken with the grey dummy skin (alternative look).",
+   "tags": [
+    "fighter",
+    "dummy-skin"
+   ],
+   "source": {
+    "kit": "kit.cast:CAST['ken_dummy']",
+    "cast": "ken_dummy"
+   },
+   "licence": "CC0 (Quaternius Ultimate Animated Character) + own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [],
+   "status": "draft",
+   "preview": {
+    "recipe": "character",
+    "cast": "ken_dummy",
+    "image": "library/previews/character__ken-dummy.jpg"
+   },
+   "notes": "owner preferred natural skin"
+  },
+  {
+   "id": "character/ronin",
+   "kind": "character",
+   "name": "Ronin (samurai)",
+   "description": "Early custom-rig samurai hero (own armature, not Quaternius).",
+   "tags": [
+    "samurai",
+    "japan",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.samurai:build_ronin"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai",
+    "builder": "build_ronin",
+    "image": "library/previews/character__ronin.jpg"
+   },
+   "notes": "old rig; the kit.pose POSES library drives it"
+  },
+  {
+   "id": "character/warlord",
+   "kind": "character",
+   "name": "Warlord (samurai)",
+   "description": "Early custom-rig armoured samurai villain.",
+   "tags": [
+    "samurai",
+    "japan",
+    "armour",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.samurai:build_warlord"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai",
+    "builder": "build_warlord",
+    "image": "library/previews/character__warlord.jpg"
+   }
+  },
+  {
+   "id": "character/builder-fighter",
+   "kind": "character-part",
+   "name": "Fighter builder parts",
+   "description": "Reusable character-building helpers: shape_arms (bicep/forearm taper), add_thumbs, fingerless_gloves (wrist wraps), sleeveless gi recipe in _fighter().",
+   "tags": [
+    "helper",
+    "arms",
+    "gloves"
+   ],
+   "source": {
+    "kit": "kit.cast:shape_arms"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "character/face",
+   "kind": "character-part",
+   "name": "Decal face + expressions",
+   "description": "2D decal eyes/brows/mouth on any rig: expressions neutral, stern, angry, surprised, suspicious, smug, deadpan; mouth shapes for Rhubarb lip sync; blink/auto_blink.",
+   "tags": [
+    "face",
+    "expression",
+    "lipsync",
+    "blink"
+   ],
+   "source": {
+    "kit": "kit.face:build_face"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item",
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "character/cape",
+   "kind": "character-part",
+   "name": "Spring cape",
+   "description": "Skinned cape with baked spring motion (follows the body).",
+   "tags": [
+    "cape",
+    "cloth",
+    "secondary-motion"
+   ],
+   "source": {
+    "kit": "kit.cape:build_cape"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "rig/basecharacter",
+   "kind": "rig",
+   "name": "BaseCharacter",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "basecharacter"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/BaseCharacter.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "BaseCharacter.blend",
+    "image": "library/previews/rig__basecharacter.jpg"
+   }
+  },
+  {
+   "id": "rig/bluesoldier-female",
+   "kind": "rig",
+   "name": "BlueSoldier Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "bluesoldier",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/BlueSoldier_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "BlueSoldier_Female.blend",
+    "image": "library/previews/rig__bluesoldier-female.jpg"
+   }
+  },
+  {
+   "id": "rig/bluesoldier-male",
+   "kind": "rig",
+   "name": "BlueSoldier Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "bluesoldier",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/BlueSoldier_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "BlueSoldier_Male.blend",
+    "image": "library/previews/rig__bluesoldier-male.jpg"
+   }
+  },
+  {
+   "id": "rig/casual2-female",
+   "kind": "rig",
+   "name": "Casual2 Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual2",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual2_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual2_Female.blend",
+    "image": "library/previews/rig__casual2-female.jpg"
+   }
+  },
+  {
+   "id": "rig/casual2-male",
+   "kind": "rig",
+   "name": "Casual2 Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual2",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual2_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual2_Male.blend",
+    "image": "library/previews/rig__casual2-male.jpg"
+   }
+  },
+  {
+   "id": "rig/casual3-female",
+   "kind": "rig",
+   "name": "Casual3 Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual3",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual3_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual3_Female.blend",
+    "image": "library/previews/rig__casual3-female.jpg"
+   }
+  },
+  {
+   "id": "rig/casual3-male",
+   "kind": "rig",
+   "name": "Casual3 Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual3",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual3_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual3_Male.blend",
+    "image": "library/previews/rig__casual3-male.jpg"
+   }
+  },
+  {
+   "id": "rig/casual-bald",
+   "kind": "rig",
+   "name": "Casual Bald",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual",
+    "bald"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual_Bald.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual_Bald.blend",
+    "image": "library/previews/rig__casual-bald.jpg"
+   }
+  },
+  {
+   "id": "rig/casual-female",
+   "kind": "rig",
+   "name": "Casual Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual_Female.blend",
+    "image": "library/previews/rig__casual-female.jpg"
+   }
+  },
+  {
+   "id": "rig/casual-male",
+   "kind": "rig",
+   "name": "Casual Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "casual",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Casual_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Casual_Male.blend",
+    "image": "library/previews/rig__casual-male.jpg"
+   }
+  },
+  {
+   "id": "rig/chef-female",
+   "kind": "rig",
+   "name": "Chef Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "chef",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Chef_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Chef_Female.blend",
+    "image": "library/previews/rig__chef-female.jpg"
+   }
+  },
+  {
+   "id": "rig/chef-hat",
+   "kind": "rig",
+   "name": "Chef Hat",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "chef",
+    "hat"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Chef_Hat.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Chef_Hat.blend",
+    "image": "library/previews/rig__chef-hat.jpg"
+   }
+  },
+  {
+   "id": "rig/chef-male",
+   "kind": "rig",
+   "name": "Chef Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "chef",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Chef_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Chef_Male.blend",
+    "image": "library/previews/rig__chef-male.jpg"
+   }
+  },
+  {
+   "id": "rig/cow",
+   "kind": "rig",
+   "name": "Cow",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "cow"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Cow.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Cow.blend",
+    "image": "library/previews/rig__cow.jpg"
+   }
+  },
+  {
+   "id": "rig/cowboy-female",
+   "kind": "rig",
+   "name": "Cowboy Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "cowboy",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Cowboy_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Cowboy_Female.blend",
+    "image": "library/previews/rig__cowboy-female.jpg"
+   }
+  },
+  {
+   "id": "rig/cowboy-hair",
+   "kind": "rig",
+   "name": "Cowboy Hair",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "cowboy",
+    "hair"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Cowboy_Hair.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Cowboy_Hair.blend",
+    "image": "library/previews/rig__cowboy-hair.jpg"
+   }
+  },
+  {
+   "id": "rig/cowboy-male",
+   "kind": "rig",
+   "name": "Cowboy Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "cowboy",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Cowboy_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Cowboy_Male.blend",
+    "image": "library/previews/rig__cowboy-male.jpg"
+   }
+  },
+  {
+   "id": "rig/doctor-female-old",
+   "kind": "rig",
+   "name": "Doctor Female Old",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "doctor",
+    "female",
+    "old"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Doctor_Female_Old.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Doctor_Female_Old.blend",
+    "image": "library/previews/rig__doctor-female-old.jpg"
+   }
+  },
+  {
+   "id": "rig/doctor-female-young",
+   "kind": "rig",
+   "name": "Doctor Female Young",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "doctor",
+    "female",
+    "young"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Doctor_Female_Young.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Doctor_Female_Young.blend",
+    "image": "library/previews/rig__doctor-female-young.jpg"
+   }
+  },
+  {
+   "id": "rig/doctor-male-old",
+   "kind": "rig",
+   "name": "Doctor Male Old",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "doctor",
+    "male",
+    "old"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Doctor_Male_Old.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Doctor_Male_Old.blend",
+    "image": "library/previews/rig__doctor-male-old.jpg"
+   }
+  },
+  {
+   "id": "rig/doctor-male-young",
+   "kind": "rig",
+   "name": "Doctor Male Young",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "doctor",
+    "male",
+    "young"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Doctor_Male_Young.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Doctor_Male_Young.blend",
+    "image": "library/previews/rig__doctor-male-young.jpg"
+   }
+  },
+  {
+   "id": "rig/elf",
+   "kind": "rig",
+   "name": "Elf",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "elf"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Elf.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Elf.blend",
+    "image": "library/previews/rig__elf.jpg"
+   }
+  },
+  {
+   "id": "rig/goblin-female",
+   "kind": "rig",
+   "name": "Goblin Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "goblin",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Goblin_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Goblin_Female.blend",
+    "image": "library/previews/rig__goblin-female.jpg"
+   }
+  },
+  {
+   "id": "rig/goblin-male",
+   "kind": "rig",
+   "name": "Goblin Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "goblin",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Goblin_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Goblin_Male.blend",
+    "image": "library/previews/rig__goblin-male.jpg"
+   }
+  },
+  {
+   "id": "rig/kimono-female",
+   "kind": "rig",
+   "name": "Kimono Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "kimono",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Kimono_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Kimono_Female.blend",
+    "image": "library/previews/rig__kimono-female.jpg"
+   }
+  },
+  {
+   "id": "rig/kimono-male",
+   "kind": "rig",
+   "name": "Kimono Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "kimono",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Kimono_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Kimono_Male.blend",
+    "image": "library/previews/rig__kimono-male.jpg"
+   }
+  },
+  {
+   "id": "rig/knight-golden-female",
+   "kind": "rig",
+   "name": "Knight Golden Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "knight",
+    "golden",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Knight_Golden_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Knight_Golden_Female.blend",
+    "image": "library/previews/rig__knight-golden-female.jpg"
+   }
+  },
+  {
+   "id": "rig/knight-golden-male",
+   "kind": "rig",
+   "name": "Knight Golden Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "knight",
+    "golden",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Knight_Golden_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Knight_Golden_Male.blend",
+    "image": "library/previews/rig__knight-golden-male.jpg"
+   }
+  },
+  {
+   "id": "rig/knight-male",
+   "kind": "rig",
+   "name": "Knight Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "knight",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Knight_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Knight_Male.blend",
+    "image": "library/previews/rig__knight-male.jpg"
+   }
+  },
+  {
+   "id": "rig/ninja-female",
+   "kind": "rig",
+   "name": "Ninja Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "ninja",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Ninja_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Ninja_Female.blend",
+    "image": "library/previews/rig__ninja-female.jpg"
+   }
+  },
+  {
+   "id": "rig/ninja-male",
+   "kind": "rig",
+   "name": "Ninja Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "ninja",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Ninja_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Ninja_Male.blend",
+    "image": "library/previews/rig__ninja-male.jpg"
+   }
+  },
+  {
+   "id": "rig/ninja-male-hair",
+   "kind": "rig",
+   "name": "Ninja Male Hair",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "ninja",
+    "male",
+    "hair"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Ninja_Male_Hair.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Ninja_Male_Hair.blend",
+    "image": "library/previews/rig__ninja-male-hair.jpg"
+   }
+  },
+  {
+   "id": "rig/ninja-sand",
+   "kind": "rig",
+   "name": "Ninja Sand",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "ninja",
+    "sand"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Ninja_Sand.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Ninja_Sand.blend",
+    "image": "library/previews/rig__ninja-sand.jpg"
+   }
+  },
+  {
+   "id": "rig/ninja-sand-female",
+   "kind": "rig",
+   "name": "Ninja Sand Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "ninja",
+    "sand",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Ninja_Sand_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Ninja_Sand_Female.blend",
+    "image": "library/previews/rig__ninja-sand-female.jpg"
+   }
+  },
+  {
+   "id": "rig/oldclassy-female",
+   "kind": "rig",
+   "name": "OldClassy Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "oldclassy",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/OldClassy_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "OldClassy_Female.blend",
+    "image": "library/previews/rig__oldclassy-female.jpg"
+   }
+  },
+  {
+   "id": "rig/oldclassy-male",
+   "kind": "rig",
+   "name": "OldClassy Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "oldclassy",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/OldClassy_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "OldClassy_Male.blend",
+    "image": "library/previews/rig__oldclassy-male.jpg"
+   }
+  },
+  {
+   "id": "rig/pirate-female",
+   "kind": "rig",
+   "name": "Pirate Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "pirate",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Pirate_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Pirate_Female.blend",
+    "image": "library/previews/rig__pirate-female.jpg"
+   }
+  },
+  {
+   "id": "rig/pirate-male",
+   "kind": "rig",
+   "name": "Pirate Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "pirate",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Pirate_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Pirate_Male.blend",
+    "image": "library/previews/rig__pirate-male.jpg"
+   }
+  },
+  {
+   "id": "rig/pug",
+   "kind": "rig",
+   "name": "Pug",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "pug"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Pug.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Pug.blend",
+    "image": "library/previews/rig__pug.jpg"
+   }
+  },
+  {
+   "id": "rig/soldier-female",
+   "kind": "rig",
+   "name": "Soldier Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "soldier",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Soldier_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Soldier_Female.blend",
+    "image": "library/previews/rig__soldier-female.jpg"
+   }
+  },
+  {
+   "id": "rig/soldier-male",
+   "kind": "rig",
+   "name": "Soldier Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "soldier",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Soldier_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Soldier_Male.blend",
+    "image": "library/previews/rig__soldier-male.jpg"
+   }
+  },
+  {
+   "id": "rig/suit-female",
+   "kind": "rig",
+   "name": "Suit Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "suit",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Suit_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Suit_Female.blend",
+    "image": "library/previews/rig__suit-female.jpg"
+   }
+  },
+  {
+   "id": "rig/suit-male",
+   "kind": "rig",
+   "name": "Suit Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "suit",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Suit_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Suit_Male.blend",
+    "image": "library/previews/rig__suit-male.jpg"
+   }
+  },
+  {
+   "id": "rig/vikinghelmet",
+   "kind": "rig",
+   "name": "VikingHelmet",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "vikinghelmet"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/VikingHelmet.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "VikingHelmet.blend",
+    "image": "library/previews/rig__vikinghelmet.jpg"
+   }
+  },
+  {
+   "id": "rig/viking-female",
+   "kind": "rig",
+   "name": "Viking Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "viking",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Viking_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Viking_Female.blend",
+    "image": "library/previews/rig__viking-female.jpg"
+   }
+  },
+  {
+   "id": "rig/viking-male",
+   "kind": "rig",
+   "name": "Viking Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "viking",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Viking_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Viking_Male.blend",
+    "image": "library/previews/rig__viking-male.jpg"
+   }
+  },
+  {
+   "id": "rig/witch",
+   "kind": "rig",
+   "name": "Witch",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "witch"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Witch.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Witch.blend",
+    "image": "library/previews/rig__witch.jpg"
+   }
+  },
+  {
+   "id": "rig/wizard",
+   "kind": "rig",
+   "name": "Wizard",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "wizard"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Wizard.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Wizard.blend",
+    "image": "library/previews/rig__wizard.jpg"
+   }
+  },
+  {
+   "id": "rig/worker-female",
+   "kind": "rig",
+   "name": "Worker Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "worker",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Worker_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Worker_Female.blend",
+    "image": "library/previews/rig__worker-female.jpg"
+   }
+  },
+  {
+   "id": "rig/worker-male",
+   "kind": "rig",
+   "name": "Worker Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "worker",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Worker_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Worker_Male.blend",
+    "image": "library/previews/rig__worker-male.jpg"
+   }
+  },
+  {
+   "id": "rig/zombie-female",
+   "kind": "rig",
+   "name": "Zombie Female",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "zombie",
+    "female"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Zombie_Female.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Zombie_Female.blend",
+    "image": "library/previews/rig__zombie-female.jpg"
+   }
+  },
+  {
+   "id": "rig/zombie-male",
+   "kind": "rig",
+   "name": "Zombie Male",
+   "description": "Quaternius rigged character (23-bone CharacterArmature, 17 actions). Load with kit.qchar.load_character; recolour/parts via kit.qchar.",
+   "tags": [
+    "quaternius",
+    "rig",
+    "base",
+    "zombie",
+    "male"
+   ],
+   "source": {
+    "kit": "kit.qchar:load_character",
+    "file": "assets/library/quaternius/ultimate_animated_character/Zombie_Male.blend"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "rig",
+    "file": "Zombie_Male.blend",
+    "image": "library/previews/rig__zombie-male.jpg"
+   }
+  },
+  {
+   "id": "pose/fight-stance",
+   "kind": "pose",
+   "name": "Fight pose STANCE",
+   "description": "Fighting stance for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken"
+   ],
+   "source": {
+    "kit": "kit.fight:STANCE"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "pose",
+    "pose": "STANCE",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-stance.jpg"
+   }
+  },
+  {
+   "id": "pose/fight-stance-low",
+   "kind": "pose",
+   "name": "Fight pose STANCE_LOW",
+   "description": "Low fighting stance for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken"
+   ],
+   "source": {
+    "kit": "kit.fight:STANCE_LOW"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "pose",
+    "pose": "STANCE_LOW",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-stance-low.jpg"
+   }
+  },
+  {
+   "id": "pose/fight-charge",
+   "kind": "pose",
+   "name": "Fight pose CHARGE",
+   "description": "Hadouken charge (old: hands behind) for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken",
+    "deprecated"
+   ],
+   "source": {
+    "kit": "kit.fight:CHARGE"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [],
+   "status": "deprecated",
+   "preview": {
+    "recipe": "pose",
+    "pose": "CHARGE",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-charge.jpg"
+   },
+   "notes": "owner: arms must not go behind the back (use CHARGE_HIP/CHARGE_OUT)"
+  },
+  {
+   "id": "pose/fight-charge-hip",
+   "kind": "pose",
+   "name": "Fight pose CHARGE_HIP",
+   "description": "Hadouken charge, palms cupped at the hip for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken"
+   ],
+   "source": {
+    "kit": "kit.fight:CHARGE_HIP"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "pose",
+    "pose": "CHARGE_HIP",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-charge-hip.jpg"
+   }
+  },
+  {
+   "id": "pose/fight-charge-out",
+   "kind": "pose",
+   "name": "Fight pose CHARGE_OUT",
+   "description": "Hadouken push-out, arms forward for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken"
+   ],
+   "source": {
+    "kit": "kit.fight:CHARGE_OUT"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "pose",
+    "pose": "CHARGE_OUT",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-charge-out.jpg"
+   }
+  },
+  {
+   "id": "pose/fight-thrust",
+   "kind": "pose",
+   "name": "Fight pose THRUST",
+   "description": "Hadouken release thrust for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken"
+   ],
+   "source": {
+    "kit": "kit.fight:THRUST"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "pose",
+    "pose": "THRUST",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-thrust.jpg"
+   }
+  },
+  {
+   "id": "pose/fight-tired",
+   "kind": "pose",
+   "name": "Fight pose TIRED",
+   "description": "Exhausted, panting for Quaternius rigs (native armature space; kit.fight.mirror for the other side; blend() between poses).",
+   "tags": [
+    "fight",
+    "street-fighter",
+    "hadouken"
+   ],
+   "source": {
+    "kit": "kit.fight:TIRED"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "pose",
+    "pose": "TIRED",
+    "cast": "ryu",
+    "image": "library/previews/pose__fight-tired.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-rest",
+   "kind": "pose",
+   "name": "Samurai pose rest",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['rest']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "rest",
+    "image": "library/previews/pose__samurai-rest.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-sheathed",
+   "kind": "pose",
+   "name": "Samurai pose sheathed",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['sheathed']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "sheathed",
+    "image": "library/previews/pose__samurai-sheathed.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-draw-mid",
+   "kind": "pose",
+   "name": "Samurai pose draw_mid",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['draw_mid']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "draw_mid",
+    "image": "library/previews/pose__samurai-draw-mid.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-chudan",
+   "kind": "pose",
+   "name": "Samurai pose chudan",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['chudan']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "chudan",
+    "image": "library/previews/pose__samurai-chudan.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-jodan",
+   "kind": "pose",
+   "name": "Samurai pose jodan",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['jodan']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "jodan",
+    "image": "library/previews/pose__samurai-jodan.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-overhead-hit",
+   "kind": "pose",
+   "name": "Samurai pose overhead_hit",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['overhead_hit']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "overhead_hit",
+    "image": "library/previews/pose__samurai-overhead-hit.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-slash-windup",
+   "kind": "pose",
+   "name": "Samurai pose slash_windup",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['slash_windup']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "slash_windup",
+    "image": "library/previews/pose__samurai-slash-windup.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-slash-hit",
+   "kind": "pose",
+   "name": "Samurai pose slash_hit",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['slash_hit']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "slash_hit",
+    "image": "library/previews/pose__samurai-slash-hit.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-thrust-windup",
+   "kind": "pose",
+   "name": "Samurai pose thrust_windup",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['thrust_windup']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "thrust_windup",
+    "image": "library/previews/pose__samurai-thrust-windup.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-thrust-hit",
+   "kind": "pose",
+   "name": "Samurai pose thrust_hit",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['thrust_hit']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "thrust_hit",
+    "image": "library/previews/pose__samurai-thrust-hit.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-block-high",
+   "kind": "pose",
+   "name": "Samurai pose block_high",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['block_high']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "block_high",
+    "image": "library/previews/pose__samurai-block-high.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-block-mid",
+   "kind": "pose",
+   "name": "Samurai pose block_mid",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['block_mid']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "block_mid",
+    "image": "library/previews/pose__samurai-block-mid.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-parry",
+   "kind": "pose",
+   "name": "Samurai pose parry",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['parry']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "parry",
+    "image": "library/previews/pose__samurai-parry.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-dodge-side",
+   "kind": "pose",
+   "name": "Samurai pose dodge_side",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['dodge_side']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "dodge_side",
+    "image": "library/previews/pose__samurai-dodge-side.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-dodge-back",
+   "kind": "pose",
+   "name": "Samurai pose dodge_back",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['dodge_back']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "dodge_back",
+    "image": "library/previews/pose__samurai-dodge-back.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-stagger",
+   "kind": "pose",
+   "name": "Samurai pose stagger",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['stagger']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "stagger",
+    "image": "library/previews/pose__samurai-stagger.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-iai-follow",
+   "kind": "pose",
+   "name": "Samurai pose iai_follow",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['iai_follow']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "iai_follow",
+    "image": "library/previews/pose__samurai-iai-follow.jpg"
+   }
+  },
+  {
+   "id": "pose/samurai-kneel",
+   "kind": "pose",
+   "name": "Samurai pose kneel",
+   "description": "Sword pose for the custom samurai rig (kit.pose.POSES; apply_pose/key_pose).",
+   "tags": [
+    "samurai",
+    "sword",
+    "custom-rig"
+   ],
+   "source": {
+    "kit": "kit.pose:POSES['kneel']"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "samurai_pose",
+    "pose": "kneel",
+    "image": "library/previews/pose__samurai-kneel.jpg"
+   }
+  },
+  {
+   "id": "motion/walk-to",
+   "kind": "motion",
+   "name": "walk_to",
+   "description": "Foot-locked walk to a point (nla walk + root travel).",
+   "tags": [
+    "walk",
+    "locomotion"
+   ],
+   "source": {
+    "kit": "kit.motion:walk_to"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/turn-to",
+   "kind": "motion",
+   "name": "turn_to",
+   "description": "Turn on the spot to a heading.",
+   "tags": [
+    "turn"
+   ],
+   "source": {
+    "kit": "kit.motion:turn_to"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/reach",
+   "kind": "motion",
+   "name": "reach",
+   "description": "Ik hand reach to a point.",
+   "tags": [
+    "ik",
+    "hand"
+   ],
+   "source": {
+    "kit": "kit.motion:reach"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/hold",
+   "kind": "motion",
+   "name": "hold",
+   "description": "Ik hold an object in the hand.",
+   "tags": [
+    "ik",
+    "prop"
+   ],
+   "source": {
+    "kit": "kit.motion:hold"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/release",
+   "kind": "motion",
+   "name": "release",
+   "description": "Release a held object.",
+   "tags": [
+    "ik",
+    "prop"
+   ],
+   "source": {
+    "kit": "kit.motion:release"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/throw",
+   "kind": "motion",
+   "name": "throw",
+   "description": "Throw a held object along an arc.",
+   "tags": [
+    "ik",
+    "prop",
+    "throw"
+   ],
+   "source": {
+    "kit": "kit.motion:throw"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/reach-path",
+   "kind": "motion",
+   "name": "reach_path",
+   "description": "Hand follows a path of points.",
+   "tags": [
+    "ik",
+    "hand"
+   ],
+   "source": {
+    "kit": "kit.motion:reach_path"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/play",
+   "kind": "motion",
+   "name": "play",
+   "description": "Play a quaternius nla action (idle, walk, run, punch, death…) over a range.",
+   "tags": [
+    "nla",
+    "action"
+   ],
+   "source": {
+    "kit": "kit.motion:play"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/foot-events",
+   "kind": "motion",
+   "name": "foot_events",
+   "description": "Frames where feet touch down (for footstep sfx).",
+   "tags": [
+    "sfx",
+    "walk"
+   ],
+   "source": {
+    "kit": "kit.motion:foot_events"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "motion/quaternius-actions",
+   "kind": "motion",
+   "name": "Quaternius actions (17)",
+   "description": "Built-in actions of every Quaternius rig, played with kit.motion.play / kit.qchar.set_action: Death, Defeat, Idle, Jump, PickUp, Punch, RecieveHit, Roll, Run, Run_Carry, Shoot_OneHanded, SitDown, StandUp, SwordSlash, Victory, Walk, Walk_Carry.",
+   "tags": [
+    "nla",
+    "action",
+    "quaternius"
+   ],
+   "source": {
+    "kit": "kit.qchar:set_action"
+   },
+   "licence": "CC0 (Quaternius)",
+   "origin": null,
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "prop/milk",
+   "kind": "prop",
+   "name": "Milk carton",
+   "description": "Milk carton prop.",
+   "tags": [
+    "food",
+    "store"
+   ],
+   "source": {
+    "kit": "kit.props:milk"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "prop",
+    "builder": "milk",
+    "image": "library/previews/prop__milk.jpg"
+   }
+  },
+  {
+   "id": "prop/batarang",
+   "kind": "prop",
+   "name": "Batarang",
+   "description": "Batarang throwing prop.",
+   "tags": [
+    "batman",
+    "weapon"
+   ],
+   "source": {
+    "kit": "kit.props:batarang"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "prop",
+    "builder": "batarang",
+    "image": "library/previews/prop__batarang.jpg"
+   }
+  },
+  {
+   "id": "prop/self-checkout",
+   "kind": "prop",
+   "name": "Self-checkout kiosk",
+   "description": "Self-checkout with scanner, monitor (screen states), bagging area, lamp.",
+   "tags": [
+    "store",
+    "machine",
+    "screen"
+   ],
+   "source": {
+    "kit": "kit.checkout:build_checkout"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "prop",
+    "builder": "checkout",
+    "image": "library/previews/prop__self-checkout.jpg"
+   }
+  },
+  {
+   "id": "prop/katana",
+   "kind": "prop",
+   "name": "Katana + scabbard",
+   "description": "Katana built along the sword bone of the samurai rig.",
+   "tags": [
+    "samurai",
+    "sword",
+    "weapon"
+   ],
+   "source": {
+    "kit": "kit.samurai:build_katana"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "fx/fireball",
+   "kind": "fx",
+   "name": "Hadouken fireball",
+   "description": "Energy ball: bright core, soft shell, two spinning rings; key(frame, loc, size); glows with kit.post bloom.",
+   "tags": [
+    "energy",
+    "hadouken",
+    "glow"
+   ],
+   "source": {
+    "kit": "kit.fight:Fireball"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "fx",
+    "builder": "fireball",
+    "image": "library/previews/fx__fireball.jpg"
+   }
+  },
+  {
+   "id": "fx/maple-leaves",
+   "kind": "fx",
+   "name": "Autumn maple leaves + wind",
+   "description": "Leaves blown by a wind driven by an energy curve; loop-exact (whole cycles).",
+   "tags": [
+    "wind",
+    "leaves",
+    "autumn",
+    "loop"
+   ],
+   "source": {
+    "kit": "kit.fight:Leaves"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "fx",
+    "builder": "leaves",
+    "image": "library/previews/fx__maple-leaves.jpg"
+   }
+  },
+  {
+   "id": "fx/bloom",
+   "kind": "fx",
+   "name": "Bloom (compositor glow)",
+   "description": "Glare/Bloom on bright emission (Blender 5 compositor).",
+   "tags": [
+    "glow",
+    "post"
+   ],
+   "source": {
+    "kit": "kit.post:setup"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/flash",
+   "kind": "fx",
+   "name": "White flash",
+   "description": "Keyable white flash.",
+   "tags": [
+    "flash",
+    "post"
+   ],
+   "source": {
+    "kit": "kit.post:flash"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [],
+   "status": "deprecated",
+   "notes": "owner: never as a loop bridge (sf01)"
+  },
+  {
+   "id": "fx/spark",
+   "kind": "fx",
+   "name": "spark",
+   "description": "Impact sparks.",
+   "tags": [
+    "impact",
+    "sword"
+   ],
+   "source": {
+    "kit": "kit.fx:spark"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/smear",
+   "kind": "fx",
+   "name": "smear",
+   "description": "Motion smear ribbon.",
+   "tags": [
+    "speed",
+    "sword"
+   ],
+   "source": {
+    "kit": "kit.fx:smear"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/shake",
+   "kind": "fx",
+   "name": "shake",
+   "description": "Camera shake.",
+   "tags": [
+    "camera",
+    "impact"
+   ],
+   "source": {
+    "kit": "kit.fx:shake"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel",
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/dust",
+   "kind": "fx",
+   "name": "dust",
+   "description": "Dust puffs.",
+   "tags": [
+    "ground",
+    "impact"
+   ],
+   "source": {
+    "kit": "kit.fx:dust"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/helmet-split",
+   "kind": "fx",
+   "name": "helmet_split",
+   "description": "Helmet splits in two.",
+   "tags": [
+    "samurai",
+    "gag"
+   ],
+   "source": {
+    "kit": "kit.fx:helmet_split"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/smoke-puff",
+   "kind": "fx",
+   "name": "Smoke puff",
+   "description": "Smoke bomb puff (geometry spheres).",
+   "tags": [
+    "smoke",
+    "batman"
+   ],
+   "source": {
+    "kit": "kit.props:smoke_puff"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/petals",
+   "kind": "fx",
+   "name": "Falling petals",
+   "description": "Falling petals for the bamboo stage.",
+   "tags": [
+    "petals",
+    "japan"
+   ],
+   "source": {
+    "kit": "kit.stage:petals"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/portal",
+   "kind": "fx",
+   "name": "Portal (2D)",
+   "description": "Swirling 2D portal for cut-out style.",
+   "tags": [
+    "2d",
+    "sci-fi"
+   ],
+   "source": {
+    "kit": "kit.cutout:Portal"
+   },
+   "licence": "own code",
+   "origin": "tests/rick-and-morty-screen-test",
+   "used_in": [],
+   "status": "deprecated",
+   "notes": "2D cut-out style rejected by the owner"
+  },
+  {
+   "id": "set/gotham-mart",
+   "kind": "set",
+   "name": "Gotham Mart (supermarket)",
+   "description": "Night supermarket: shelves, milk fridge, sign, tube light with flicker (Kenney mini-market). Anchors: checkout, aisle_entry, aisle_mid.",
+   "tags": [
+    "store",
+    "supermarket",
+    "night",
+    "indoor"
+   ],
+   "source": {
+    "kit": "kit.sets:gotham_mart"
+   },
+   "licence": "CC0 (Kenney mini-market) + own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "set",
+    "builder": "gotham_mart",
+    "image": "library/previews/set__gotham-mart.jpg"
+   },
+   "notes": "open top renders black above the shelves: Facebook 'border' issue; needs a ceiling/wall for vertical shots"
+  },
+  {
+   "id": "set/rooftop-sunset",
+   "kind": "set",
+   "name": "Rooftop at sunset",
+   "description": "Generic Japanese rooftop: planks, parapet, lanterns, gradient sky with sun, mountains and pagoda silhouettes; sunset_lights().",
+   "tags": [
+    "rooftop",
+    "sunset",
+    "japan",
+    "outdoor",
+    "fight"
+   ],
+   "source": {
+    "kit": "kit.fight:rooftop_sunset"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved",
+   "preview": {
+    "recipe": "set",
+    "builder": "rooftop_sunset",
+    "image": "library/previews/set__rooftop-sunset.jpg"
+   }
+  },
+  {
+   "id": "set/bamboo-grove",
+   "kind": "set",
+   "name": "Moonlit bamboo grove",
+   "description": "Night bamboo stage with moon and lights.",
+   "tags": [
+    "bamboo",
+    "night",
+    "japan",
+    "outdoor"
+   ],
+   "source": {
+    "kit": "kit.stage:build_stage"
+   },
+   "licence": "own code",
+   "origin": "samurai-duel",
+   "used_in": [
+    "samurai-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "set",
+    "builder": "bamboo_stage",
+    "image": "library/previews/set__bamboo-grove.jpg"
+   },
+   "notes": "black night sky fails the border check in vertical shots"
+  },
+  {
+   "id": "set/meadow",
+   "kind": "set",
+   "name": "Cupid meadow",
+   "description": "Early studio-core meadow (sky, hills, trees).",
+   "tags": [
+    "meadow",
+    "day",
+    "outdoor"
+   ],
+   "source": {
+    "kit": "projects/cupid-had-one-job/script.py"
+   },
+   "licence": "own code",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "draft",
+   "notes": "built inside the episode script, not yet a kit function"
+  },
+  {
+   "id": "set/garage-2d",
+   "kind": "set",
+   "name": "Garage (2D backdrop)",
+   "description": "Flat 2D garage backdrop for cut-out style.",
+   "tags": [
+    "2d",
+    "garage"
+   ],
+   "source": {
+    "kit": "kit.cutout:backdrop"
+   },
+   "licence": "own code",
+   "origin": "tests/rick-and-morty-screen-test",
+   "used_in": [],
+   "status": "deprecated",
+   "notes": "2D cut-out style rejected"
+  },
+  {
+   "id": "set/light-store-night",
+   "kind": "set-part",
+   "name": "Store-night light rig",
+   "description": "Three-light night rig used for turnarounds and the mart.",
+   "tags": [
+    "lighting"
+   ],
+   "source": {
+    "kit": "kit.look:store_night"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "camera/auto-frame",
+   "kind": "camera",
+   "name": "Auto-framed shots",
+   "description": "shots.frame(name, target, shot=wide|full|medium|close|ecu|insert|two_shot, yaw, pitch, lens, side_offset); push, whip, check.",
+   "tags": [
+    "camera",
+    "framing"
+   ],
+   "source": {
+    "kit": "kit.shots:frame"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item",
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "sfx/sword-clash",
+   "kind": "sfx",
+   "name": "sword_clash",
+   "description": "Sound id 'sword_clash' in assets/sfx_bank.json (7 file(s), gain 0.9).",
+   "tags": [
+    "sfx",
+    "sword",
+    "clash"
+   ],
+   "source": {
+    "sfx": "sword_clash",
+    "file": "assets/library/oga/starninjas/sword_clash.1.ogg"
+   },
+   "licence": "CC0 (OpenGameArt)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/oga/starninjas/sword_clash.1.ogg",
+    "image": "library/previews/sfx__sword-clash.png"
+   }
+  },
+  {
+   "id": "sfx/big-clash",
+   "kind": "sfx",
+   "name": "big_clash",
+   "description": "Sound id 'big_clash' in assets/sfx_bank.json (1 file(s), gain 1.0).",
+   "tags": [
+    "sfx",
+    "big",
+    "clash"
+   ],
+   "source": {
+    "sfx": "big_clash",
+    "file": "assets/library/oga/starninjas/sword_clash.3.ogg"
+   },
+   "licence": "CC0 (OpenGameArt)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/oga/starninjas/sword_clash.3.ogg",
+    "image": "library/previews/sfx__big-clash.png"
+   }
+  },
+  {
+   "id": "sfx/sword-swing",
+   "kind": "sfx",
+   "name": "sword_swing",
+   "description": "Sound id 'sword_swing' in assets/sfx_bank.json (8 file(s), gain 0.55).",
+   "tags": [
+    "sfx",
+    "sword",
+    "swing"
+   ],
+   "source": {
+    "sfx": "sword_swing",
+    "file": "assets/library/oga/starninjas/sword - StarNinjas/sword.1.ogg"
+   },
+   "licence": "CC0 (OpenGameArt)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/oga/starninjas/sword - StarNinjas/sword.1.ogg",
+    "image": "library/previews/sfx__sword-swing.png"
+   }
+  },
+  {
+   "id": "sfx/slash",
+   "kind": "sfx",
+   "name": "slash",
+   "description": "Sound id 'slash' in assets/sfx_bank.json (1 file(s), gain 1.0).",
+   "tags": [
+    "sfx",
+    "slash"
+   ],
+   "source": {
+    "sfx": "slash",
+    "file": "assets/library/oga/starninjas/sword - StarNinjas/sword.9.ogg"
+   },
+   "licence": "CC0 (OpenGameArt)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/oga/starninjas/sword - StarNinjas/sword.9.ogg",
+    "image": "library/previews/sfx__slash.png"
+   }
+  },
+  {
+   "id": "sfx/swoosh",
+   "kind": "sfx",
+   "name": "swoosh",
+   "description": "Sound id 'swoosh' in assets/sfx_bank.json (2 file(s), gain 0.6).",
+   "tags": [
+    "sfx",
+    "swoosh"
+   ],
+   "source": {
+    "sfx": "swoosh",
+    "file": "assets/library/oga/starninjas/sword - StarNinjas/sword.2.ogg"
+   },
+   "licence": "CC0 (OpenGameArt)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/oga/starninjas/sword - StarNinjas/sword.2.ogg",
+    "image": "library/previews/sfx__swoosh.png"
+   }
+  },
+  {
+   "id": "sfx/sword-draw",
+   "kind": "sfx",
+   "name": "sword_draw",
+   "description": "Sound id 'sword_draw' in assets/sfx_bank.json (2 file(s), gain 0.7).",
+   "tags": [
+    "sfx",
+    "sword",
+    "draw"
+   ],
+   "source": {
+    "sfx": "sword_draw",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/drawKnife3.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/drawKnife3.ogg",
+    "image": "library/previews/sfx__sword-draw.png"
+   }
+  },
+  {
+   "id": "sfx/click",
+   "kind": "sfx",
+   "name": "click",
+   "description": "Sound id 'click' in assets/sfx_bank.json (1 file(s), gain 0.6).",
+   "tags": [
+    "sfx",
+    "click"
+   ],
+   "source": {
+    "sfx": "click",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/metalLatch.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/metalLatch.ogg",
+    "image": "library/previews/sfx__click.png"
+   }
+  },
+  {
+   "id": "sfx/armor-clank",
+   "kind": "sfx",
+   "name": "armor_clank",
+   "description": "Sound id 'armor_clank' in assets/sfx_bank.json (1 file(s), gain 0.6).",
+   "tags": [
+    "sfx",
+    "armor",
+    "clank"
+   ],
+   "source": {
+    "sfx": "armor_clank",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactMetal_heavy_001.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactMetal_heavy_001.ogg",
+    "image": "library/previews/sfx__armor-clank.png"
+   }
+  },
+  {
+   "id": "sfx/thud",
+   "kind": "sfx",
+   "name": "thud",
+   "description": "Sound id 'thud' in assets/sfx_bank.json (1 file(s), gain 0.9).",
+   "tags": [
+    "sfx",
+    "thud"
+   ],
+   "source": {
+    "sfx": "thud",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_002.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_002.ogg",
+    "image": "library/previews/sfx__thud.png"
+   }
+  },
+  {
+   "id": "sfx/step",
+   "kind": "sfx",
+   "name": "step",
+   "description": "Sound id 'step' in assets/sfx_bank.json (5 file(s), gain 0.25).",
+   "tags": [
+    "sfx",
+    "step"
+   ],
+   "source": {
+    "sfx": "step",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/footstep_grass_000.ogg",
+    "image": "library/previews/sfx__step.png"
+   }
+  },
+  {
+   "id": "sfx/whoosh",
+   "kind": "sfx",
+   "name": "whoosh",
+   "description": "Sound id 'whoosh' in assets/sfx_bank.json (1 file(s), gain 0.4).",
+   "tags": [
+    "sfx",
+    "whoosh"
+   ],
+   "source": {
+    "sfx": "whoosh",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/cloth1.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/cloth1.ogg",
+    "image": "library/previews/sfx__whoosh.png"
+   }
+  },
+  {
+   "id": "sfx/cloth",
+   "kind": "sfx",
+   "name": "cloth",
+   "description": "Sound id 'cloth' in assets/sfx_bank.json (2 file(s), gain 0.35).",
+   "tags": [
+    "sfx",
+    "cloth"
+   ],
+   "source": {
+    "sfx": "cloth",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/cloth1.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_rpg-audio/Audio/cloth1.ogg",
+    "image": "library/previews/sfx__cloth.png"
+   }
+  },
+  {
+   "id": "sfx/step-hard",
+   "kind": "sfx",
+   "name": "step_hard",
+   "description": "Sound id 'step_hard' in assets/sfx_bank.json (5 file(s), gain 0.3).",
+   "tags": [
+    "sfx",
+    "step",
+    "hard"
+   ],
+   "source": {
+    "sfx": "step_hard",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/footstep_concrete_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/footstep_concrete_000.ogg",
+    "image": "library/previews/sfx__step-hard.png"
+   }
+  },
+  {
+   "id": "sfx/scan-beep",
+   "kind": "sfx",
+   "name": "scan_beep",
+   "description": "Sound id 'scan_beep' in assets/sfx_bank.json (2 file(s), gain 0.5).",
+   "tags": [
+    "sfx",
+    "scan",
+    "beep"
+   ],
+   "source": {
+    "sfx": "scan_beep",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/select_002.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/select_002.ogg",
+    "image": "library/previews/sfx__scan-beep.png"
+   }
+  },
+  {
+   "id": "sfx/error-beep",
+   "kind": "sfx",
+   "name": "error_beep",
+   "description": "Sound id 'error_beep' in assets/sfx_bank.json (2 file(s), gain 0.55).",
+   "tags": [
+    "sfx",
+    "error",
+    "beep"
+   ],
+   "source": {
+    "sfx": "error_beep",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/error_003.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/error_003.ogg",
+    "image": "library/previews/sfx__error-beep.png"
+   }
+  },
+  {
+   "id": "sfx/success",
+   "kind": "sfx",
+   "name": "success",
+   "description": "Sound id 'success' in assets/sfx_bank.json (2 file(s), gain 0.5).",
+   "tags": [
+    "sfx",
+    "success"
+   ],
+   "source": {
+    "sfx": "success",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/confirmation_001.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/confirmation_001.ogg",
+    "image": "library/previews/sfx__success.png"
+   }
+  },
+  {
+   "id": "sfx/flicker",
+   "kind": "sfx",
+   "name": "flicker",
+   "description": "Sound id 'flicker' in assets/sfx_bank.json (2 file(s), gain 0.35).",
+   "tags": [
+    "sfx",
+    "flicker"
+   ],
+   "source": {
+    "sfx": "flicker",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/glitch_001.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/glitch_001.ogg",
+    "image": "library/previews/sfx__flicker.png"
+   }
+  },
+  {
+   "id": "sfx/slam",
+   "kind": "sfx",
+   "name": "slam",
+   "description": "Sound id 'slam' in assets/sfx_bank.json (2 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "slam"
+   ],
+   "source": {
+    "sfx": "slam",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactPunch_heavy_000.ogg",
+    "image": "library/previews/sfx__slam.png"
+   }
+  },
+  {
+   "id": "sfx/thunk",
+   "kind": "sfx",
+   "name": "thunk",
+   "description": "Sound id 'thunk' in assets/sfx_bank.json (2 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "thunk"
+   ],
+   "source": {
+    "sfx": "thunk",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactWood_heavy_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactWood_heavy_000.ogg",
+    "image": "library/previews/sfx__thunk.png"
+   }
+  },
+  {
+   "id": "sfx/grab",
+   "kind": "sfx",
+   "name": "grab",
+   "description": "Sound id 'grab' in assets/sfx_bank.json (2 file(s), gain 0.5).",
+   "tags": [
+    "sfx",
+    "grab"
+   ],
+   "source": {
+    "sfx": "grab",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactPlate_light_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactPlate_light_000.ogg",
+    "image": "library/previews/sfx__grab.png"
+   }
+  },
+  {
+   "id": "sfx/poof",
+   "kind": "sfx",
+   "name": "poof",
+   "description": "Sound id 'poof' in assets/sfx_bank.json (2 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "poof"
+   ],
+   "source": {
+    "sfx": "poof",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactSoft_heavy_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactSoft_heavy_000.ogg",
+    "image": "library/previews/sfx__poof.png"
+   }
+  },
+  {
+   "id": "sfx/portal-gun",
+   "kind": "sfx",
+   "name": "portal_gun",
+   "description": "Sound id 'portal_gun' in assets/sfx_bank.json (1 file(s), gain 0.7).",
+   "tags": [
+    "sfx",
+    "portal",
+    "gun"
+   ],
+   "source": {
+    "sfx": "portal_gun",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserSmall_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserSmall_000.ogg",
+    "image": "library/previews/sfx__portal-gun.png"
+   }
+  },
+  {
+   "id": "sfx/portal-open",
+   "kind": "sfx",
+   "name": "portal_open",
+   "description": "Sound id 'portal_open' in assets/sfx_bank.json (1 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "portal",
+    "open"
+   ],
+   "source": {
+    "sfx": "portal_open",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/forceField_003.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/forceField_003.ogg",
+    "image": "library/previews/sfx__portal-open.png"
+   }
+  },
+  {
+   "id": "sfx/portal-suck",
+   "kind": "sfx",
+   "name": "portal_suck",
+   "description": "Sound id 'portal_suck' in assets/sfx_bank.json (1 file(s), gain 0.9).",
+   "tags": [
+    "sfx",
+    "portal",
+    "suck"
+   ],
+   "source": {
+    "sfx": "portal_suck",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/slime_001.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/slime_001.ogg",
+    "image": "library/previews/sfx__portal-suck.png"
+   }
+  },
+  {
+   "id": "sfx/portal-close",
+   "kind": "sfx",
+   "name": "portal_close",
+   "description": "Sound id 'portal_close' in assets/sfx_bank.json (1 file(s), gain 0.7).",
+   "tags": [
+    "sfx",
+    "portal",
+    "close"
+   ],
+   "source": {
+    "sfx": "portal_close",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserRetro_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserRetro_000.ogg",
+    "image": "library/previews/sfx__portal-close.png"
+   }
+  },
+  {
+   "id": "sfx/hado-fire",
+   "kind": "sfx",
+   "name": "hado_fire",
+   "description": "Sound id 'hado_fire' in assets/sfx_bank.json (2 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "hado",
+    "fire"
+   ],
+   "source": {
+    "sfx": "hado_fire",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserLarge_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/laserLarge_000.ogg",
+    "image": "library/previews/sfx__hado-fire.png"
+   }
+  },
+  {
+   "id": "sfx/fizzle",
+   "kind": "sfx",
+   "name": "fizzle",
+   "description": "Sound id 'fizzle' in assets/sfx_bank.json (1 file(s), gain 0.7).",
+   "tags": [
+    "sfx",
+    "fizzle"
+   ],
+   "source": {
+    "sfx": "fizzle",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactSoft_medium_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactSoft_medium_000.ogg",
+    "image": "library/previews/sfx__fizzle.png"
+   }
+  },
+  {
+   "id": "sfx/bubble-pop",
+   "kind": "sfx",
+   "name": "bubble_pop",
+   "description": "Sound id 'bubble_pop' in assets/sfx_bank.json (1 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "bubble",
+    "pop"
+   ],
+   "source": {
+    "sfx": "bubble_pop",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/pluck_001.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/pluck_001.ogg",
+    "image": "library/previews/sfx__bubble-pop.png"
+   }
+  },
+  {
+   "id": "sfx/charge-hum",
+   "kind": "sfx",
+   "name": "charge_hum",
+   "description": "Sound id 'charge_hum' in assets/sfx_bank.json (1 file(s), gain 0.6).",
+   "tags": [
+    "sfx",
+    "charge",
+    "hum"
+   ],
+   "source": {
+    "sfx": "charge_hum",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/forceField_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/forceField_000.ogg",
+    "image": "library/previews/sfx__charge-hum.png"
+   }
+  },
+  {
+   "id": "sfx/mega-rumble",
+   "kind": "sfx",
+   "name": "mega_rumble",
+   "description": "Sound id 'mega_rumble' in assets/sfx_bank.json (1 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "mega",
+    "rumble"
+   ],
+   "source": {
+    "sfx": "mega_rumble",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/spaceEngineLarge_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_sci-fi-sounds/Audio/spaceEngineLarge_000.ogg",
+    "image": "library/previews/sfx__mega-rumble.png"
+   }
+  },
+  {
+   "id": "sfx/pip",
+   "kind": "sfx",
+   "name": "pip",
+   "description": "Sound id 'pip' in assets/sfx_bank.json (1 file(s), gain 1.0).",
+   "tags": [
+    "sfx",
+    "pip"
+   ],
+   "source": {
+    "sfx": "pip",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/pluck_002.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_interface-sounds/Audio/pluck_002.ogg",
+    "image": "library/previews/sfx__pip.png"
+   }
+  },
+  {
+   "id": "sfx/drum-hit",
+   "kind": "sfx",
+   "name": "drum_hit",
+   "description": "Sound id 'drum_hit' in assets/sfx_bank.json (1 file(s), gain 0.8).",
+   "tags": [
+    "sfx",
+    "drum",
+    "hit"
+   ],
+   "source": {
+    "sfx": "drum_hit",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactBell_heavy_000.ogg"
+   },
+   "licence": "CC0 (Kenney)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/kenney/kenney_impact-sounds/Audio/impactBell_heavy_000.ogg",
+    "image": "library/previews/sfx__drum-hit.png"
+   }
+  },
+  {
+   "id": "sfx/synth-boing",
+   "kind": "sfx",
+   "name": "boing",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/boing.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-bonk",
+   "kind": "sfx",
+   "name": "bonk",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/bonk.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-boom",
+   "kind": "sfx",
+   "name": "boom",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/boom.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-chime",
+   "kind": "sfx",
+   "name": "chime",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/chime.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-ding",
+   "kind": "sfx",
+   "name": "ding",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/ding.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-laugh",
+   "kind": "sfx",
+   "name": "laugh",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/laugh.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-pop",
+   "kind": "sfx",
+   "name": "pop",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/pop.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-step",
+   "kind": "sfx",
+   "name": "step",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/step.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-swoosh",
+   "kind": "sfx",
+   "name": "swoosh",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/swoosh.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-thud",
+   "kind": "sfx",
+   "name": "thud",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/thud.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-twang",
+   "kind": "sfx",
+   "name": "twang",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/twang.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "sfx/synth-whoosh",
+   "kind": "sfx",
+   "name": "whoosh",
+   "description": "Early synthesized sound.",
+   "tags": [
+    "synthesized"
+   ],
+   "source": {
+    "file": "assets/sfx/whoosh.wav"
+   },
+   "licence": "own",
+   "origin": "cupid-had-one-job",
+   "used_in": [
+    "cupid-had-one-job"
+   ],
+   "status": "deprecated",
+   "notes": "owner: no synthesized audio, ever — do not use"
+  },
+  {
+   "id": "music/asian-drums",
+   "kind": "music",
+   "name": "Asian Drums",
+   "description": "Kevin MacLeod track 'Asian Drums'. Credit line required (assets/library/music/LICENSES.md).",
+   "tags": [
+    "music"
+   ],
+   "source": {
+    "file": "assets/library/music/Asian Drums.mp3"
+   },
+   "licence": "CC BY 4.0 (Kevin MacLeod)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/music/Asian Drums.mp3",
+    "image": "library/previews/music__asian-drums.png"
+   }
+  },
+  {
+   "id": "music/big-mojo",
+   "kind": "music",
+   "name": "Big Mojo",
+   "description": "Kevin MacLeod track 'Big Mojo'. Credit line required (assets/library/music/LICENSES.md).",
+   "tags": [
+    "music"
+   ],
+   "source": {
+    "file": "assets/library/music/Big Mojo.mp3"
+   },
+   "licence": "CC BY 4.0 (Kevin MacLeod)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/music/Big Mojo.mp3",
+    "image": "library/previews/music__big-mojo.png"
+   }
+  },
+  {
+   "id": "music/hidden-agenda",
+   "kind": "music",
+   "name": "Hidden Agenda",
+   "description": "Kevin MacLeod track 'Hidden Agenda'. Credit line required (assets/library/music/LICENSES.md).",
+   "tags": [
+    "music"
+   ],
+   "source": {
+    "file": "assets/library/music/Hidden Agenda.mp3"
+   },
+   "licence": "CC BY 4.0 (Kevin MacLeod)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/music/Hidden Agenda.mp3",
+    "image": "library/previews/music__hidden-agenda.png"
+   }
+  },
+  {
+   "id": "music/mountain-emperor",
+   "kind": "music",
+   "name": "Mountain Emperor",
+   "description": "Kevin MacLeod track 'Mountain Emperor'. Credit line required (assets/library/music/LICENSES.md).",
+   "tags": [
+    "music"
+   ],
+   "source": {
+    "file": "assets/library/music/Mountain Emperor.mp3"
+   },
+   "licence": "CC BY 4.0 (Kevin MacLeod)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/music/Mountain Emperor.mp3",
+    "image": "library/previews/music__mountain-emperor.png"
+   }
+  },
+  {
+   "id": "music/mystery-sax",
+   "kind": "music",
+   "name": "Mystery Sax",
+   "description": "Kevin MacLeod track 'Mystery Sax'. Credit line required (assets/library/music/LICENSES.md).",
+   "tags": [
+    "music"
+   ],
+   "source": {
+    "file": "assets/library/music/Mystery Sax.mp3"
+   },
+   "licence": "CC BY 4.0 (Kevin MacLeod)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved",
+   "preview": {
+    "recipe": "audio",
+    "file": "assets/library/music/Mystery Sax.mp3",
+    "image": "library/previews/music__mystery-sax.png"
+   }
+  },
+  {
+   "id": "voice/batman",
+   "kind": "voice",
+   "name": "batman voice",
+   "description": "chatterbox voice for batman: Reference: 8 Arkham Asylum lines (Kevin Conroy), 13.2 s, modified with rubberband pitch=0.93 formant=shifted (deeper, bigger). Gemini check 2026-09-24: noticeab",
+   "tags": [
+    "voice",
+    "chatterbox"
+   ],
+   "source": {
+    "voices": "batman"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved"
+  },
+  {
+   "id": "voice/joker",
+   "kind": "voice",
+   "name": "joker voice",
+   "description": "chatterbox voice for joker: Reference: dry face-to-face Arkham Asylum speech (Mark Hamill), 13.5 s, modified with rubberband pitch=1.04 formant=shifted. Gemini check: modified pitch, lacks",
+   "tags": [
+    "voice",
+    "chatterbox"
+   ],
+   "source": {
+    "voices": "joker"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved"
+  },
+  {
+   "id": "voice/machine",
+   "kind": "voice",
+   "name": "machine voice",
+   "description": "kokoro voice for machine: Self-checkout: flat British female (the UK 'unexpected item' meme). No reference download.",
+   "tags": [
+    "voice",
+    "kokoro"
+   ],
+   "source": {
+    "voices": "machine"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved"
+  },
+  {
+   "id": "voice/ryu",
+   "kind": "voice",
+   "name": "ryu voice",
+   "description": "chatterbox voice for ryu: Reference: 7 calm dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ryu), 15.1 s, supplied by the owner 2026-09-25; modified rubberband pitch=0.90",
+   "tags": [
+    "voice",
+    "chatterbox"
+   ],
+   "source": {
+    "voices": "ryu"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved"
+  },
+  {
+   "id": "voice/ken",
+   "kind": "voice",
+   "name": "ken voice",
+   "description": "chatterbox voice for ken: Reference: 7 confident dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ken), 14.2 s, supplied by the owner 2026-09-25; modified rubberband pitch",
+   "tags": [
+    "voice",
+    "chatterbox"
+   ],
+   "source": {
+    "voices": "ken"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": null,
+   "used_in": [],
+   "status": "approved"
+  },
+  {
+   "id": "camera/push",
+   "kind": "camera",
+   "name": "Camera push-in",
+   "description": "Slow push-in on a shot camera between two frames (amount = fraction of distance).",
+   "tags": [
+    "camera",
+    "move"
+   ],
+   "source": {
+    "kit": "kit.shots:push"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "camera/whip",
+   "kind": "camera",
+   "name": "Whip pan",
+   "description": "Fast whip from the current framing to a new target over a few frames.",
+   "tags": [
+    "camera",
+    "move",
+    "transition"
+   ],
+   "source": {
+    "kit": "kit.shots:whip"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "camera/check",
+   "kind": "camera",
+   "name": "Framing check",
+   "description": "Measures whether a target is fully and properly framed by a camera (used by QA/review).",
+   "tags": [
+    "camera",
+    "qa"
+   ],
+   "source": {
+    "kit": "kit.shots:check"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "fx/light-flicker",
+   "kind": "fx",
+   "name": "Tube-light flicker",
+   "description": "Flicker the Gotham Mart tube light over frame ranges.",
+   "tags": [
+    "light",
+    "store",
+    "horror"
+   ],
+   "source": {
+    "kit": "kit.sets:flicker"
+   },
+   "licence": "own code",
+   "origin": "batman-unexpected-item",
+   "used_in": [
+    "batman-unexpected-item"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "set-part/sunset-lights",
+   "kind": "set-part",
+   "name": "Sunset light rig",
+   "description": "Warm key + fill for the rooftop sunset.",
+   "tags": [
+    "lighting",
+    "sunset"
+   ],
+   "source": {
+    "kit": "kit.fight:sunset_lights"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "pose/fight-tools",
+   "kind": "pose",
+   "name": "Pose tools: blend, mirror, key_pose",
+   "description": "Fight-pose helpers: blend(a, b, t) between poses, mirror(p) for the other side, prepare + key_pose to key a Pose on a Quaternius rig.",
+   "tags": [
+    "pose",
+    "tool"
+   ],
+   "source": {
+    "kit": "kit.fight:blend"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [
+    "ryu-vs-ken-last-hadouken"
+   ],
+   "status": "approved"
+  },
+  {
+   "id": "pose/fight-charge-far",
+   "kind": "pose",
+   "name": "Fight pose CHARGE_FAR",
+   "description": "CHARGE mirrored (old charge on the far side).",
+   "tags": [
+    "fight",
+    "deprecated"
+   ],
+   "source": {
+    "kit": "kit.fight:CHARGE_FAR"
+   },
+   "licence": "own code",
+   "origin": "ryu-vs-ken-last-hadouken",
+   "used_in": [],
+   "status": "deprecated",
+   "notes": "based on CHARGE (arms behind): use CHARGE_HIP/CHARGE_OUT"
+  }
+ ],
+ "internal": [
+  "kit.cape:add_cape_bones",
+  "kit.cape:bake_cape",
+  "kit.cast:CAST",
+  "kit.cast:CHEST",
+  "kit.cast:DUMMY",
+  "kit.cast:SKIN",
+  "kit.cast:add_thumbs",
+  "kit.cast:fingerless_gloves",
+  "kit.checkout:Checkout",
+  "kit.checkout:lamp",
+  "kit.checkout:screen_state",
+  "kit.cutout:Puppet",
+  "kit.cutout:flat_material",
+  "kit.cutout:key_camera",
+  "kit.cutout:ortho_camera",
+  "kit.cutout:set_linear_constant_bools",
+  "kit.face:EXPRESSIONS",
+  "kit.face:Face",
+  "kit.face:apply_lipsync",
+  "kit.face:auto_blink",
+  "kit.face:band",
+  "kit.face:blink",
+  "kit.face:change_expression",
+  "kit.face:key_mouth",
+  "kit.face:mouth_outlines",
+  "kit.face:set_expression",
+  "kit.face:superellipse",
+  "kit.fight:Pose",
+  "kit.fight:between_hands",
+  "kit.fight:emit_mat",
+  "kit.fight:hand_world",
+  "kit.fight:key_pose",
+  "kit.fight:mirror",
+  "kit.fight:prepare",
+  "kit.fx:sword_point",
+  "kit.look:floor",
+  "kit.look:toon2",
+  "kit.look:toon_tex",
+  "kit.motion:foot_track",
+  "kit.motion:ground_speed",
+  "kit.motion:key_root",
+  "kit.motion:setup_ik",
+  "kit.pose:POSES",
+  "kit.pose:Pose",
+  "kit.pose:apply_pose",
+  "kit.pose:auto_steps",
+  "kit.pose:blade_quat",
+  "kit.pose:hold",
+  "kit.pose:key_pose",
+  "kit.pose:limb",
+  "kit.pose:reach_ok",
+  "kit.pose:sword_through",
+  "kit.pose:to_local",
+  "kit.pose:to_world",
+  "kit.post:setup",
+  "kit.samurai:part",
+  "kit.sets:Mart",
+  "kit.sets:prop",
+  "kit.shots:PRESETS",
+  "kit.shots:region",
+  "kit.stage:petals"
+ ]
+}

@@ -80,7 +80,7 @@
     "The 3D look pulled 5,947 views in day 1 on 4 platforms vs 554-1,438 for each stickman video in 4-8 days",
     "Facebook limits videos with a border: no flat black/white band at the frame edges (qa check added)"
   ],
-  "harvested": "partial: Batman/Joker builders (kit/cast.py), Gotham Mart set (kit/sets.py, kit/checkout.py), spring cape (kit/cape.py); not yet catalogued",
+  "harvested": "partial: Batman/Joker builders (kit/cast.py), Gotham Mart set (kit/sets.py, kit/checkout.py), spring cape (kit/cape.py); catalogued in library/catalog.json 2026-09-26",
   "history": [
     {
       "date": "2026-09-24",
@@ -96,6 +96,11 @@
       "date": "2026-09-26",
       "status": "published",
       "note": "Facebook insights (owner screenshots): border issue, low 20-s view rate, 1,303 views, 10 engagements, 1 follow"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "published",
+      "note": "components catalogued in the library"
     }
   ]
 }

@@ -5,6 +5,10 @@ description: Rules for visual effects and sets/backgrounds in blender-video (pla
 
 # VFX & sets
 
+**Library first:** search `python tools/catalog.py search <text> --kind <kind>` (gallery: `library/CATALOG.md`)
+and reuse; anything new is built as a reusable kit function and gets a `library/catalog.json` entry, a preview
+(`tools/catalog_preview.py --ids <id>`) and a gallery rebuild (`tools/catalog.py gallery`).
+
 ## VFX
 - Stylised to match the toon look, short and punchy; made from geometry and animated shaders, not heavy simulation.
 - Each FX is tied to an event (contact, release, landing) and lives only as long as it reads.

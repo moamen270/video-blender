@@ -18,8 +18,10 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
   `owner_notes` with the phase that must fix it, `decisions`, `next`, `history`, `updated`) *before* acting on it.
   Update `status`/`next` on every phase change. This is what survives compaction and lets a weaker model continue.
 - **Send a note back to the earliest phase that caused it** (staging → `animatic`, joke → `pitch`) and redo from there.
-- **Components before episodes:** characters, poses, motions, props, FX, sets, sounds are built/approved as reusable
-  library items (`kit/`, `assets/`), then used; every finished video is harvested back (`state.harvested`).
+- **Components before episodes — search the library first:** `python tools/catalog.py search <text> [--kind K]`
+  (gallery with previews: `library/CATALOG.md`). Reuse what exists; build only what is missing, as a reusable kit
+  function, then add its entry to `library/catalog.json`, render its preview and rebuild the gallery. Harvest after
+  every video: `python tools/catalog.py harvest` must list 0 uncatalogued components (`state.harvested`).
 - New episode: `python tools/new_episode.py <descriptive-slug> "Title" --why-now "..." --deadline YYYY-MM-DD`
   (templates in `templates/episode/`: state.json, pitch.md, script.md, design.md, lines.json, social.json),
   then `git checkout -b ep/<slug>`.
@@ -47,6 +49,8 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 |---|---|
 | `docs/PIPELINE.md` | **the process**: phases, inputs/outputs, gates, lanes, definition of done, `state.json` schema, teams, what exists vs planned |
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
+| `library/catalog.json`, `library/CATALOG.md`, `library/previews/` | **component library**: every character, rig, pose, motion, prop, FX, set, camera move, sound, music track and voice, with source, licence, status and preview |
+| `tools/catalog.py`, `tools/catalog_preview.py` | library search / check / harvest / gallery; Blender preview renderer |
 | `tools/board.py`, `tools/new_episode.py`, `templates/episode/` | Kanban board of episodes; new-episode scaffold; phase templates |
 | `README.md` | layout, `make.sh`, live Blender-MCP loop |
 | `.claude/skills/blender-episode/SKILL.md` | **how to make an episode** + skill map (hook-script, character-build, voice-casting, motion-acting, shot-design, sound-design, vfx-sets, episode-review, publish-release) |
@@ -85,6 +89,8 @@ python tools/social.py <p> [--version N]  # regenerate social.md from social.jso
 python tools/stats.py                     # snapshot numbers for every video in analytics/posts.json
 python tools/board.py                     # episode board: status, next action, DoD gaps
 python tools/new_episode.py <slug> "Title" # scaffold a new episode from templates/episode
+python tools/catalog.py search <text> [--kind K] [--tag T]   # find reusable components (check|harvest|gallery|show)
+/f/blender/blender.exe -b --python tools/catalog_preview.py -- --ids <id,...>   # render a component preview
 uv run --project F:/PoCs/video-builder/py python tools/qa_episode.py --out projects/<p>/output/vN   # QA incl. border
 gh release create vX.Y.Z -R moamen270/video-blender --target <branch> ...
 ```
@@ -105,6 +111,7 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
 - 2026-09-26: Facebook flagged Batman EP02 "video has a border" (open set top = black band) → `qa_episode.py`
   border check (FAIL on black/white edge band ≥ 5 %). Owner chose only the check; no set rule or checklist change.
 - 2026-09-26: the pipeline is in place (`docs/PIPELINE.md`, `state.json` per episode, board, scaffold, templates).
-  Planned next (owner's list): library catalog with previews + harvest, research lane (events calendar, tech radar,
+  2026-09-26: library catalog v1 (182 components, 93 rendered previews, audio waveforms, `library/CATALOG.md`).
+  Planned next (owner's list): research lane (events calendar, tech radar,
   asset scouting), pitch PoC tooling, animatic spec + compiler + staging checks, per-team subagents, creator analytics.
 - Ryu vs Ken v40 is ready but not uploaded yet (as far as the repo knows).

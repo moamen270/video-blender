@@ -5,6 +5,10 @@ description: Rules for building or changing a 3D character in blender-video (pla
 
 # Character build (3D)
 
+**Library first:** search `python tools/catalog.py search <text> --kind <kind>` (gallery: `library/CATALOG.md`)
+and reuse; anything new is built as a reusable kit function and gets a `library/catalog.json` entry, a preview
+(`tools/catalog_preview.py --ids <id>`) and a gallery rebuild (`tools/catalog.py gallery`).
+
 Direction (owner, 2026-09-24): 3D. The 2D cut-out trial (release v0.2.0) was rejected as "very poor", so don't
 propose it again as the main style. EP02 scores: building Batman/Joker 7/10, the character style 4/10 ("could use enhancements").
 
