@@ -1,6 +1,6 @@
 # Plan status — checklist of docs/PRODUCTION_PLAN.md
 
-Last checked against the code: 2026-09-24. ✅ done · 🟡 partial · ❌ not started. Update this file when an item changes.
+Last checked against the code: 2026-09-25. ✅ done · 🟡 partial · ❌ not started. Update this file when an item changes.
 Each factor has a skill with its rules (see the skill map in `.claude/skills/blender-episode/SKILL.md`).
 
 | # | factor (skill) | item | status |
@@ -38,8 +38,9 @@ Each factor has a skill with its rules (see the skill map in `.claude/skills/ble
 | 10 | Sets (`vfx-sets`) | Gotham Mart (Kenney) | ✅ |
 | | | set library with look presets | ❌ |
 | × | Packaging (`publish-release`) | GitHub releases | ✅ v0.1.0, v0.2.0 |
-| | | auto `social.md` | ❌ |
-| × | Analytics | per-upload log | ❌ in this repo |
+| | | auto `social.md` (all 4 platforms, `tools/social.py`) | ✅ 2026-09-25 |
+| | | definition of done = published + merged + analytics (skill `publish-release`) | ✅ rule written 2026-09-25 |
+| × | Analytics | per-upload log | 🟡 `analytics/videos.csv` created, no rows yet |
 | × | Episode compiler | spec → episode | ❌ |
 
 ## EP02 owner-flagged defects → automatic checks

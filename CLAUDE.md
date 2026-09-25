@@ -15,6 +15,9 @@ Read this file first, then the skill for the work at hand. Nothing below depends
   **Never commit voice references (`assets/library/voices_ref/`) or API keys** (git-ignored; keep it that way).
 - Loops continue through the action (last frame = setup of frame 1); never a white/black flash.
 - Every milestone render → GitHub release on `moamen270/video-blender` (skill `publish-release`).
+- **Done = published on all 4 platforms** (post URLs recorded) + GitHub release + **merged to `main`** + analytics
+  logged + reusable parts harvested. Full definition and branch rules: skill `publish-release`.
+- Branches: `main` = finished work; work on `ep/<episode-slug>` or `kit/<topic>`, merge when done.
 - Record every owner correction as a skill rule (and in `docs/` logs) so it is never repeated.
 
 ## Important files
@@ -29,6 +32,7 @@ Read this file first, then the skill for the work at hand. Nothing below depends
 | `content/IDEAS.md`, `content/scripts/` | idea bank and written scripts |
 | `brand.json` | channel name, handle, platform links, default hashtags |
 | `assets/cast/voices.json` | voice casting (engine, reference wav, pitch) per character |
+| `analytics/videos.csv` | upload log per platform (upload, 24 h, 72 h, 7 d) |
 | `assets/sfx_bank.json`, `assets/library/LICENSES.md` | sound bank (ids → CC0 files) and every asset licence |
 | `kit/` | the library: `qchar` (Quaternius rigs), `cast` (character builders: Batman, Joker, Ryu, Ken…), `fight` (poses, fireballs, rooftop, leaves), `shots` (auto-framed cameras), `face`, `motion` (IK), `captions`, `post` (bloom), `sets`, `fx` |
 | `tools/make.sh` | one command: build → render → mix → `final.mp4` → 4 Hz sheet → `social.md` |
@@ -62,8 +66,10 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
 - `audios` — voice research (why Chatterbox). `agy_scratch/` — scratch cwd for read-only Gemini jobs.
 
 ## Current state (update when it changes)
-- Work is on branch `rm01-cutout`, **not yet merged to main**.
+- 2026-09-25: all work merged to `main` (housekeeping). Old branches removed.
+- `analytics/videos.csv` exists but is empty: the published videos (5 stickman from video-builder + Batman EP02,
+  all platforms) still have to be logged — next step "numbers".
 - Open proposals awaiting the owner: a phased production process (research → pitch PoC → script → design →
   voice → animatic → animation → sound → QA → publish → learn), a reusable component/asset/set library,
-  per-episode `state.json`, analytics pulled from the platforms, "done" = published on all platforms + merged.
-- Published videos (5 stickman + Batman EP02 on all platforms) are **not yet logged** in any analytics sheet.
+  per-episode `state.json`, analytics pulled from the platforms.
+- Ryu vs Ken v40 is ready but not uploaded yet (as far as the repo knows).

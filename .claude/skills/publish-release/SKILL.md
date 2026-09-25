@@ -5,6 +5,21 @@ description: How to publish a blender-video milestone — push the branch, GitHu
 
 # Publishing
 
+## Definition of done (an episode is DONE only when all of these are true)
+1. **Published on every platform** (YouTube Shorts, TikTok, Instagram Reels, Facebook Reels) with the owner-approved
+   final, and each post URL recorded in `projects/<p>/social.json` → `"posts": {"youtube": url, ...}`.
+2. **GitHub release** of that final exists (below), with `social.md` attached.
+3. **Branch merged to `main`** (fast-forward or merge commit) and pushed; the episode branch is then deleted.
+4. **Analytics row** for each platform in `analytics/videos.csv` at upload, then 24 h / 72 h / 7 d.
+5. **Harvest:** new characters, poses, sets, props, FX, sounds from the episode are reusable from `kit/` / asset
+   banks (not only inside `script.py`), and every owner correction from the episode is a skill rule or a check.
+A GitHub release alone is a milestone, not done. Until the owner has uploaded, the episode stays "awaiting upload".
+
+## Branches
+- `main` = everything finished. One branch per episode or kit change: `ep/<episode-slug>`, `kit/<topic>`.
+- Releases may target the branch while in progress; merge to `main` when the episode is done (DoD 3), and
+  merge kit work as soon as it is tested so the next episode starts from it.
+
 ## GitHub release (every milestone, without being asked)
 1. Commit, then `git push -u origin <branch>`.
 2. `gh release create vX.Y.Z -R moamen270/video-blender --target <branch> --title "vX.Y.Z — <name>" --notes-file notes.md`
@@ -28,5 +43,6 @@ description: How to publish a blender-video milestone — push the branch, GitHu
 - One pinned-comment question.
 
 ## After upload
-- Log into analytics at 24 h / 72 h / 7 d: views, 3-s retention, average watch, completion, likes, shares,
-  followers (video-builder's `analytics/videos.csv` format). Every upload is a lesson: write the lesson down.
+- Log into `analytics/videos.csv` (same columns as video-builder's) at upload, 24 h / 72 h / 7 d: views,
+  3-s retention, average watch, completion, likes, comments, shares, saves, followers. Every upload is a lesson:
+  write the lesson down (skill rule / `docs/` log).
