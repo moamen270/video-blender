@@ -29,6 +29,10 @@ propose it again as the main style. EP02 scores: building Batman/Joker 7/10, the
 - Mouth shapes = the 9 Rhubarb shapes; readable at MCU size.
 
 ## Gate & checks (before any animation)
+**Owner rule (2026-09-26): show components INDIVIDUALLY at G3** — one sheet per character (turnaround), per set
+(empty, per mood), per prop, per pose sheet. Never ask for approval on a composed scene: each item is improved to its
+best version on its own, then assembled.
+
 1. `tools/turnaround.py` sheet: front, 3/4, side, back, close-up. Look for floating decals, gaps between parts,
    parts through the body, and outline artefacts.
 2. Silhouette render (black on white) at 25 % size: still recognisable?

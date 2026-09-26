@@ -370,4 +370,6 @@ CAST = {
     "ken": build_ken,
     "ryu_dummy": lambda col=None: build_ryu(col, skin="dummy"),
     "ken_dummy": lambda col=None: build_ken(col, skin="dummy"),
+    "vader": lambda col=None: __import__("kit.starwars", fromlist=["x"]).build_vader(col),
+    "luke": lambda col=None: __import__("kit.starwars", fromlist=["x"]).build_luke(col),
 }

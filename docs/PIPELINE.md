@@ -74,7 +74,7 @@ Side exits: `dropped` (premise rejected or abandoned — keep the reason), `arch
 |---|---|---|---|
 | G1 premise | 3 pitches + a pitch PoC | "Is this funny?" | 2 min |
 | G2 script | `script.md` + voice preview when ready | "Is this the joke, well told?" | 3 min |
-| G3 look | turnaround / set stills (new items only) | "Is this the character/place?" | 1 min |
+| G3 look | **each new component on its own sheet** (owner 2026-09-26): character turnaround, the empty set, each prop, each pose — never a composed scene | "Is this the character/place/pose? What makes it better?" | 1 min per item |
 | G4 animatic | draft render + 4 Hz sheet | "Staging, framing, timing right?" | 2 min |
 | G5 final | `final.mp4` | "Ship it?" — taste only; checks caught the mechanics | 1 min |
 

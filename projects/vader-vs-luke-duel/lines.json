@@ -28,10 +28,10 @@
  {
   "id": "l_what2",
   "character": "luke",
-  "text": "You're my WHAT?!",
+  "text": "You're my... WHAT?!",
   "emotion": 0.85,
   "speed": 1.05,
-  "note": "shouting, hand to ear",
+  "note": "shouting, hand to ear; comma pause so 'you're my' is clear (take 1 read back 'gurmi what')",
   "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav"
  },
  {

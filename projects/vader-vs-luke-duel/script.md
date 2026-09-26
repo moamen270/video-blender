@@ -55,4 +55,4 @@ lamp, then the reveal finally lands, then the roles swap).
 **Voices:** Vader and Luke parody clones. We need your reference clips for both, like the Street Fighter X Tekken clips you gave for Ryu and Ken.
 
 ## Owner decision (G2)
-approved: … · date: … · notes: …
+approved: **yes** · date: 2026-09-26 · notes: owner "approved"

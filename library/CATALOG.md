@@ -5,14 +5,14 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 
 | kind | items |
 |---|---|
-| [Characters](#characters) | 8 |
+| [Characters](#characters) | 10 |
 | [Character parts](#character-parts) | 3 |
 | [Base rigs (Quaternius, CC0)](#base-rigs-quaternius-cc0) | 52 |
-| [Poses](#poses) | 27 |
+| [Poses](#poses) | 28 |
 | [Motions](#motions) | 10 |
-| [Props](#props) | 4 |
+| [Props](#props) | 6 |
 | [Effects](#effects) | 13 |
-| [Sets / environments](#sets--environments) | 5 |
+| [Sets / environments](#sets--environments) | 6 |
 | [Set parts](#set-parts) | 2 |
 | [Cameras](#cameras) | 4 |
 | [Sound effects](#sound-effects) | 44 |
@@ -25,9 +25,9 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 |---|---|---|---|---|---|
 | **Batman (parody)**<br>`character/batman`<br>approved | **Joker (parody)**<br>`character/joker`<br>approved | **Ryu (parody)**<br>`character/ryu`<br>approved | **Ken (parody)**<br>`character/ken`<br>approved | **Ryu (dummy skin)**<br>`character/ryu-dummy`<br>draft | **Ken (dummy skin)**<br>`character/ken-dummy`<br>draft |
 
-| <img src="previews/character__ronin.jpg" width="120"> | <img src="previews/character__warlord.jpg" width="120"> |
-|---|---|
-| **Ronin (samurai)**<br>`character/ronin`<br>draft | **Warlord (samurai)**<br>`character/warlord`<br>draft |
+| <img src="previews/character__ronin.jpg" width="120"> | <img src="previews/character__warlord.jpg" width="120"> | <img src="previews/character__vader.jpg" width="120"> | <img src="previews/character__luke.jpg" width="120"> |
+|---|---|---|---|
+| **Ronin (samurai)**<br>`character/ronin`<br>draft | **Warlord (samurai)**<br>`character/warlord`<br>draft | **Darth Vader (parody)**<br>`character/vader`<br>draft | **Luke Skywalker (parody)**<br>`character/luke`<br>draft |
 
 
 ## Character parts
@@ -103,6 +103,7 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 |---|---|---|---|---|---|
 | `pose/fight-tools` | Pose tools: blend, mirror, key_pose | approved | Fight-pose helpers: blend(a, b, t) between poses, mirror(p) for the other side, prepare + key_pose to key a Pose on a Quaternius rig. | `kit.fight:blend` |  |
 | `pose/fight-charge-far` | ~~Fight pose CHARGE_FAR~~ | deprecated | CHARGE mirrored (old charge on the far side). | `kit.fight:CHARGE_FAR` |  |
+| `pose/starwars-duel-set` | Vader & Luke script poses | draft | saber_guard, saber_press, hand_up, ear_cup, lost, look_around, pull_cord, formal, no_scream, lean_in (kit.fight.Pose); POSE_CAST says who us | `kit.starwars:POSES` |  |
 
 ## Motions
 
@@ -128,6 +129,8 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 | id | name | status | what | source | preview |
 |---|---|---|---|---|---|
 | `prop/katana` | Katana + scabbard | draft | Katana built along the sword bone of the samurai rig. | `kit.samurai:build_katana` |  |
+| `prop/lightsaber` | Lightsaber | draft | Hilt + white core + coloured translucent glow; key(frame, on 0..1) ignites/retracts from the emitter; follows a fist when given a character. | `kit.starwars:Lightsaber` |  |
+| `prop/pull-cord-lamp` | Bare bulb on a pull cord | draft | Hanging flex, socket, bulb (emission keyed), pull cord with bead, warm point light; key_on(frame, on), swing(frame) damped swing. | `kit.starwars:PullLamp` |  |
 
 ## Effects
 
@@ -158,6 +161,7 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 |---|---|---|---|---|---|
 | `set/meadow` | Cupid meadow | draft | Early studio-core meadow (sky, hills, trees). | `projects/cupid-had-one-job/script.py` |  |
 | `set/garage-2d` | ~~Garage (2D backdrop)~~ | deprecated | Flat 2D garage backdrop for cut-out style. | `kit.cutout:backdrop` |  |
+| `set/death-star-corridor` | Death Star corridor | draft | Grey panelled corridor (floor grating, wall panels, light strips, ceiling lights, octagonal door); corridor_lights() + key_mood(lights, fram | `kit.starwars:death_star_corridor` |  |
 
 ## Set parts
 

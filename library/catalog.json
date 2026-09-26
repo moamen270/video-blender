@@ -4317,6 +4317,152 @@
    "origin": "vader-vs-luke-duel",
    "used_in": [],
    "status": "draft"
+  },
+  {
+   "id": "character/vader",
+   "kind": "character",
+   "name": "Darth Vader (parody)",
+   "description": "BaseCharacter in black: helmet sized from the head (dome, flared skirt, slanted lenses, cheek plates, triangular grille), chest box with lights, shoulder plates, belt, the cape. No face decals (mask).",
+   "tags": [
+    "star-wars",
+    "vader",
+    "villain",
+    "parody",
+    "cape"
+   ],
+   "source": {
+    "kit": "kit.starwars:build_vader",
+    "cast": "vader"
+   },
+   "licence": "CC0 (Quaternius) + own code",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [
+    "vader-vs-luke-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "character",
+    "cast": "vader",
+    "image": "library/previews/character__vader.jpg"
+   },
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/char_vader.jpg"
+  },
+  {
+   "id": "character/luke",
+   "kind": "character",
+   "name": "Luke Skywalker (parody)",
+   "description": "Kimono_Male as the black Jedi tunic (sleeves), sandy hair (Casual_Male), black boots, black right glove, stern face.",
+   "tags": [
+    "star-wars",
+    "luke",
+    "hero",
+    "parody",
+    "jedi"
+   ],
+   "source": {
+    "kit": "kit.starwars:build_luke",
+    "cast": "luke"
+   },
+   "licence": "CC0 (Quaternius) + own code",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [
+    "vader-vs-luke-duel"
+   ],
+   "status": "draft",
+   "preview": {
+    "recipe": "character",
+    "cast": "luke",
+    "image": "library/previews/character__luke.jpg"
+   },
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/char_luke.jpg"
+  },
+  {
+   "id": "prop/lightsaber",
+   "kind": "prop",
+   "name": "Lightsaber",
+   "description": "Hilt + white core + coloured translucent glow; key(frame, on 0..1) ignites/retracts from the emitter; follows a fist when given a character.",
+   "tags": [
+    "star-wars",
+    "saber",
+    "weapon",
+    "glow"
+   ],
+   "source": {
+    "kit": "kit.starwars:Lightsaber"
+   },
+   "licence": "own code",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [
+    "vader-vs-luke-duel"
+   ],
+   "status": "draft",
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/props_saber.jpg"
+  },
+  {
+   "id": "prop/pull-cord-lamp",
+   "kind": "prop",
+   "name": "Bare bulb on a pull cord",
+   "description": "Hanging flex, socket, bulb (emission keyed), pull cord with bead, warm point light; key_on(frame, on), swing(frame) damped swing.",
+   "tags": [
+    "lamp",
+    "light",
+    "bulb",
+    "gag"
+   ],
+   "source": {
+    "kit": "kit.starwars:PullLamp"
+   },
+   "licence": "own code",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [
+    "vader-vs-luke-duel"
+   ],
+   "status": "draft",
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/props_lamp.jpg"
+  },
+  {
+   "id": "set/death-star-corridor",
+   "kind": "set",
+   "name": "Death Star corridor",
+   "description": "Grey panelled corridor (floor grating, wall panels, light strips, ceiling lights, octagonal door); corridor_lights() + key_mood(lights, frame, 'lit'|'dark'|'lamp') switch moods by light + keyed exposure (never flat black).",
+   "tags": [
+    "star-wars",
+    "corridor",
+    "sci-fi",
+    "interior"
+   ],
+   "source": {
+    "kit": "kit.starwars:death_star_corridor"
+   },
+   "licence": "own code",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [
+    "vader-vs-luke-duel"
+   ],
+   "status": "draft",
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/set_kit_starwars_death_star_corridor.jpg; helpers corridor_lights, key_mood"
+  },
+  {
+   "id": "pose/starwars-duel-set",
+   "kind": "pose",
+   "name": "Vader & Luke script poses",
+   "description": "saber_guard, saber_press, hand_up, ear_cup, lost, look_around, pull_cord, formal, no_scream, lean_in (kit.fight.Pose); POSE_CAST says who uses which, POSE_FACE the expression.",
+   "tags": [
+    "pose",
+    "star-wars",
+    "saber",
+    "acting"
+   ],
+   "source": {
+    "kit": "kit.starwars:POSES"
+   },
+   "licence": "own code",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [
+    "vader-vs-luke-duel"
+   ],
+   "status": "draft",
+   "notes": "G3 sheets projects/vader-vs-luke-duel/design/poses_vader_kit_starwars.jpg, poses_luke_kit_starwars.jpg"
   }
  ],
  "internal": [
@@ -4380,6 +4526,8 @@
   "kit.sets:prop",
   "kit.shots:PRESETS",
   "kit.shots:region",
-  "kit.stage:petals"
+  "kit.stage:petals",
+  "kit.starwars:corridor_lights",
+  "kit.starwars:key_mood"
  ]
 }

@@ -57,6 +57,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
 | `library/catalog.json`, `library/CATALOG.md`, `library/previews/` | **component library**: every character, rig, pose, motion, prop, FX, set, camera move, sound, music track and voice, with source, licence, status and preview |
 | `tools/catalog.py`, `tools/catalog_preview.py` | library search / check / harvest / gallery; Blender preview renderer |
+| `tools/component_sheet.py` | G3: each new component on its OWN sheet (character turnaround, poses, empty set per mood, props) → `projects/<p>/design/*.jpg` |
 | `tools/storyboard.py` | pitch PoC (G1): renders `projects/<p>/poc/storyboard.json` panels (library characters or PoC stand-ins, sabers, sets, text overlays) → `poc/board.jpg` |
 | `tools/board.py`, `tools/new_episode.py`, `templates/episode/` | Kanban board of episodes; new-episode scaffold; phase templates |
 | `README.md` | layout, `make.sh`, live Blender-MCP loop |
@@ -71,7 +72,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 | `analytics/posts.json`, `analytics/videos.csv` | every published video's post ids (all channel videos, both repos) and the numbers log |
 | `tools/stats.py` | pulls public views/likes from YouTube, TikTok, Instagram, Facebook (no login) → appends to `videos.csv` |
 | `assets/sfx_bank.json`, `assets/library/LICENSES.md` | sound bank (ids → CC0 files) and every asset licence |
-| `kit/` | the library: `qchar` (Quaternius rigs), `cast` (character builders: Batman, Joker, Ryu, Ken…), `fight` (poses, fireballs, rooftop, leaves), `shots` (auto-framed cameras), `face`, `motion` (IK), `captions`, `post` (bloom), `sets`, `fx` |
+| `kit/` | the library: `qchar` (Quaternius rigs), `cast` (character builders: Batman, Joker, Ryu, Ken, Vader, Luke…), `starwars` (Vader, Luke, lightsaber, corridor + moods, pull-cord lamp, poses), `fight` (poses, fireballs, rooftop, leaves), `shots` (auto-framed cameras), `face`, `motion` (IK), `captions`, `post` (bloom), `sets`, `fx` |
 | `tools/make.sh` | one command: build → render → mix → `final.mp4` → 4 Hz sheet → `social.md` |
 | `tools/clip_scan.py`, `tools/make_ref.py` | voice packs: label every game clip talking vs sound (ASR) → pick clips → build the modified Chatterbox reference |
 | `tools/voice.py`, `tools/audio.py`, `tools/social.py`, `tools/qa_episode.py` | voices (+ lip sync, word timings), mix/loudness/overlays, upload text, QA |
@@ -83,7 +84,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 Live status is in each `state.json` (`python tools/board.py`); summary:
 | project | status |
 |---|---|
-| `vader-vs-luke-duel` | `pitch` — 3 pitches + storyboard PoC waiting for G1 |
+| `vader-vs-luke-duel` | `design` — "Luke, I Am Your WHAT?" (G1, G2 approved); G3 sheets per component waiting for owner notes |
 | `samurai-standoff` | `dropped` at phase 0 (owner: famous characters for now) |
 | `ryu-vs-ken-last-hadouken` | `awaiting-upload` — Street Fighter loop, 18 s, final v40 = release v0.3.4. Owner: "not bad, I like it" |
 | `batman-unexpected-item` | `published` 2026-09-24 — final v21; owner story 0/10, humour 0/10, style 4/10; Facebook flagged a border |

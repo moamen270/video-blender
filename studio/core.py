@@ -35,6 +35,8 @@ def reset_scene() -> bpy.types.Scene:
     for c in list(bpy.data.collections):
         bpy.data.collections.remove(c)
     scene.timeline_markers.clear()
+    scene.animation_data_clear()                  # keyed scene values (e.g. exposure moods) must not leak into the next build
+    scene.view_settings.exposure = 0.0
     scene.frame_start = 1
     scene.render.fps = FPS
     scene.render.fps_base = 1.0
