@@ -247,6 +247,90 @@ def vader_mask(centre, R: float, col=None) -> list:
     return parts
 
 
+def vader_suit(qc: Q.QChar, col=None) -> dict:
+    """Vader's costume on a plain Quaternius body (owner live session 2026-09-26): black leather bodysuit (the skin),
+    glossy gloves/gauntlets and boots, shoulder armour collar, chest box with lights, belt with buckle and boxes, cape.
+    Positions come from the body at rest (bones + a ray to the chest surface); front = world +y."""
+    from mathutils.bvhtree import BVHTree
+    leather = _gloss("vs_leather", "#131418", 0.45)
+    gloss = _gloss("vs_gloss", "#0f1013", 0.12, coat=1.0)
+    dgrey = _gloss("vh_dgrey", "#2c2f36", 0.3, metal=0.4)
+    silver = _gloss("vh_silver", "#b9bec7", 0.25, metal=1.0)
+    cloth = _gloss("vs_cape", "#0b0c0f", 0.75)
+    cloth.use_backface_culling = False
+    out = {}
+    # 1) suit: the skin becomes black leather
+    for s in qc.body.material_slots:
+        if s.material and Q.strip(s.material.name) in ("Skin",):
+            s.material = leather
+    # 2) gloves + gauntlets, boots (native-space ranges as used for Batman)
+    Q.assign(qc, gloss, bones=["Fist.L", "Fist.R"])
+    Q.assign(qc, gloss, bones=["LowerArm.L", "LowerArm.R"], absx_min=1.06)
+    Q.assign(qc, gloss, bones=["Foot.L", "Foot.R"])
+    Q.assign(qc, gloss, bones=["LowerLeg.L", "LowerLeg.R"], z_range=(-1.0, 0.45))
+    bpy.context.view_layer.update()
+    mw, arm = qc.arm.matrix_world, qc.arm.data.bones
+    neck = mw @ arm["Neck"].head_local if "Neck" in arm else mw @ arm["Head"].head_local
+    sh_l, sh_r = mw @ arm["UpperArm.L"].head_local, mw @ arm["UpperArm.R"].head_local
+    hip = mw @ arm["Abdomen"].head_local if "Abdomen" in arm else mw @ arm["Hips"].head_local
+    pts = [qc.body.matrix_world @ v.co for v in qc.body.data.vertices]
+    tree = BVHTree.FromPolygons(pts, [p.vertices[:] for p in qc.body.data.polygons])
+
+    def front_at(z, x=0.0):                                   # the body's front surface at height z
+        hit = tree.ray_cast(Vector((x, 2.0, z)), Vector((0, -1, 0)))
+        return hit[0].y if hit[0] is not None else 0.1
+
+    def ring(z, band=0.03):                                   # half-width / half-depth of the body at height z
+        sl = [p for p in pts if abs(p.z - z) < band and abs(p.x) < abs(sh_l.x) * 0.9]
+        return (max(abs(p.x) for p in sl), max(abs(p.y) for p in sl)) if sl else (0.15, 0.1)
+
+    # 3) shoulder armour: a glossy collar plate over the shoulders, dipping at the front
+    half_w = abs(sh_l.x - sh_r.x) / 2 * 1.35
+    cw, cd = ring(neck.z - 0.08)
+    def mantle_row(t):
+        def row(phi):
+            dip = 0.05 * max(0.0, math.sin(phi))              # lower at the chest
+            return (0.35 + 0.65 * t, -0.13 * t - dip * t)
+        return row
+    out["mantle"] = _lathe("vs_mantle", [mantle_row(t) for t in (0.0, 0.35, 0.7, 1.0)], 64, lambda i, phi: True, gloss, col,
+                           Vector((0, (sh_l.y + sh_r.y) / 2, neck.z + 0.01)), half_w, max(cd * 1.35, 0.12), 1.0)
+    # 4) chest box on the chest surface, with coloured lights and switches
+    cz = neck.z - 0.24
+    fy = front_at(cz)
+    box = C.cube("vs_chestbox", size=1.0, loc=(0, fy + 0.012, cz), scale=(0.15, 0.03, 0.10), mat=dgrey, col=col)
+    parts = [box]
+    for i, (hx, x, z) in enumerate((("#ff3a30", -0.045, 0.022), ("#36ff6a", 0.0, 0.022), ("#3a8cff", 0.045, 0.022),
+                                    ("#ff3a30", -0.03, -0.02), ("#d8dde6", 0.0, -0.02), ("#d8dde6", 0.03, -0.02))):
+        parts.append(C.cube(f"vs_light{i}", size=1.0, loc=(x, fy + 0.03, cz + z), scale=(0.022, 0.01, 0.016),
+                            mat=FT.emit_mat(f"vs_l{i}", hx, 4.0) if i < 4 else silver, col=col))
+    out["chest"] = parts
+    # 5) belt: glossy band at the waist, silver buckle with slots, two boxes each side
+    bz = hip.z + 0.05
+    bw, bd = ring(bz)
+    belt = _lathe("vs_belt", [(1.0, 0.03), (1.0, -0.03)], 48, lambda i, phi: True, gloss, col, Vector((0, 0, bz)),
+                  bw * 1.08, bd * 1.12, 1.0)
+    bfy = front_at(bz)
+    parts = [belt, C.cube("vs_buckle", size=1.0, loc=(0, bfy + 0.02, bz), scale=(0.10, 0.012, 0.06), mat=silver, col=col)]
+    for k in (-1, 0, 1):
+        parts.append(C.cube(f"vs_bslot{k}", size=1.0, loc=(k * 0.025, bfy + 0.027, bz), scale=(0.012, 0.004, 0.035),
+                            mat=gloss, col=col))
+    for s in (-1, 1):
+        for j in (1, 2):
+            ang = math.radians(90 - s * (28 + 18 * j))
+            px, py = bw * 1.12 * math.cos(ang), bd * 1.15 * math.sin(ang)
+            b = C.cube(f"vs_bbox{s}{j}", size=1.0, loc=(px, py, bz - 0.005), scale=(0.045, 0.03, 0.05), mat=dgrey, col=col)
+            b.rotation_euler = (0, 0, ang - math.pi / 2)
+            parts.append(b)
+    out["belt"] = parts
+    for grp in ("chest", "belt"):
+        for o in out[grp]:
+            Q.attach_part(qc, o, "Torso" if grp == "chest" else ("Abdomen" if "Abdomen" in arm else "Hips"), o.name)
+    Q.attach_part(qc, out["mantle"], "Torso", "mantle")
+    # 6) cape: the approved skinned cape, in black fabric
+    out["cape"] = kit.cape.build_cape(qc, cloth)
+    return out
+
+
 def _vader_helmet(c: Vector, h: Vector, *, gloss, grey, lens, dark, col) -> list:
     """The helmet as sculpted surfaces sized to the head bounds (c = centre, h = half size):
     dome + brow line + a flared skirt that sweeps lower at the back, open in front for the face mask;
