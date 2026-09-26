@@ -469,16 +469,27 @@ def luke_hair(qc: Q.QChar, mat, col=None) -> bpy.types.Object:
             return 1.17 * math.sqrt(max(0.0, 1.0 - (z / 1.30) ** 2))
         return 1.10 * math.sqrt(max(0.25, 1.0 - (z / 1.10) ** 2))
 
-    def row(t):
+    LOCKS, TWIST = 11, 0.55                                    # hair locks around the head; how much they sweep sideways
+
+    def lock(phi, u):                                          # 1 on a lock's ridge, 0 in the groove between locks
+        return (0.5 + 0.5 * math.cos(LOCKS * (phi + TWIST * u))) ** 2
+
+    def row(u, z_of):                                          # u: 0 at the crown -> 1 at the tips
         def f(phi):
-            z = 0.55 + (edge(phi) - 0.55) * t
-            tuck = 0.05 * t * max(0.0, 1.0 - d(phi) / math.radians(62))   # the fringe hugs the forehead (no brim)
-            return (radius(z) - tuck, z)
+            z = z_of(phi)
+            if u >= 0.99:                                      # the tips: each lock ends in a point, lower than the grooves
+                z -= 0.12 * lock(phi, u)
+            tuck = 0.05 * max(0.0, (u - 0.45) / 0.55) * max(0.0, 1.0 - d(phi) / math.radians(62))
+            bump = 0.07 * (u ** 0.8) * lock(phi, u)             # locks stand out more toward the tips
+            return (radius(z) * (1.0 + bump) - tuck, z)
         return f
 
-    dome = [(radius(z), z) for z in (1.30, 1.26, 1.15, 0.98, 0.76)]
-    rows = dome + [row(t) for t in (0.0, 0.34, 0.67, 1.0)]
-    o = _lathe("luke_hair", rows, 64, lambda i, phi: True, mat, col, c + Vector((0, -0.01, 0.0)), h.x, h.y, h.z)
+    rows = [row(0.0, lambda phi: 1.30)]
+    for u, z in ((0.06, 1.26), (0.16, 1.15), (0.28, 0.98), (0.40, 0.76)):
+        rows.append(row(u, lambda phi, z=z: z))
+    for tt in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0):
+        rows.append(row(0.45 + 0.55 * tt, lambda phi, tt=tt: 0.55 + (edge(phi) - 0.55) * tt))
+    o = _lathe("luke_hair", rows, 176, lambda i, phi: True, mat, col, c + Vector((0, -0.01, 0.0)), h.x, h.y, h.z)
     o.modifiers["solid"].thickness = 0.03
     Q.attach_part(qc, o, "Head", "hair")
     return o
