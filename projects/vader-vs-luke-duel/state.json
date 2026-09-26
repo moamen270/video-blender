@@ -87,9 +87,9 @@
     {
       "date": "2026-09-26",
       "version": 0,
-      "note": "Vader looks weird",
+      "note": "Vader looks weird — rebuilt live with the owner; approved 2026-09-26",
       "phase": "design",
-      "status": "open",
+      "status": "fixed",
       "fixed_in": 0
     },
     {
@@ -145,6 +145,16 @@
       "date": "2026-09-26",
       "decision": "Vader rebuilt live with the owner (Blender MCP): plain BaseCharacter + human skin; helmet (vader_helmet, from a motorcycle helmet with the face cut out) and mask (vader_mask, from a respirator + sunglasses) built SEPARATELY, merged later",
       "why": "owner: 'it's just a helmet and a mask, do each separately then merge them'; owner edited the mask by hand (removed cheek lines; grille, slots, chin tubes placed) — encoded in kit.starwars.vader_mask, verified equal to the live mesh"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Vader look approved by the owner ('well done'): BaseCharacter + vader_helmet + vader_mask + vader_suit (live session)",
+      "why": "owner G3 for Vader"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Luke: keep the build, change only the hair: rounded, light brown (owner refs: LEGO Luke, ROTJ art)",
+      "why": "owner"
     }
   ],
   "known_issues": [

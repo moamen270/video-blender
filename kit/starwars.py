@@ -443,6 +443,47 @@ def build_vader(col: bpy.types.Collection | None = None) -> Q.QChar:
     return qc
 
 
+def luke_hair(qc: Q.QChar, mat, col=None) -> bpy.types.Object:
+    """Luke's hair (owner refs 2026-09-26: LEGO Luke, ROTJ art): a rounded light-brown cap over the head that covers
+    the ears, a fringe swept to his right from a part on his left, down to the nape at the back. Built at rest from the
+    head bounds and parented to the Head bone."""
+    lo, hi = _head_bounds(qc)
+    c, h = (lo + hi) / 2, (hi - lo) / 2
+
+    def d(phi):
+        return abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi)
+
+    def edge(phi):                                             # the hair's lower edge height, in head half-sizes
+        a = d(phi)
+        front = 0.26 + 0.22 * math.cos(phi)                     # diagonal swept fringe: low on his right (world -x), high at the part
+        if a < math.radians(62):
+            return front
+        if a < math.radians(105):                               # temples -> over the ears
+            t = (a - math.radians(62)) / math.radians(43)
+            return front + (-0.38 - front) * t
+        t = (a - math.radians(105)) / math.radians(75)          # ears -> nape
+        return -0.38 + (-0.72 + 0.38) * t
+
+    def radius(z):                                             # follow the round head, with volume on top
+        if z >= 0:
+            return 1.17 * math.sqrt(max(0.0, 1.0 - (z / 1.30) ** 2))
+        return 1.10 * math.sqrt(max(0.25, 1.0 - (z / 1.10) ** 2))
+
+    def row(t):
+        def f(phi):
+            z = 0.55 + (edge(phi) - 0.55) * t
+            tuck = 0.05 * t * max(0.0, 1.0 - d(phi) / math.radians(62))   # the fringe hugs the forehead (no brim)
+            return (radius(z) - tuck, z)
+        return f
+
+    dome = [(radius(z), z) for z in (1.30, 1.26, 1.15, 0.98, 0.76)]
+    rows = dome + [row(t) for t in (0.0, 0.34, 0.67, 1.0)]
+    o = _lathe("luke_hair", rows, 64, lambda i, phi: True, mat, col, c + Vector((0, -0.01, 0.0)), h.x, h.y, h.z)
+    o.modifiers["solid"].thickness = 0.03
+    Q.attach_part(qc, o, "Head", "hair")
+    return o
+
+
 def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     """Luke Skywalker parody (Return of the Jedi black tunic)."""
     from kit import cast
@@ -455,12 +496,13 @@ def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     Q.assign(qc, skin, materials=["Skin"])
     Q.assign(qc, tunic, materials=["Clothes"])
     Q.assign(qc, L.toon2("luke_belt", "#3a3b42"), materials=["Band"], z_range=(-1.0, 2.0))
-    hair = L.toon2("luke_hair", "#d4a955")
-    Q.assign(qc, hair, materials=["Band"], z_range=(2.0, 9.0))
+    hair = L.toon2("luke_hair", "#a07c55")                    # light brown (owner refs)
+    band = L.toon2("luke_band", cast.SKIN["ken"])              # the pack's headband in skin colour (the hair covers it)
+    Q.assign(qc, band, materials=["Band"], z_range=(2.0, 9.0))
     # the pack's headband tails stand straight up (they read as horns): remove them (as cast._fighter does)
     import bmesh
     bm = bmesh.new(); bm.from_mesh(qc.body.data)
-    hi_ = list(qc.body.data.materials).index(hair)
+    hi_ = list(qc.body.data.materials).index(band)
     tails = [f for f in bm.faces if f.material_index == hi_ and f.calc_center_median().z > 2.98]
     bmesh.ops.delete(bm, geom=tails, context="FACES")
     bm.to_mesh(qc.body.data); bm.free(); qc.body.data.update()
@@ -470,12 +512,7 @@ def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     boots = L.toon2("luke_boots", "#141418")
     Q.assign(qc, boots, bones=["Foot.L", "Foot.R"])
     Q.assign(qc, boots, bones=["LowerLeg.L", "LowerLeg.R"], z_range=(-1.0, 0.45))
-    part = Q.take_part(qc, "Casual_Male.blend", "Hair", "hair", hair)
-    for v in part.data.vertices:                                       # lift the fringe off the brows
-        if v.co.y < 0.0:
-            t = max(0.0, min(1.0, (3.0 - v.co.z) / 0.8))
-            v.co.z += 0.14 * t
-    part.data.update()
+    part = luke_hair(qc, hair, tc)
     Q.smooth(qc)
     Q.outline(qc.body, 0.010)
     Q.outline(part, 0.010)
