@@ -1,10 +1,10 @@
 {
   "slug": "vader-vs-luke-duel",
   "title": "Luke, I Am Your WHAT?",
-  "status": "voice",
+  "status": "sound",
   "branch": "ep/vader-vs-luke-duel",
   "updated": "2026-09-26",
-  "next": "Sounds: find real CC0 recordings (saber hum/ignite/retract/clash, pull-cord click, bulb buzz, Vader breathing) -> sfx_bank; then the animatic (G4).",
+  "next": "Owner picks sounds from sfx_review/sfx_candidates.mp3 (hum, ignite, retract, clash, pull-cord click, Vader breathing); then add them to assets/sfx_bank.json and build the animatic (G4).",
   "why_now": "evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).",
   "deadline": "",
   "cast": [
@@ -244,6 +244,11 @@
       "date": "2026-09-26",
       "status": "voice",
       "note": "G3 approved; voices already locked"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "sound",
+      "note": "12 sound candidates from local CC0 Kenney/OGA packs + Vader game-pack breaths"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"

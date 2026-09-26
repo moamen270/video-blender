@@ -21,3 +21,4 @@ projects/**/beats.json
 # local scratch (owner source clips live in tmp/; review stills)
 tmp/
 review/
+projects/*/sfx_review/
