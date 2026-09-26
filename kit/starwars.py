@@ -90,7 +90,7 @@ def vader_helmet(centre, R: float, col=None) -> list:
     lensm = _gloss("vh_lens", "#050608", 0.03, metal=0.7, coat=1.0)
     silver = _gloss("vh_silver", "#b9bec7", 0.25, metal=1.0)
     dgrey = _gloss("vh_dgrey", "#2c2f36", 0.3, metal=0.4)
-    FRONT = math.radians(58)                                # half-width of the face opening
+    FRONT = math.radians(41)                                # half-width of the face opening = the mask's (asin 0.64 = 40 deg)
 
     def d(phi):                                             # angular distance from the front (+y)
         return abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi)
