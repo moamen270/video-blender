@@ -207,7 +207,8 @@ def youtube_analytics(ids: list[str], start: str = "2026-09-01", end: str | None
 
 # ---- TikTok (Login Kit for Desktop + Display API video.list) --------------------------------------------------------
 TT_TOKEN = os.path.join(os.path.dirname(SECRETS), "tiktok_token.json")
-TT_REDIRECT = "http://127.0.0.1:8766/"          # register exactly this under Login Kit -> Desktop -> Redirect URI
+TT_REDIRECT = "http://127.0.0.1:8766/callback/"  # default; register EXACTLY the same string under Login Kit -> Desktop
+#                                                  (override with secrets.json "tiktok_redirect_uri", localhost/127.0.0.1 + port)
 TT_SCOPES = "user.info.basic,user.info.stats,video.list"
 
 
@@ -223,11 +224,13 @@ def tiktok_login(timeout_s: int = 600) -> bool:
     """One-time desktop login (PKCE; TikTok desktop uses a HEX sha256 code_challenge). Saves tiktok_token.json."""
     import hashlib, http.server, secrets as pysecrets, threading, time as _t, webbrowser
     key, secret = _tt_keys()
+    redirect = secrets().get("tiktok_redirect_uri") or TT_REDIRECT
+    port = urllib.parse.urlparse(redirect).port or 80
     verifier = pysecrets.token_urlsafe(64)[:64]
     challenge = hashlib.sha256(verifier.encode()).hexdigest()
     state = pysecrets.token_urlsafe(16)
     url = "https://www.tiktok.com/v2/auth/authorize/?" + urllib.parse.urlencode({
-        "client_key": key, "scope": TT_SCOPES, "response_type": "code", "redirect_uri": TT_REDIRECT, "state": state,
+        "client_key": key, "scope": TT_SCOPES, "response_type": "code", "redirect_uri": redirect, "state": state,
         "code_challenge": challenge, "code_challenge_method": "S256"})
     got = {}
 
@@ -243,7 +246,8 @@ def tiktok_login(timeout_s: int = 600) -> bool:
         def log_message(self, *a):
             pass
 
-    srv = http.server.HTTPServer(("127.0.0.1", 8766), H); srv.timeout = 5
+    srv = http.server.HTTPServer(("127.0.0.1", port), H); srv.timeout = 5
+    print(f"[tiktok] redirect_uri = {redirect} (must match the portal exactly)", flush=True)
     print("[tiktok] opening the browser for approval (if it does not open, visit):\n" + url, flush=True)
     threading.Timer(1.0, lambda: webbrowser.open(url)).start()
     end = _t.time() + timeout_s
@@ -255,7 +259,7 @@ def tiktok_login(timeout_s: int = 600) -> bool:
         return False
     tok = http_json("https://open.tiktokapis.com/v2/oauth/token/", data={
         "client_key": key, "client_secret": secret, "code": got["code"], "grant_type": "authorization_code",
-        "redirect_uri": TT_REDIRECT, "code_verifier": verifier})
+        "redirect_uri": redirect, "code_verifier": verifier})
     if "refresh_token" not in tok:
         print("[tiktok] token exchange failed:", tok.get("error_description") or tok.get("error") or sorted(tok), flush=True)
         return False

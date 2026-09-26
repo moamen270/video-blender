@@ -1,6 +1,6 @@
 """One-time TikTok sign-in (owner approves in the browser): python tools/tiktok_auth.py
 
-Needs in the TikTok developer portal: Login Kit (Desktop) with the redirect URI http://127.0.0.1:8766/ and the scopes
+Needs in the TikTok developer portal: Login Kit (Desktop) with the redirect URI http://127.0.0.1:8766/callback/ and the scopes
 user.info.basic, user.info.stats, video.list (Display API); while unreviewed use the SANDBOX (its own client key/secret →
 secrets.json tiktok_sandbox_client_key/_secret) with @dummysticky added as a target user.
 Saves %USERPROFILE%/.dummysticky/tiktok_token.json, then lists the account's videos as a check.

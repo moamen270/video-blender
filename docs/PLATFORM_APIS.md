@@ -28,7 +28,7 @@ does those steps (accounts, verification, consent screens), then Claude builds `
   (The API key alone can only read public numbers.)
 - **TikTok** (app "dummy-sticky" exists; production client key/secret saved 2026-09-26). Two tracks:
   1. **Numbers now — Sandbox (no review):** in the developer portal switch to **Sandbox** → create a sandbox →
-     Products: **Login Kit** (platform **Desktop**, Redirect URI exactly `http://127.0.0.1:8766/`) and **Display API**;
+     Products: **Login Kit** (platform **Desktop**, Redirect URI exactly `http://127.0.0.1:8766/callback/`) and **Display API**;
      Scopes: `user.info.basic`, `user.info.stats`, `video.list` → **Target users → Add account → log in as @dummysticky**
      → send Claude the **sandbox** client key + secret (they differ from production) → Claude runs
      `python tools/tiktok_auth.py` and the owner approves in the browser. Remove *Data Portability API* (not needed;
