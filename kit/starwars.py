@@ -497,7 +497,7 @@ def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     Q.assign(qc, skin, materials=["Skin"])
     Q.assign(qc, tunic, materials=["Clothes"])
     Q.assign(qc, L.toon2("luke_belt", "#3a3b42"), materials=["Band"], z_range=(-1.0, 2.0))
-    hair = L.toon2("luke_hair", "#a07c55")                    # light brown (owner refs)
+    hair = L.toon2("luke_hair", "#8a6440")                    # brown (owner 2026-09-26)
     band = L.toon2("luke_band", cast.SKIN["ken"])              # the pack's headband in skin colour (the hair covers it)
     Q.assign(qc, band, materials=["Band"], z_range=(2.0, 9.0))
     # the pack's headband tails stand straight up (they read as horns): remove them (as cast._fighter does)
@@ -513,7 +513,14 @@ def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     boots = L.toon2("luke_boots", "#141418")
     Q.assign(qc, boots, bones=["Foot.L", "Foot.R"])
     Q.assign(qc, boots, bones=["LowerLeg.L", "LowerLeg.R"], z_range=(-1.0, 0.45))
-    part = luke_hair(qc, hair, tc)
+    # owner 2026-09-26: back to the first hair (the pack's Casual_Male hair, like Ken's), brown, fringe lifted a little
+    # off the brows (luke_hair() = the sculpted alternative, kept but unused)
+    part = Q.take_part(qc, "Casual_Male.blend", "Hair", "hair", hair)
+    for v in part.data.vertices:
+        if v.co.y < 0.0:
+            t_ = max(0.0, min(1.0, (3.0 - v.co.z) / 0.8))
+            v.co.z += 0.16 * t_
+    part.data.update()
     Q.smooth(qc)
     Q.outline(qc.body, 0.010)
     Q.outline(part, 0.010)

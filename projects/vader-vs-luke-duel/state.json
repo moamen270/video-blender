@@ -168,6 +168,11 @@
       "date": "2026-09-26",
       "decision": "voice locked: Luke's scream = l_no_a; old l_no, denoised, stretched and s1-s6 variants deleted",
       "why": "owner: 'l_no_a win'"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Luke hair: back to the first (pack Casual_Male) hair, brown #8a6440, fringe lifted 0.16; sculpted luke_hair() kept unused",
+      "why": "owner: 'the first one, make his hair brown and adjust a little, that's it'"
     }
   ],
   "known_issues": [
