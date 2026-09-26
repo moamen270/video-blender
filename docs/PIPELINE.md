@@ -57,12 +57,14 @@ Status values in `state.json` are the phase ids in the first column.
 2. **Events:** check the events calendar (releases, holidays, trends). An event-tied video is wanted when the event is
    **close** (we can make it and post it in the event's window) and **no other event-tied episode is pending**
    (`state.json` `event`). Otherwise pick an evergreen idea. Never start an event too early (Halloween in September).
-3. **Idea bank + analytics:** rank candidates in `content/IDEAS.md` by what the numbers say
+3. **Cast: famous (parody) characters for now** (owner, 2026-09-26), not our own original characters — they bring
+   the reach (Batman 3D 5,947 views day 1). Revisit only when the owner says.
+4. **Idea bank + analytics:** rank candidates in `content/IDEAS.md` by what the numbers say
    (`analytics/videos.csv`: views, avg watch, % watched), the owner's taste (rejected patterns stay rejected) and
    the library (`tools/catalog.py search`: what exists vs must be built).
-4. Write the **idea card** in `content/IDEAS.md` §6 (format there): premise, cast, why now, event (or "evergreen"),
+5. Write the **idea card** in `content/IDEAS.md` §6 (format there): premise, cast, why now, event (or "evergreen"),
    deadline, excluded casts, library reuse/build, numbers behind the choice.
-5. `python tools/new_episode.py <card-slug> "Title"` (reads the card; refuses without one or on a cast clash),
+6. `python tools/new_episode.py <card-slug> "Title"` (reads the card; refuses without one or on a cast clash),
    `git checkout -b ep/<slug>`, then phase 1.
 
 Side exits: `dropped` (premise rejected or abandoned — keep the reason), `archived` (old tests).

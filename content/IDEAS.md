@@ -115,3 +115,22 @@ or a second event-tied episode would be pending. Format (keep the field names ex
 - **Numbers:** the analytics behind the choice
 - **Status:** card | episode created YYYY-MM-DD
 ```
+
+### card: samurai-standoff
+- **Title:** Samurai Standoff
+- **Premise:** Two rival samurai meet for the duel of their lives, and the joke is their rivalry: petty, escalating, and deadly serious. The payoff uses the full samurai fight kit. Phase 1 writes three pitches with different mechanisms from this.
+- **Cast:** ronin, warlord
+- **Why now:** evergreen by choice. Ryu vs Ken (uploading 2026-09-27) is already our pending event video (Street Fighter film 2026-10-16), so the next one must not be tied to an event. Halloween is too early to start. Two-rival escalation is the shape the owner approved for Ryu vs Ken. The samurai kit is the most complete unpublished library we have.
+- **Event:** evergreen
+- **Deadline:** none
+- **Excluded (open episodes):** ryu-vs-ken-last-hadouken (ryu, ken; awaiting upload), batman-unexpected-item (batman, joker; published, stats running). Also excluded: the "hero vs daily chore" pattern the owner rejected (owner-taste memory, EP02 humour 0/10), so bank ideas #2, #4, #8–#18 and #27 are out. Event-tied ideas #3, #5–#7, #11, #12, #17, #19 and #28–#30 are out for now.
+- **Library:** reuse character/ronin, character/warlord, 17 pose/samurai-*, prop/katana, fx/helmet-split, fx/sakura-petals, set/bamboo-grove, the sword SFX in `assets/sfx_bank.json` (OGA StarNinjas, Kenney), and the MacLeod music from samurai-duel. The clash solver and reach QA come from samurai-duel (≈2.5 h to a 28 s final). Build: a sky for the bamboo grove (its black night sky fails the border check), voices for the ronin and warlord (none in voices.json yet), and promote the draft items to approved at G3.
+- **Numbers:**
+  - Fight/rivalry videos hold viewers best. YouTube average % watched: Batman Alley 52.6, Jhin 49.1, Dodgeball 46.6, Shapeshifter 45.6, Wolverine 38.6.
+  - 3D beats stickman on reach: Batman EP02 had 5,947 views on day 1, against 554–1,438 per stickman video in 4–8 days. Its Instagram average watch was 21.5 s.
+  - Risk: no famous character in the hook. Low IP risk (original characters).
+- **Candidates considered:**
+  - #22 High Noon at 11:59 (cowboys): a new cast would have to be built first.
+  - #24 laser-sword duellists and #25 the Trooper: Star Wars parody, a new cast with high build cost.
+  - #26 Henchman #3: this is the rejected "character × mundane" shape.
+- **Status:** episode created 2026-09-26 → **dropped** 2026-09-26 (owner: famous characters for now, not our own)

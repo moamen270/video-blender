@@ -1,0 +1,77 @@
+{
+  "slug": "samurai-standoff",
+  "title": "Samurai Standoff",
+  "status": "dropped",
+  "branch": "ep/samurai-standoff",
+  "updated": "2026-09-26",
+  "next": "Nothing: dropped at phase 0. Owner: famous characters for now, not our own.",
+  "why_now": "evergreen by choice. Ryu vs Ken (uploading 2026-09-27) is already our pending event video (Street Fighter film 2026-10-16), so the next one must not be tied to an event. Halloween is too early to start. Two-rival escalation is the shape the owner approved for Ryu vs Ken. The samurai kit is the most complete unpublished library we have.",
+  "deadline": "",
+  "cast": [
+    "ronin",
+    "warlord"
+  ],
+  "event": "",
+  "gates": {
+    "G1": {
+      "status": "pending",
+      "date": "",
+      "note": "premise"
+    },
+    "G2": {
+      "status": "pending",
+      "date": "",
+      "note": "script"
+    },
+    "G3": {
+      "status": "pending",
+      "date": "",
+      "note": "look of new characters/sets (skipped if all reused)"
+    },
+    "G4": {
+      "status": "pending",
+      "date": "",
+      "note": "animatic: staging and timing"
+    },
+    "G5": {
+      "status": "pending",
+      "date": "",
+      "note": "final"
+    }
+  },
+  "files": {
+    "pitch": "pitch.md",
+    "script": "script.md",
+    "design": "design.md",
+    "lines": "lines.json",
+    "build": "script.py",
+    "social": "social.json"
+  },
+  "final": {
+    "version": null,
+    "release": null
+  },
+  "owner_notes": [],
+  "decisions": [
+    {
+      "date": "2026-09-26",
+      "decision": "dropped at phase 0 (before pitches)",
+      "why": "owner: 'we need famous characters for now, not our own'"
+    }
+  ],
+  "known_issues": [],
+  "lessons": [],
+  "history": [
+    {
+      "date": "2026-09-26",
+      "status": "idea",
+      "note": "created with tools/new_episode.py"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "dropped",
+      "note": "owner wants famous characters for now"
+    }
+  ],
+  "idea_card": "content/IDEAS.md#card-samurai-standoff"
+}
