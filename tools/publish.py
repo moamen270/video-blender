@@ -13,7 +13,9 @@ Only the owner decides WHEN something is published: never run with --go unless t
 YouTube (--platform youtube): uploaded with the OAuth token (tools/youtube_auth.py) as PRIVATE — Google keeps uploads
 from unaudited API projects private; the owner switches it to Public in YouTube Studio. The AI disclosure is set by the
 API (status.containsSyntheticMedia). The pinned comment is not posted on YouTube (needs another scope): add it in Studio.
-TikTok is not supported (its API needs TikTok's audit).
+TikTok (--platform tiktok): the video goes to the @dummysticky INBOX AS A DRAFT (Content Posting API "Upload"); the
+owner opens the TikTok notification, pastes the caption printed here, sets privacy and posts. Direct posting needs
+TikTok's production review. The post id is registered later (tools/stats.py reports new TikTok posts).
 Facebook/Instagram do not expose the AI / altered-content label: turn it on in the app after posting.
 """
 from __future__ import annotations
@@ -171,6 +173,12 @@ def main():
             results[p] = facebook(video, texts["facebook"], texts["pinned"], go=True, at=a.at)
         elif p == "youtube" and a.go:
             results[p] = youtube(video, texts)
+        elif p == "tiktok" and a.go:
+            results[p] = PF.tiktok_upload_draft(video)
+            if results[p].get("publish_id"):
+                time.sleep(10)
+                results[p]["status"] = PF.tiktok_publish_status(results[p]["publish_id"]).get("status")
+                print(f"[publish] TikTok caption to paste in the app:\n{texts['tiktok']}")
         else:
             results[p] = {"error": f"{p}: not supported yet (YouTube needs OAuth, TikTok needs an audit)"}
         print(f"[publish] {p}: {results[p]}")

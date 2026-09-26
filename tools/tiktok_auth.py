@@ -1,7 +1,7 @@
-"""One-time TikTok sign-in (owner approves in the browser): python tools/tiktok_auth.py
+"""One-time TikTok sign-in (owner approves in the browser): python tools/tiktok_auth.py [--relogin]
 
 Needs in the TikTok developer portal: Login Kit (Desktop) with the redirect URI http://127.0.0.1:8766/callback/ and the scopes
-user.info.basic, user.info.stats, video.list (Display API); while unreviewed use the SANDBOX (its own client key/secret →
+user.info.basic, user.info.stats, video.list (Display API), video.upload (Content Posting API, drafts); while unreviewed use the SANDBOX (its own client key/secret →
 secrets.json tiktok_sandbox_client_key/_secret) with @dummysticky added as a target user.
 Saves %USERPROFILE%/.dummysticky/tiktok_token.json, then lists the account's videos as a check.
 """
@@ -11,6 +11,8 @@ import platforms as PF  # noqa: E402
 
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
+    if "--relogin" in sys.argv and os.path.exists(PF.TT_TOKEN):
+        os.remove(PF.TT_TOKEN)          # e.g. after adding a scope in the portal
     if not os.path.exists(PF.TT_TOKEN) and not PF.tiktok_login():
         sys.exit(1)
     vids = PF.tiktok_videos()

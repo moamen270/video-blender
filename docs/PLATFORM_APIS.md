@@ -4,7 +4,8 @@ Goal (owner): Claude publishes videos and pulls numbers/analytics on YouTube, Ti
 official APIs, instead of the owner uploading by hand and `tools/stats.py` reading public pages.
 Status (2026-09-26): **Meta is live** (Facebook + Instagram: publish + insights, system-user token that does not
 expire); **YouTube live** (API key for fresh public numbers + OAuth to the Dummy Sticky channel: YouTube Analytics and private uploads; `tools/youtube_auth.py`); **TikTok: numbers live** via the sandbox
-(Login Kit Desktop + Display API, signed in as Dummy Sticky on 2026-09-26; publishing still needs the production review). Tools: `tools/platforms.py` (secrets + API helpers), `tools/stats.py` (API-first numbers),
+(Login Kit Desktop + Display API, signed in as Dummy Sticky on 2026-09-26; publishing: drafts to the @dummysticky inbox work now via Content Posting API "Upload" (`video.upload`, 2026-09-26) —
+the owner posts from the app; direct posting still needs the production review). Tools: `tools/platforms.py` (secrets + API helpers), `tools/stats.py` (API-first numbers),
 `tools/publish.py` (Facebook/Instagram publishing, dry run by default). Tested: stats for all 6 videos; an Instagram
 upload processed to FINISHED without publishing. Facebook publishing is written but has not posted yet.
 

@@ -47,7 +47,8 @@ A GitHub release alone is a milestone, not done. Until the owner has uploaded, t
   `--go` publishes, `--at <ISO>` schedules on Facebook. Only when the owner asked for it and chose the time.
 - It records the post ids in `analytics/posts.json` and `state.json`; turn on the AI label in each app afterwards.
 - `--platform youtube` uploads PRIVATE with the AI disclosure set (Google keeps unaudited uploads private): the owner
-  switches it to Public in Studio and pins the comment there. TikTok (needs the audit) is still manual.
+  switches it to Public in Studio and pins the comment there. `--platform tiktok` sends the video to the @dummysticky inbox as a DRAFT; the owner pastes the printed caption,
+  sets privacy and posts from the app (direct posting needs TikTok's review).
   Details: `docs/PLATFORM_APIS.md`.
 
 ## After upload

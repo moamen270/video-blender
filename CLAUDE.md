@@ -125,7 +125,8 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
 - 2026-09-26: **Meta API live** (FB + IG publish and insights: avg watch, retention curve, reach, followers);
   **YouTube** (API key + OAuth to the Dummy Sticky channel: Analytics — avg view duration, % watched, retention —
   and uploads, which stay private until Google's audit); **TikTok** numbers via the sandbox app (Display API: views,
-  likes, comments, shares; no retention); TikTok publishing needs the production review (`docs/PLATFORM_APIS.md`).
+  likes, comments, shares; no retention) and **drafts to the TikTok inbox** (`publish.py --platform tiktok`; the owner
+  posts from the app); direct TikTok posting needs the production review (`docs/PLATFORM_APIS.md`).
   Keys in `%USERPROFILE%\.dummysticky\secrets.json` — never commit, print or store them in memory.
   Publishing with `--go` only when the owner says so (Ryu vs Ken: the owner uploads on 2026-09-27).
 - Other repos: `video-builder` has 12 uncommitted changes and 3 unpushed commits and `taxi-trial1` has no GitHub

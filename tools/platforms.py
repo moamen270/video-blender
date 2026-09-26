@@ -209,7 +209,7 @@ def youtube_analytics(ids: list[str], start: str = "2026-09-01", end: str | None
 TT_TOKEN = os.path.join(os.path.dirname(SECRETS), "tiktok_token.json")
 TT_REDIRECT = "http://127.0.0.1:8766/callback/"  # default; register EXACTLY the same string under Login Kit -> Desktop
 #                                                  (override with secrets.json "tiktok_redirect_uri", localhost/127.0.0.1 + port)
-TT_SCOPES = "user.info.basic,user.info.stats,video.list"
+TT_SCOPES = "user.info.basic,user.info.stats,video.list,video.upload"   # video.upload = drafts to the TikTok inbox
 
 
 def _tt_keys() -> tuple[str | None, str | None]:
@@ -304,3 +304,51 @@ def tiktok_videos() -> dict:
             break
         cursor = d.get("cursor")
     return out
+
+
+def tiktok_upload_draft(video: str) -> dict:
+    """Content Posting API "Upload to TikTok": send the file to the signed-in account's inbox as a DRAFT.
+    The owner gets a TikTok notification, edits the caption and posts it from the app (the owner chooses privacy)."""
+    tok = tiktok_access_token()
+    if not tok:
+        return {"error": "no TikTok token: python tools/tiktok_auth.py"}
+    size = os.path.getsize(video)
+    chunk = size if size <= 64 * 1024 * 1024 else 10 * 1024 * 1024          # one chunk up to 64 MB
+    n = max(1, size // chunk)
+    init = urllib.request.Request(
+        "https://open.tiktokapis.com/v2/post/publish/inbox/video/init/",
+        data=json.dumps({"source_info": {"source": "FILE_UPLOAD", "video_size": size, "chunk_size": chunk,
+                                         "total_chunk_count": n}}).encode(),
+        method="POST", headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=UTF-8"})
+    try:
+        with urllib.request.urlopen(init, timeout=60) as r:
+            d = json.load(r)
+    except urllib.error.HTTPError as e:
+        return {"error": e.read().decode("utf-8", "ignore")[:300]}
+    data = d.get("data", {})
+    if not data.get("upload_url"):
+        return {"error": d.get("error")}
+    blob = open(video, "rb").read()
+    for i in range(n):
+        a = i * chunk
+        b = size - 1 if i == n - 1 else a + chunk - 1
+        put = urllib.request.Request(data["upload_url"], data=blob[a:b + 1], method="PUT",
+                                     headers={"Content-Type": "video/mp4", "Content-Length": str(b - a + 1),
+                                              "Content-Range": f"bytes {a}-{b}/{size}"})
+        try:
+            urllib.request.urlopen(put, timeout=600).read()
+        except urllib.error.HTTPError as e:
+            return {"error": f"chunk {i}: " + e.read().decode("utf-8", "ignore")[:200], "publish_id": data.get("publish_id")}
+    return {"publish_id": data["publish_id"], "state": "draft sent to the TikTok inbox"}
+
+
+def tiktok_publish_status(publish_id: str) -> dict:
+    tok = tiktok_access_token()
+    req = urllib.request.Request("https://open.tiktokapis.com/v2/post/publish/status/fetch/",
+                                 data=json.dumps({"publish_id": publish_id}).encode(), method="POST",
+                                 headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=UTF-8"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.load(r).get("data", {})
+    except urllib.error.HTTPError as e:
+        return {"error": e.read().decode("utf-8", "ignore")[:300]}
