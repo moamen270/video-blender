@@ -31,6 +31,13 @@ Any change under `site/` on `main` redeploys (`.github/workflows/pages.yml`).
 - `site/tiktokZpwkIG5QACwbe3eBUPNFoBtyCz2Wvoxz.txt`: TikTok URL-prefix verification for `https://moamen270.github.io/video-blender/` —
   **never delete** (TikTok re-checks it; deleting it un-verifies the app's URLs).
 
+## Status log
+- 2026-09-26: TikTok production app **submitted for review** (Login Kit Desktop, Display API video.list, Content Posting API
+  Upload/drafts; user.info.basic, user.info.stats, video.list, video.upload). Demo video built with `tools/tiktok_demo.py`
+  + the owner's phone clip. Waiting on TikTok ("high volume of requests").
+- 2026-09-26: Google Auth Platform branding completed (site links, no logo) and the app published by the owner; YouTube
+  re-signed in afterwards so the token no longer has the Testing 7-day expiry.
+
 ## Google app: Testing → Production
 - While the Google Auth Platform app is in **Testing**, refresh tokens expire after **7 days** → the YouTube sign-in of
   2026-09-26 stops working ~2026-10-03; renew with `python tools/youtube_auth.py --relogin` (owner approves).

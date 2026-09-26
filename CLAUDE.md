@@ -129,8 +129,8 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
   likes, comments, shares; no retention) and **drafts to the TikTok inbox** (`publish.py --platform tiktok`; the owner
   posts from the app); direct TikTok posting needs the production review (`docs/PLATFORM_APIS.md`).
   Keys in `%USERPROFILE%\.dummysticky\secrets.json` — never commit, print or store them in memory.
-  Google app is in Testing: the YouTube token expires ~2026-10-03 (7-day rule) → `python tools/youtube_auth.py --relogin`
-  until the app is published (needs the Pages site; `docs/PLATFORM_APIS.md`).
+  Google app published by the owner 2026-09-26 (branding done); if YouTube calls ever fail with an expired token:
+  `python tools/youtube_auth.py --relogin`. TikTok production app **in review since 2026-09-26** (direct posting later).
   Publishing with `--go` only when the owner says so (Ryu vs Ken: the owner uploads on 2026-09-27).
 - Other repos: `video-builder` has 12 uncommitted changes and 3 unpushed commits and `taxi-trial1` has no GitHub
   remote; this workspace's GitHub access covers only `moamen270/video-blender`, so the owner pushes those.
