@@ -173,6 +173,11 @@
       "date": "2026-09-26",
       "decision": "Luke hair: back to the first (pack Casual_Male) hair, brown #8a6440, fringe lifted 0.16; sculpted luke_hair() kept unused",
       "why": "owner: 'the first one, make his hair brown and adjust a little, that's it'"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Luke hair = the pack's Casual2_Female hair (spiky swept fringe, long side strands), brown, ponytail cut",
+      "why": "owner reference image: 'make the hair just like this' (matched against all 37 pack hairs)"
     }
   ],
   "known_issues": [

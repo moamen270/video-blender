@@ -513,14 +513,13 @@ def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     boots = L.toon2("luke_boots", "#141418")
     Q.assign(qc, boots, bones=["Foot.L", "Foot.R"])
     Q.assign(qc, boots, bones=["LowerLeg.L", "LowerLeg.R"], z_range=(-1.0, 0.45))
-    # owner 2026-09-26: back to the first hair (the pack's Casual_Male hair, like Ken's), brown, fringe lifted a little
-    # off the brows (luke_hair() = the sculpted alternative, kept but unused)
-    part = Q.take_part(qc, "Casual_Male.blend", "Hair", "hair", hair)
-    for v in part.data.vertices:
-        if v.co.y < 0.0:
-            t_ = max(0.0, min(1.0, (3.0 - v.co.z) / 0.8))
-            v.co.z += 0.16 * t_
-    part.data.update()
+    # owner 2026-09-26 (reference image): the pack's Casual_Female hair — swept layered fringe, longer strands on one
+    # side — in brown (luke_hair() = the sculpted alternative, kept but unused)
+    part = Q.take_part(qc, "Casual2_Female.blend", "Hair", "hair", hair)
+    bmh = bmesh.new(); bmh.from_mesh(part.data)                # cut the pack's ponytail (not in the owner's reference)
+    pony = [f for f in bmh.faces if f.calc_center_median().y > 0.2 and f.calc_center_median().z < 2.35]
+    bmesh.ops.delete(bmh, geom=pony, context="FACES")
+    bmh.to_mesh(part.data); bmh.free(); part.data.update()
     Q.smooth(qc)
     Q.outline(qc.body, 0.010)
     Q.outline(part, 0.010)
