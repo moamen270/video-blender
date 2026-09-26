@@ -27,6 +27,8 @@ does those steps (accounts, verification, consent screens), then Claude builds `
 - Terms of service: https://moamen270.github.io/video-blender/terms.html
 - App icon: https://moamen270.github.io/video-blender/app-icon-1024.png
 Any change under `site/` on `main` redeploys (`.github/workflows/pages.yml`).
+- `site/tiktokZpwkIG5QACwbe3eBUPNFoBtyCz2Wvoxz.txt`: TikTok URL-prefix verification for `https://moamen270.github.io/video-blender/` —
+  **never delete** (TikTok re-checks it; deleting it un-verifies the app's URLs).
 
 ## Google app: Testing → Production
 - While the Google Auth Platform app is in **Testing**, refresh tokens expire after **7 days** → the YouTube sign-in of
