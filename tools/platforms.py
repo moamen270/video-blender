@@ -203,3 +203,100 @@ def youtube_analytics(ids: list[str], start: str = "2026-09-01", end: str | None
                            "completion_pct": round(100 * at(1.0), 1) if curve else None}
         raw[v["video"]] = {"report": v, "length_s": length, "retention": curve}
     return out, raw
+
+
+# ---- TikTok (Login Kit for Desktop + Display API video.list) --------------------------------------------------------
+TT_TOKEN = os.path.join(os.path.dirname(SECRETS), "tiktok_token.json")
+TT_REDIRECT = "http://127.0.0.1:8766/"          # register exactly this under Login Kit -> Desktop -> Redirect URI
+TT_SCOPES = "user.info.basic,user.info.stats,video.list"
+
+
+def _tt_keys() -> tuple[str | None, str | None]:
+    """Sandbox credentials win while the app is unreviewed (sandbox keys differ from production)."""
+    s = secrets()
+    if s.get("tiktok_sandbox_client_key"):
+        return s["tiktok_sandbox_client_key"], s.get("tiktok_sandbox_client_secret")
+    return s.get("tiktok_client_key"), s.get("tiktok_client_secret")
+
+
+def tiktok_login(timeout_s: int = 600) -> bool:
+    """One-time desktop login (PKCE; TikTok desktop uses a HEX sha256 code_challenge). Saves tiktok_token.json."""
+    import hashlib, http.server, secrets as pysecrets, threading, time as _t, webbrowser
+    key, secret = _tt_keys()
+    verifier = pysecrets.token_urlsafe(64)[:64]
+    challenge = hashlib.sha256(verifier.encode()).hexdigest()
+    state = pysecrets.token_urlsafe(16)
+    url = "https://www.tiktok.com/v2/auth/authorize/?" + urllib.parse.urlencode({
+        "client_key": key, "scope": TT_SCOPES, "response_type": "code", "redirect_uri": TT_REDIRECT, "state": state,
+        "code_challenge": challenge, "code_challenge_method": "S256"})
+    got = {}
+
+    class H(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            if q.get("state", [""])[0] == state:
+                got.update({k: v[0] for k, v in q.items()})
+            self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8"); self.end_headers()
+            self.wfile.write(("<h2>Dummy Sticky: TikTok access " + ("granted. You can close this tab." if "code" in got
+                              else "was not granted.") + "</h2>").encode())
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.HTTPServer(("127.0.0.1", 8766), H); srv.timeout = 5
+    print("[tiktok] opening the browser for approval (if it does not open, visit):\n" + url, flush=True)
+    threading.Timer(1.0, lambda: webbrowser.open(url)).start()
+    end = _t.time() + timeout_s
+    while "code" not in got and "error" not in got and _t.time() < end:
+        srv.handle_request()
+    srv.server_close()
+    if "code" not in got:
+        print("[tiktok] no approval:", got.get("error_description") or got.get("error", "timeout"), flush=True)
+        return False
+    tok = http_json("https://open.tiktokapis.com/v2/oauth/token/", data={
+        "client_key": key, "client_secret": secret, "code": got["code"], "grant_type": "authorization_code",
+        "redirect_uri": TT_REDIRECT, "code_verifier": verifier})
+    if "refresh_token" not in tok:
+        print("[tiktok] token exchange failed:", tok.get("error_description") or tok.get("error") or sorted(tok), flush=True)
+        return False
+    json.dump({"refresh_token": tok["refresh_token"], "open_id": tok.get("open_id"), "scope": tok.get("scope")},
+              open(TT_TOKEN, "w"), indent=1)
+    print("[tiktok] access granted; token saved (scopes: %s)" % tok.get("scope"), flush=True)
+    return True
+
+
+def tiktok_access_token() -> str | None:
+    if not os.path.exists(TT_TOKEN):
+        return None
+    key, secret = _tt_keys(); t = json.load(open(TT_TOKEN))
+    r = http_json("https://open.tiktokapis.com/v2/oauth/token/", data={
+        "client_key": key, "client_secret": secret, "grant_type": "refresh_token", "refresh_token": t["refresh_token"]})
+    if r.get("refresh_token") and r["refresh_token"] != t["refresh_token"]:
+        t["refresh_token"] = r["refresh_token"]; json.dump(t, open(TT_TOKEN, "w"), indent=1)
+    return r.get("access_token")
+
+
+def tiktok_videos() -> dict:
+    """video id -> {views, likes, comments, shares} for the signed-in account (Display API video.list)."""
+    tok = tiktok_access_token()
+    if not tok:
+        return {}
+    out, cursor = {}, None
+    for _ in range(10):
+        body = {"max_count": 20, **({"cursor": cursor} if cursor else {})}
+        req = urllib.request.Request(
+            "https://open.tiktokapis.com/v2/video/list/?fields=id,create_time,duration,view_count,like_count,comment_count,share_count",
+            data=json.dumps(body).encode(), method="POST",
+            headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                d = json.load(r).get("data", {})
+        except urllib.error.HTTPError:
+            break
+        for v in d.get("videos", []):
+            out[v["id"]] = {"views": v.get("view_count"), "likes": v.get("like_count"), "comments": v.get("comment_count"),
+                            "shares": v.get("share_count"), "source": "tiktok-display-api"}
+        if not d.get("has_more"):
+            break
+        cursor = d.get("cursor")
+    return out

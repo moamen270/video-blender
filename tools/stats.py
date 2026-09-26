@@ -12,7 +12,8 @@ Sources (best available per platform; tools/platforms.py, keys in %USERPROFILE%/
   avg view duration, % watched, retention curve (3 s + completion), shares, subscribers gained (lags 2-3 days).
   YouTube retention is audienceWatchRatio: it can exceed 100 % (rewatches of the opening).
   Fallback: yt-dlp.
-- TikTok: public profile via yt-dlp (needs `pip install curl_cffi`); no API access yet.
+- TikTok: Display API video.list after tools/tiktok_auth.py (views, likes, comments, shares; no retention);
+  fallback: public profile via yt-dlp (needs `pip install curl_cffi`).
 Raw API answers (incl. the full Facebook retention curve) go to analytics/raw/<date>.json.
 Profile listings also report posts that are not in posts.json yet.
 """
@@ -143,7 +144,7 @@ def main():
             yt[vid].update({k: v for k, v in extra.items() if v is not None})
             yt[vid]["source"] = "youtube-data-api + youtube-analytics"
             yt[vid]["avg_pct"] = extra.get("avg_pct")
-    tt = tiktok_all("dummysticky")
+    tt = PF.tiktok_videos() or tiktok_all("dummysticky")   # Display API when signed in, else the public profile
     rows = []
     for v in posts["videos"]:
         age = (today - dt.date.fromisoformat(v["uploaded"])).days

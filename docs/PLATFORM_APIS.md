@@ -26,7 +26,27 @@ does those steps (accounts, verification, consent screens), then Claude builds `
   the same project → APIs: YouTube Data API v3 + YouTube Analytics API → OAuth consent screen (owner as test user) →
   Credentials → OAuth client ID → Desktop → download `client_secret.json` into `%USERPROFILE%\.dummysticky\`.
   (The API key alone can only read public numbers.)
-- **TikTok:** developer app + Direct Post audit (below).
+- **TikTok** (app "dummy-sticky" exists; production client key/secret saved 2026-09-26). Two tracks:
+  1. **Numbers now — Sandbox (no review):** in the developer portal switch to **Sandbox** → create a sandbox →
+     Products: **Login Kit** (platform **Desktop**, Redirect URI exactly `http://127.0.0.1:8766/`) and **Display API**;
+     Scopes: `user.info.basic`, `user.info.stats`, `video.list` → **Target users → Add account → log in as @dummysticky**
+     → send Claude the **sandbox** client key + secret (they differ from production) → Claude runs
+     `python tools/tiktok_auth.py` and the owner approves in the browser. Remove *Data Portability API* (not needed;
+     it needs its own application).
+  2. **Production + publishing (review):** fill the production form: icon `site/app-icon-1024.png`; Terms / Privacy /
+     website URLs = the GitHub Pages site (`site/`, workflow `.github/workflows/pages.yml`, live after the owner OKs
+     enabling Pages: https://moamen270.github.io/video-blender/terms.html, /privacy.html, /); description and the
+     review explanation below; add **Content Posting API** (`video.upload`, `video.publish`) when we want to post;
+     a demo video recorded in the sandbox showing the sign-in and the stats/posting flow.
+  - Review explanation draft (≤ 1000 chars): "dummy-sticky is a private desktop tool used only by the owner of the
+    Dummy Sticky TikTok account (@dummysticky), an animated comedy channel. Login Kit (Desktop): the owner signs in once
+    with the channel's own account. user.info.basic / user.info.stats: show the channel's own follower and video counts
+    in the owner's production dashboard. video.list: read the view, like, comment and share counts of the channel's
+    own videos so the owner can see which videos work and plan the next one. (With Content Posting API:
+    video.upload / video.publish: publish the channel's own finished videos with their captions instead of uploading
+    them by hand.) The app has no other users, never accesses other accounts, and stores tokens only on the owner's
+    computer."
+- ~~TikTok: developer app + Direct Post audit (below).~~
 - In the apps: turn on the AI/altered-content label after each API post (not exposed by the APIs).
 
 ## What the owner does (once)
