@@ -10,7 +10,7 @@ Gate first: the premise/script is approved by the owner (skill `comedy-pitch`). 
 
 **Process:** `docs/PIPELINE.md` (phases, gates, definition of done). Every episode has `projects/<p>/state.json`:
 read it first, write every owner decision/note into it immediately, update `status` and `next` on each phase change.
-New episode: `python tools/new_episode.py <slug> "Title"`; board: `python tools/board.py`.
+New episode: idea card in `content/IDEAS.md` §6 first (phase 0, `docs/PIPELINE.md`), then `python tools/new_episode.py <card-slug> "Title"`; board: `python tools/board.py`.
 
 ## Skill map (load the one for the work at hand)
 | work | skill |

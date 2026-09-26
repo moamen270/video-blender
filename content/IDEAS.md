@@ -96,3 +96,22 @@ So the first slot uses the samurai kit; famous-character episodes start when the
 - `scripts/02-unexpected-item.md` — full script
 - `scripts/03-for-me-it-was-tuesday.md` — full script
 Each has a Gemini table-read critique and my revision noted at the bottom once reviewed.
+
+## 6. Idea cards (phase 0 output — `tools/new_episode.py` reads these)
+One card per episode, written **before** the episode folder exists (steps: `docs/PIPELINE.md` "Phase 0 steps").
+`new_episode.py <slug>` refuses without a card, with an empty field, or when the cast clashes with an open episode
+or a second event-tied episode would be pending. Format (keep the field names exactly):
+
+```
+### card: <descriptive-kebab-slug>
+- **Title:** ...
+- **Premise:** one sentence (the idea, not yet the pitch; phase 1 writes 3 pitches from it)
+- **Cast:** name, name            (lowercase, as in state.json "cast")
+- **Why now:** ...
+- **Event:** evergreen | <event> YYYY-MM-DD
+- **Deadline:** YYYY-MM-DD | none
+- **Excluded (open episodes):** <slug> (cast), ...
+- **Library:** reuse <catalog ids> · build <new items>
+- **Numbers:** the analytics behind the choice
+- **Status:** card | episode created YYYY-MM-DD
+```

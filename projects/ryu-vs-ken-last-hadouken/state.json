@@ -220,5 +220,10 @@
       "note": "owner scheduled the upload for 2026-09-27"
     }
   ],
-  "upload_date": "2026-09-27"
+  "upload_date": "2026-09-27",
+  "cast": [
+    "ryu",
+    "ken"
+  ],
+  "event": "Street Fighter film release 2026-10-16"
 }

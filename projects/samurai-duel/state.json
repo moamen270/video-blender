@@ -25,5 +25,10 @@
   "final": {
     "version": 6,
     "release": "v0.4.1"
-  }
+  },
+  "cast": [
+    "ronin",
+    "warlord"
+  ],
+  "event": ""
 }

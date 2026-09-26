@@ -16,5 +16,9 @@
       "status": "archived",
       "note": "first pipeline test (release v0.1.0); never published"
     }
-  ]
+  ],
+  "cast": [
+    "cupid"
+  ],
+  "event": ""
 }
