@@ -31,6 +31,9 @@ Any change under `site/` on `main` redeploys (`.github/workflows/pages.yml`).
 - `site/tiktokZpwkIG5QACwbe3eBUPNFoBtyCz2Wvoxz.txt`: TikTok URL-prefix verification for `https://moamen270.github.io/video-blender/` —
   **never delete** (TikTok re-checks it; deleting it un-verifies the app's URLs).
 - `site/google4e892d0c6a0100ee.html`: Google Search Console ownership of the site (Google OAuth branding) — **never delete**.
+- Root site `https://moamen270.github.io/` = repo `moamen270/moamen270.github.io` (owner-managed; outside this workspace's
+  GitHub access): `index.html` forwards to /video-blender/, plus the same Google verification file — **never delete**.
+  Google branding home page = `https://moamen270.github.io/`.
 
 ## Status log
 - 2026-09-26: TikTok production app **submitted for review** (Login Kit Desktop, Display API video.list, Content Posting API
