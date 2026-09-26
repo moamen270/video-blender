@@ -21,7 +21,8 @@
   "text": "I AM YOUR—",
   "emotion": 0.85,
   "speed": 1.05,
-  "note": "angry shout, cut off by the clash"
+  "note": "angry shout, cut off by the clash",
+  "voiceRef": "assets/library/voices_ref/vader_shout_ref.wav"
  },
  {
   "id": "l_what2",
@@ -93,6 +94,7 @@
   "text": "...WHAT?",
   "emotion": 0.8,
   "speed": 1.0,
-  "note": "shouted over the hum; roles swapped"
+  "note": "shouted over the hum; roles swapped",
+  "voiceRef": "assets/library/voices_ref/vader_shout_ref.wav"
  }
 ]

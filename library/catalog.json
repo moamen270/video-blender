@@ -4278,6 +4278,26 @@
    "used_in": [],
    "status": "deprecated",
    "notes": "based on CHARGE (arms behind): use CHARGE_HIP/CHARGE_OUT"
+  },
+  {
+   "id": "voice/vader",
+   "kind": "voice",
+   "name": "vader voice",
+   "description": "chatterbox voice for Darth Vader (parody): Disney Infinity 3.0 Vader reference (16.1 s) modified rubberband pitch=0.95 formant=shifted; shout reference from the 9 loudest game clips",
+   "tags": [
+    "voice",
+    "chatterbox",
+    "star-wars",
+    "vader"
+   ],
+   "source": {
+    "voices": "vader"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [],
+   "status": "draft",
+   "notes": "used before in video-builder The Shapeshifter; shout ref not listened to yet"
   }
  ],
  "internal": [
