@@ -19,7 +19,7 @@ does those steps (accounts, verification, consent screens), then Claude builds `
 |---|---|---|---|---|
 | **Facebook Page** | Reels API `/{page-id}/video_reels` | Page/video insights | none for our own Page: an app in **development mode** can use the admin's own Page with Standard Access (no app review) | **start here** |
 | **Instagram** (Business/Creator linked to the Page) | Graph API media container → publish (Reels) | media insights (plays, likes, saves, shares) | same app as Facebook, own account in dev mode; account must be Business/Creator linked to the FB Page; some sources say Reel insights need ≥ 1,000 followers (we have 6) — verify | with Facebook (one Meta app) |
-| **YouTube** | Data API v3 `videos.insert` (1 unit/call, 100 uploads/day since 2026-06-01) | YouTube Analytics API (views, watch time, retention, subscribers) for our own channel via OAuth | uploads from an **unaudited** project are forced to **private**; the audit (privacy policy, ToS, use case) takes weeks–months | analytics now; upload as private + owner flips to public (or Claude via API after audit); apply for the audit |
+| **YouTube** | Data API v3 `videos.insert` (1 unit/call, 100 uploads/day since 2026-06-01) | YouTube Analytics API (views, watch time, retention, subscribers) for our own channel via OAuth | uploads from an **unaudited** project are forced to **private**; the audit (privacy policy, ToS, use case) takes weeks–months | analytics now; uploads BY HAND in Studio — API uploads are **locked private** (cannot be made public) until the audit |
 | **TikTok** | Content Posting API (Direct Post) | Display API video list (views/likes/comments/shares) — limited, no retention | **unaudited apps post only as SELF_ONLY and the whole account must be private** while posting → unusable for a public channel until TikTok audits the app | apply for the audit; until then upload by hand (or a paid, already-audited posting service) |
 
 ## Public site (live 2026-09-26, GitHub Pages from `site/`)
@@ -36,6 +36,10 @@ Any change under `site/` on `main` redeploys (`.github/workflows/pages.yml`).
   Google branding home page = `https://moamen270.github.io/`.
 
 ## Status log
+- 2026-09-26: correction — YouTube uploads from an unaudited API project are **locked as private** (the owner can NOT make
+  them public; https://support.google.com/youtube/answer/7300965). `publish.py --platform youtube` refuses until
+  secrets.json `youtube_audit_passed` is true. The **YouTube API Services audit is on hold** (owner, 2026-09-26: "we have
+  enough, we can work on it after a while"); when resumed: a recorded demo like tools/tiktok_demo.py + the audit form.
 - 2026-09-26: TikTok production app **submitted for review** (Login Kit Desktop, Display API video.list, Content Posting API
   Upload/drafts; user.info.basic, user.info.stats, video.list, video.upload). Demo video built with `tools/tiktok_demo.py`
   + the owner's phone clip. Waiting on TikTok ("high volume of requests").
@@ -120,7 +124,7 @@ Tools read them from there; nothing is printed or committed. Tokens are revoked 
 
 ## Order
 1. Meta app (Facebook + Instagram): same day, no review → publish + insights for 2 of 4 platforms.
-2. YouTube: OAuth project → analytics immediately; uploads private until the audit (owner flips to public).
+2. YouTube: OAuth project → analytics immediately; uploads by hand until the audit (API uploads are locked private).
 3. TikTok: audit application now; manual uploads meanwhile.
 
 ## Sources (2026-09-26)

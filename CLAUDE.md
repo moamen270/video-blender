@@ -125,7 +125,7 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
   without it (measure audio yourself, WebSearch for research); do not start agy jobs.
 - 2026-09-26: **Meta API live** (FB + IG publish and insights: avg watch, retention curve, reach, followers);
   **YouTube** (API key + OAuth to the Dummy Sticky channel: Analytics — avg view duration, % watched, retention —
-  and uploads, which stay private until Google's audit); **TikTok** numbers via the sandbox app (Display API: views,
+  uploads are NOT used: unaudited API uploads are locked private — YouTube is uploaded by hand; audit on hold); **TikTok** numbers via the sandbox app (Display API: views,
   likes, comments, shares; no retention) and **drafts to the TikTok inbox** (`publish.py --platform tiktok`; the owner
   posts from the app); direct TikTok posting needs the production review (`docs/PLATFORM_APIS.md`).
   Keys in `%USERPROFILE%\.dummysticky\secrets.json` — never commit, print or store them in memory.

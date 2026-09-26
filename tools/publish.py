@@ -10,9 +10,10 @@ Texts: social.json via tools/social.py captions() (Facebook = facebook text, Ins
 the pinned-comment question is posted as the first comment (pinning is done in the app).
 After publishing: post ids go to analytics/posts.json and the episode's state.json (definition of done 1).
 Only the owner decides WHEN something is published: never run with --go unless the owner asked for it.
-YouTube (--platform youtube): uploaded with the OAuth token (tools/youtube_auth.py) as PRIVATE — Google keeps uploads
-from unaudited API projects private; the owner switches it to Public in YouTube Studio. The AI disclosure is set by the
-API (status.containsSyntheticMedia). The pinned comment is not posted on YouTube (needs another scope): add it in Studio.
+YouTube (--platform youtube): DISABLED until the project passes Google's YouTube API audit — uploads from unaudited
+projects are "locked as private" and can NOT be made public in Studio (corrected 2026-09-26). Upload by hand in YouTube
+Studio. The code is kept (private upload with status.containsSyntheticMedia) for after the audit:
+secrets.json "youtube_audit_passed": true enables it.
 TikTok (--platform tiktok): the video goes to the @dummysticky INBOX AS A DRAFT (Content Posting API "Upload"); the
 owner opens the TikTok notification, pastes the caption printed here, sets privacy and posts. Direct posting needs
 TikTok's production review. The post id is registered later (tools/stats.py reports new TikTok posts).
@@ -92,7 +93,7 @@ def facebook(video: str, text: str, comment: str, *, go: bool, at: str | None) -
 
 
 def youtube(video: str, texts: dict) -> dict:
-    """Resumable upload to YouTube (private until the project passes Google's audit)."""
+    """Resumable upload to YouTube — only after the YouTube API audit (before it, uploads are locked private)."""
     tok = PF.youtube_access_token()
     if not tok:
         return {"error": "no YouTube token: python tools/youtube_auth.py"}
@@ -115,7 +116,7 @@ def youtube(video: str, texts: dict) -> dict:
     except urllib.error.HTTPError as e:
         return {"error": e.read().decode("utf-8", "ignore")[:300]}
     return {"post_id": v["id"], "url": f"https://www.youtube.com/shorts/{v['id']}",
-            "state": v.get("status", {}).get("privacyStatus"), "note": "private: switch to Public in YouTube Studio"}
+            "state": v.get("status", {}).get("privacyStatus"), "note": "uploaded via the audited API project"}
 
 
 def record(ep: str, st: dict, version: int, results: dict, day: str) -> None:
@@ -172,7 +173,10 @@ def main():
         elif p == "facebook" and a.go:
             results[p] = facebook(video, texts["facebook"], texts["pinned"], go=True, at=a.at)
         elif p == "youtube" and a.go:
-            results[p] = youtube(video, texts)
+            if PF.secrets().get("youtube_audit_passed"):
+                results[p] = youtube(video, texts)
+            else:
+                results[p] = {"error": "YouTube API uploads are locked private until Google's audit: upload by hand in Studio"}
         elif p == "tiktok" and a.go:
             results[p] = PF.tiktok_upload_draft(video)
             if results[p].get("publish_id"):
