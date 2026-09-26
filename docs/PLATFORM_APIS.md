@@ -40,7 +40,9 @@ Any change under `site/` on `main` redeploys (`.github/workflows/pages.yml`).
   Upload/drafts; user.info.basic, user.info.stats, video.list, video.upload). Demo video built with `tools/tiktok_demo.py`
   + the owner's phone clip. Waiting on TikTok ("high volume of requests").
 - 2026-09-26: Google Auth Platform branding completed (site links, no logo) and the app published by the owner; YouTube
-  re-signed in afterwards so the token no longer has the Testing 7-day expiry.
+  re-signed in afterwards (Dummy Sticky channel, 2026-09-26) so the token no longer has the Testing 7-day expiry.
+  Data Access lists no sensitive scopes → no data-access verification; scopes are requested only at sign-in (do NOT add
+  them to the Data Access page, that triggers Google's review). Branding stays unverified → consent screen warning only.
 
 ## Google app: Testing → Production
 - While the Google Auth Platform app is in **Testing**, refresh tokens expire after **7 days** → the YouTube sign-in of
