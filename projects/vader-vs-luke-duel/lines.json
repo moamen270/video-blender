@@ -13,7 +13,8 @@
   "text": "WHAT?",
   "emotion": 0.8,
   "speed": 1.0,
-  "note": "shouted over the saber noise, honest"
+  "note": "shouted over the saber noise, honest",
+  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav"
  },
  {
   "id": "v_iamyour",
@@ -30,7 +31,8 @@
   "text": "You're my WHAT?!",
   "emotion": 0.85,
   "speed": 1.05,
-  "note": "shouting, hand to ear"
+  "note": "shouting, hand to ear",
+  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav"
  },
  {
   "id": "v_father2",
@@ -86,7 +88,8 @@
   "text": "No... NOOOOOOO!",
   "emotion": 0.95,
   "speed": 0.95,
-  "note": "the famous scream, growing; needs a shouting reference"
+  "note": "the famous scream, growing; needs a shouting reference",
+  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav"
  },
  {
   "id": "v_what",

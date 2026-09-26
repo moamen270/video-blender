@@ -17,7 +17,7 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 | [Cameras](#cameras) | 4 |
 | [Sound effects](#sound-effects) | 44 |
 | [Music](#music) | 5 |
-| [Voices](#voices) | 6 |
+| [Voices](#voices) | 7 |
 
 ## Characters
 
@@ -244,3 +244,4 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 | `voice/ryu` | ryu voice | approved | chatterbox voice for ryu: Reference: 7 calm dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ryu), 15.1 s, supplied by the ow | `ryu` |  |
 | `voice/ken` | ken voice | approved | chatterbox voice for ken: Reference: 7 confident dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ken), 14.2 s, supplied by t | `ken` |  |
 | `voice/vader` | vader voice | draft | chatterbox voice for Darth Vader (parody): Disney Infinity 3.0 Vader reference (16.1 s) modified rubberband pitch=0.95 formant=shifted; shou | `vader` |  |
+| `voice/luke` | luke voice | draft | chatterbox voice for Luke Skywalker (parody): Disney Infinity 3.0 Luke lines, calm + emotional references, modified rubberband pitch=1.04 fo | `luke` |  |

@@ -4297,7 +4297,26 @@
    "origin": "vader-vs-luke-duel",
    "used_in": [],
    "status": "draft",
-   "notes": "used before in video-builder The Shapeshifter; shout ref not listened to yet"
+   "notes": "used before in video-builder The Shapeshifter; shout ref = spoken lines only (clip_scan)"
+  },
+  {
+   "id": "voice/luke",
+   "kind": "voice",
+   "name": "luke voice",
+   "description": "chatterbox voice for Luke Skywalker (parody): Disney Infinity 3.0 Luke lines, calm + emotional references, modified rubberband pitch=1.04 formant=shifted",
+   "tags": [
+    "voice",
+    "chatterbox",
+    "star-wars",
+    "luke"
+   ],
+   "source": {
+    "voices": "luke"
+   },
+   "licence": "parody clone (owner voice policy; references never committed)",
+   "origin": "vader-vs-luke-duel",
+   "used_in": [],
+   "status": "draft"
   }
  ],
  "internal": [

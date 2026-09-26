@@ -23,6 +23,11 @@ first, and render only as a clearly marked motion test.
    Record provenance in `assets/library/LICENSES.md`; references stay out of git (`assets/library/voices_ref/`).
 2. **Segments:** split by silence (`silencedetect=noise=-40dB:d=0.35`), let Gemini Pro (`media`, skill
    `media-review`) pick 6–8 clean in-character lines; join to 10–14 s, mono 24 kHz, loudnorm −20 LUFS.
+   **Game voice packs (The Sounds Resource):** first run `tools/clip_scan.py <folder> <name>` (wav2vec2 ASR →
+   `clips_<name>.csv`: talking vs sound). Dash-named files (`LUK0028-4.wav`) are grunts/jumps/laughs — never
+   use them (a Vader shout ref built from the loudest clips picked 3 grunts, 2026-09-26). Pick calm lines for
+   `<char>_ref` and the loudest/emotional lines for `<char>_shout_ref`, then `tools/make_ref.py` (joins,
+   loudnorm, modifies, keeps `_orig`). Listening check with Gemini when available.
 3. **Modify:** `rubberband=pitch=0.93:formant=shifted` (deeper) / `pitch=1.04:formant=shifted` (lighter);
    keep the unmodified `*_ref_orig.wav` for comparison.
 4. **Casting sheet** `assets/cast/voices.json`: engine (chatterbox by default), voiceRef, emotion (≤ 0.5 for deep

@@ -73,6 +73,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 | `assets/sfx_bank.json`, `assets/library/LICENSES.md` | sound bank (ids → CC0 files) and every asset licence |
 | `kit/` | the library: `qchar` (Quaternius rigs), `cast` (character builders: Batman, Joker, Ryu, Ken…), `fight` (poses, fireballs, rooftop, leaves), `shots` (auto-framed cameras), `face`, `motion` (IK), `captions`, `post` (bloom), `sets`, `fx` |
 | `tools/make.sh` | one command: build → render → mix → `final.mp4` → 4 Hz sheet → `social.md` |
+| `tools/clip_scan.py`, `tools/make_ref.py` | voice packs: label every game clip talking vs sound (ASR) → pick clips → build the modified Chatterbox reference |
 | `tools/voice.py`, `tools/audio.py`, `tools/social.py`, `tools/qa_episode.py` | voices (+ lip sync, word timings), mix/loudness/overlays, upload text, QA |
 | `.agy/BRIEF.md`, `.agy/skills/` | standing rules for the Gemini (agy) worker |
 

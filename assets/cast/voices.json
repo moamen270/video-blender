@@ -45,7 +45,15 @@
    "emotion": 0.4,
    "speed": 0.9,
    "seed": 53,
-   "notes": "Reference: F:/PoCs/video-builder/projects/casting-call/clips/ref-vader.wav (Disney Infinity 3.0 Darth Vader, the one used in The Shapeshifter), trimmed to 16.1 s; modified rubberband pitch=0.95 formant=shifted (deeper). Shouts: vader_shout_ref.wav = 9 loudest Disney Infinity 3.0 Vader clips (VDR0127, 0191, 0180, 0002-2, 0014-6, 0014-5, 0267, 0118, 0251; 18.5 s), same modification. Shout clips picked by loudness only, not listened to yet (Gemini back 2026-09-28): check them before the voice phase. 365 more clips in that folder."
+   "notes": "Reference: F:/PoCs/video-builder/projects/casting-call/clips/ref-vader.wav (Disney Infinity 3.0 Darth Vader, used before in The Shapeshifter), trimmed to 16.1 s; modified rubberband pitch=0.95 formant=shifted (deeper). Shouts: vader_shout_ref.wav (tools/make_ref.py) = 8 loudest SPOKEN game lines VDR0127, 0191, 0180, 0118, 0267, 0233, 0251, 0288 ('No, I am your father'), 19.2 s, same modification. Pack scan (tools/clip_scan.py, 2026-09-26): 365 clips, 178 talking; dash-named files (VDR0014-5...) are grunts, never use them."
+  },
+  "luke": {
+   "engine": "chatterbox",
+   "voiceRef": "assets/library/voices_ref/luke_ref.wav",
+   "emotion": 0.5,
+   "speed": 1.0,
+   "seed": 61,
+   "notes": "Reference: Disney Infinity 3.0 Luke Skywalker pack supplied by the owner 2026-09-26 (blender-video/tmp/star wars, git-ignored). Pack scan (tools/clip_scan.py): 489 clips, 246 talking. luke_ref.wav = 7 calm lines LUK0101, 0273, 0134, 0255, 0168, 0272, 0107 (14.9 s); luke_shout_ref.wav = 7 emotional lines LUK0288 ('No, that's not true, that's impossible'), 0286/0289 ('I'll never join you'), 0158, 0159, 0274, 0160 (18.0 s) — emotional, not very loud. Both modified rubberband pitch=1.04 formant=shifted (a bit lighter/younger)."
   }
  }
 }
