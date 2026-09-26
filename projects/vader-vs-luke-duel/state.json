@@ -123,6 +123,14 @@
       "phase": "design",
       "status": "fixed",
       "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "Luke hair looked like a cap: conform to the skull (no rim), sideburns/ear framing, lower tapered nape, volume on the crown, side part with the fringe sweeping across, strand lines like real hair",
+      "phase": "design",
+      "status": "fixed",
+      "fixed_in": 0
     }
   ],
   "decisions": [
@@ -211,6 +219,11 @@
       "date": "2026-09-26",
       "status": "design",
       "note": "voices locked (l_no_a); build_vader = approved live recipe, verified by headless turnaround"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "design",
+      "note": "luke_hair v3: ray-cast onto the skull, crown volume, side part + swept fringe, sideburns, tapered nape tufts, grooves + darker strand lines; headband geometry removed"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"

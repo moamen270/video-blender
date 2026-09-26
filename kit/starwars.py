@@ -405,53 +405,82 @@ def build_vader(col: bpy.types.Collection | None = None) -> Q.QChar:
 
 
 def luke_hair(qc: Q.QChar, mat, col=None) -> bpy.types.Object:
-    """Luke's hair (owner refs 2026-09-26: LEGO Luke, ROTJ art): a rounded light-brown cap over the head that covers
-    the ears, a fringe swept to his right from a part on his left, down to the nape at the back. Built at rest from the
-    head bounds and parented to the Head bone."""
+    """Luke's hair v3 (owner notes 2026-09-26: 'real hair, not a cap'): laid ON the skull (ray-cast from the head centre
+    to the head mesh), no rim: the offset thins to ~0 at the hairline; volume on the crown; side part on his left with
+    the fringe sweeping across the forehead to his right; sideburns in front of the ears, hair around the ears, a low
+    tapered nape with tufts; strand lines = grooves + darker strand faces that follow the combing flow."""
+    import bmesh
+    from mathutils.bvhtree import BVHTree
     lo, hi = _head_bounds(qc)
     c, h = (lo + hi) / 2, (hi - lo) / 2
+    neck = qc.arm.matrix_world @ qc.arm.data.bones["Head"].head_local
+    mw = qc.body.matrix_world
+    vs = [mw @ v.co for v in qc.body.data.vertices]
+    polys = [p.vertices[:] for p in qc.body.data.polygons if all(vs[i].z > neck.z + 0.02 for i in p.vertices)]
+    tree = BVHTree.FromPolygons(vs, polys)
+    strand = L.toon2("luke_hair_strand", "#6f5236")          # the drawn strand lines
+    PART = math.radians(58)                                    # the part: front, on his left (world +x side)
 
-    def d(phi):
+    def dfront(phi):
         return abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi)
 
-    def edge(phi):                                             # the hair's lower edge height, in head half-sizes
-        a = d(phi)
-        front = 0.26 + 0.22 * math.cos(phi)                     # diagonal swept fringe: low on his right (world -x), high at the part
-        if a < math.radians(62):
-            return front
-        if a < math.radians(105):                               # temples -> over the ears
-            t = (a - math.radians(62)) / math.radians(43)
-            return front + (-0.38 - front) * t
-        t = (a - math.radians(105)) / math.radians(75)          # ears -> nape
-        return -0.38 + (-0.72 + 0.38) * t
+    def interp(x, table):
+        for (x0, y0), (x1, y1) in zip(table, table[1:]):
+            if x0 <= x <= x1:
+                return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+        return table[-1][1]
 
-    def radius(z):                                             # follow the round head, with volume on top
-        if z >= 0:
-            return 1.17 * math.sqrt(max(0.0, 1.0 - (z / 1.30) ** 2))
-        return 1.10 * math.sqrt(max(0.25, 1.0 - (z / 1.10) ** 2))
+    def edge_z(phi):                                           # hairline height (head half-sizes), around the head
+        a = math.degrees(dfront(phi))
+        z = interp(a, [(0, 0.34), (40, 0.30), (58, 0.12), (68, 0.16), (76, -0.42), (84, -0.40), (90, -0.08),
+                       (108, -0.10), (125, -0.40), (150, -0.72), (180, -0.80)])
+        if a < 60:                                             # fringe: low on his right, high at the part
+            z += 0.10 * math.cos(phi)
+            z -= 0.05 * max(0.0, math.cos(9 * (phi - PART))) ** 4   # small fringe tufts
+        elif a > 110:                                          # nape: tapered chunks
+            z -= 0.10 * max(0.0, math.cos(7 * phi)) ** 3
+        return max(-0.95, min(0.95, z))
 
-    LOCKS, TWIST = 11, 0.55                                    # hair locks around the head; how much they sweep sideways
+    def flow(phi, t):                                          # combing: strands sweep from the part across the forehead
+        front = max(0.0, 1.0 - dfront(phi) / math.radians(80))
+        return phi + (0.9 * front + 0.25) * t
 
-    def lock(phi, u):                                          # 1 on a lock's ridge, 0 in the groove between locks
-        return (0.5 + 0.5 * math.cos(LOCKS * (phi + TWIST * u))) ** 2
-
-    def row(u, z_of):                                          # u: 0 at the crown -> 1 at the tips
-        def f(phi):
-            z = z_of(phi)
-            if u >= 0.99:                                      # the tips: each lock ends in a point, lower than the grooves
-                z -= 0.12 * lock(phi, u)
-            tuck = 0.05 * max(0.0, (u - 0.45) / 0.55) * max(0.0, 1.0 - d(phi) / math.radians(62))
-            bump = 0.07 * (u ** 0.8) * lock(phi, u)             # locks stand out more toward the tips
-            return (radius(z) * (1.0 + bump) - tuck, z)
-        return f
-
-    rows = [row(0.0, lambda phi: 1.30)]
-    for u, z in ((0.06, 1.26), (0.16, 1.15), (0.28, 0.98), (0.40, 0.76)):
-        rows.append(row(u, lambda phi, z=z: z))
-    for tt in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0):
-        rows.append(row(0.45 + 0.55 * tt, lambda phi, tt=tt: 0.55 + (edge(phi) - 0.55) * tt))
-    o = _lathe("luke_hair", rows, 176, lambda i, phi: True, mat, col, c + Vector((0, -0.01, 0.0)), h.x, h.y, h.z)
-    o.modifiers["solid"].thickness = 0.03
+    NP, NT = 240, 34
+    bm = bmesh.new()
+    grid = []
+    for j in range(NP):
+        phi = 2 * math.pi * j / NP
+        th_e = math.acos(edge_z(phi))
+        col_ = []
+        for i in range(NT + 1):
+            t = i / NT
+            th = max(1e-3, th_e * t)
+            dvec = Vector((math.sin(th) * math.cos(phi) * h.x, math.sin(th) * math.sin(phi) * h.y, math.cos(th) * h.z))
+            dvec.normalize()
+            hit = tree.ray_cast(c + dvec * 1.0, -dvec)              # from outside: the OUTERMOST surface (over the band)
+            r = (hit[0] - c).length if hit[0] is not None else h.x
+            f = flow(phi, t)
+            lines = (0.5 + 0.5 * math.cos(46 * f)) ** 3               # fine strands
+            tufts = (0.5 + 0.5 * math.cos(9 * f)) ** 2                # chunkier locks
+            part = math.exp(-((dfront(phi) - dfront(PART)) / 0.05) ** 2) * (1 if math.cos(phi) > 0 else 0) * max(0.0, 1 - 1.4 * t)
+            lift = (0.006 + 0.10 * (1 - t) ** 1.3 * (0.55 + 0.45 * math.cos(th))) * (1 - 0.6 * part)
+            lift += 0.010 * tufts * min(1.0, 2 * t) - 0.004 * lines
+            col_.append((bm.verts.new(c + dvec * (r + lift)), lines))
+        grid.append(col_)
+    for j in range(NP):
+        a, b = grid[j], grid[(j + 1) % NP]
+        for i in range(NT):
+            f = bm.faces.new((a[i][0], b[i][0], b[i + 1][0], a[i + 1][0]))
+            f.material_index = 1 if (a[i][1] + b[i][1]) / 2 > 0.72 and i > 1 else 0
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new("luke_hair")
+    bm.to_mesh(me); bm.free()
+    for p in me.polygons:
+        p.use_smooth = True
+    me.materials.append(mat); me.materials.append(strand)
+    o = bpy.data.objects.new("luke_hair", me)
+    C.link(o, col)
     Q.attach_part(qc, o, "Head", "hair")
     return o
 
@@ -475,7 +504,7 @@ def build_luke(col: bpy.types.Collection | None = None) -> Q.QChar:
     import bmesh
     bm = bmesh.new(); bm.from_mesh(qc.body.data)
     hi_ = list(qc.body.data.materials).index(band)
-    tails = [f for f in bm.faces if f.material_index == hi_ and f.calc_center_median().z > 2.98]
+    tails = [f for f in bm.faces if f.material_index == hi_]      # the whole headband (ring + tails): hair goes on the skull
     bmesh.ops.delete(bm, geom=tails, context="FACES")
     bm.to_mesh(qc.body.data); bm.free(); qc.body.data.update()
     cast.shape_arms(qc)
