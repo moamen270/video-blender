@@ -98,42 +98,6 @@
   "emotion": 0.6,
   "speed": 0.95,
   "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav",
-  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
- },
- {
-  "id": "l_no_b",
-  "character": "luke",
-  "text": "No... Noooooo!",
-  "emotion": 0.75,
-  "speed": 0.95,
-  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav",
-  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
- },
- {
-  "id": "l_no_c",
-  "character": "luke",
-  "text": "No... Noooooo!",
-  "emotion": 0.6,
-  "speed": 0.95,
-  "voiceRef": "assets/library/voices_ref/luke_ref.wav",
-  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
- },
- {
-  "id": "l_no_d",
-  "character": "luke",
-  "text": "No... Noooooo!",
-  "emotion": 0.75,
-  "speed": 0.95,
-  "voiceRef": "assets/library/voices_ref/luke_ref.wav",
-  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
- },
- {
-  "id": "l_no_e",
-  "character": "luke",
-  "text": "No. No! Noooo!",
-  "emotion": 0.5,
-  "speed": 0.95,
-  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav",
-  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
+  "note": "CHOSEN by the owner 2026-09-26 (clean; the old l_no had acting but was damaged, the stretched/denoised/high-emotion variants lost)"
  }
 ]

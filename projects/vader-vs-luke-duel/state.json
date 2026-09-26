@@ -4,7 +4,7 @@
   "status": "design",
   "branch": "ep/vader-vs-luke-duel",
   "updated": "2026-09-26",
-  "next": "Mask review with the owner (remaining suggestions 4-7: cheek creases, top edge = helmet V brow, chin tubes, grille recess), then the helmet, then merge them onto the head.",
+  "next": "Owner OKs Luke (G3). Then: source real CC0 saber hum/ignite/retract/clash, pull-cord click, bulb buzz, Vader breathing (owner approves each download), then the animatic (G4) with prop_rules checks.",
   "why_now": "evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).",
   "deadline": "",
   "cast": [
@@ -26,7 +26,7 @@
     "G3": {
       "status": "pending",
       "date": "",
-      "note": "individual sheets in design/ (char_vader, char_luke, poses_vader, poses_luke, props_saber, props_lamp, set corridor) + voice/voices_preview.mp3"
+      "note": "Vader approved ('well done'); props + corridor approved; Luke hair done (locks) — waiting for the owner's final OK on Luke. Code-built turnarounds: design/char_vader.jpg, design/char_luke.jpg"
     },
     "G4": {
       "status": "pending",
@@ -79,9 +79,9 @@
     {
       "date": "2026-09-26",
       "version": 0,
-      "note": "l_no and l_no_long: very noisy",
+      "note": "l_no and l_no_long: very noisy — owner chose l_no_a (emotion 0.6, clean)",
       "phase": "voice",
-      "status": "open",
+      "status": "fixed",
       "fixed_in": 0
     },
     {
@@ -155,11 +155,15 @@
       "date": "2026-09-26",
       "decision": "Luke: keep the build, change only the hair: rounded, light brown (owner refs: LEGO Luke, ROTJ art)",
       "why": "owner"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "voice locked: Luke's scream = l_no_a; old l_no, denoised, stretched and s1-s6 variants deleted",
+      "why": "owner: 'l_no_a win'"
     }
   ],
   "known_issues": [
-    "Saber grip direction in the fist not set yet (blade must leave the thumb side): set in the animatic, prop_rules catches blade-in-body",
-    "Luke NOOO: variants l_no_a/d/e measured clean (flatness 0.081-0.110 vs 0.183 old) — owner picks from voice/fixes_preview.mp3"
+    "Saber grip direction in the fist not set yet (blade must leave the thumb side): set in the animatic, prop_rules catches blade-in-body"
   ],
   "lessons": [],
   "history": [
@@ -202,6 +206,11 @@
       "date": "2026-09-26",
       "status": "design",
       "note": "mask fixes 1-3 (smooth edge, flat eyes, seated nose) applied; backups assets/models/vader_mask_*.blend"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "design",
+      "note": "voices locked (l_no_a); build_vader = approved live recipe, verified by headless turnaround"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"

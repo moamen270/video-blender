@@ -390,56 +390,17 @@ def _vader_helmet(c: Vector, h: Vector, *, gloss, grey, lens, dark, col) -> list
 
 
 def build_vader(col: bpy.types.Collection | None = None) -> Q.QChar:
-    """Darth Vader parody."""
+    """Darth Vader parody — the version the owner approved in the live session (2026-09-26): the plain Quaternius
+    BaseCharacter, vader_suit (black leather suit, glossy gloves/boots, shoulder armour, chest box, belt, cape), and the
+    helmet + mask built as two pieces, centred on the head (R = head half-size x 1.22) and parented to the Head bone."""
     qc = Q.load_character("BaseCharacter.blend", "vader", col=col)
     tc = col or (qc.body.users_collection[0] if qc.body.users_collection else None)
-    black = L.toon2("vader_black", "#16171c")
-    gloss = L.toon2("vader_gloss", "#2a2d35")
-    grey = L.toon2("vader_grey", "#7b808a")
-    dark_grey = L.toon2("vader_dgrey", "#3a3d45")
-    lens = L.toon2("vader_lens", "#0b0c10")
-    for s in qc.body.material_slots:
-        if s.material:
-            s.material = black
-
+    vader_suit(qc, tc)
     lo, hi = _head_bounds(qc)
     c, h = (lo + hi) / 2, (hi - lo) / 2
-    front = hi.y
-    parts = _vader_helmet(c, h, gloss=gloss, grey=grey, lens=lens, dark=dark_grey, col=tc)
-    _attach(qc, parts, "Head", "helmet")
-    qc.arm.pose.bones["Head"].scale = (0.72, 0.72, 0.72)   # smaller head (the helmet follows): less chibi, more menace
-
-    # chest box with lights, found on the chest surface (Batman's emblem position)
-    chest = Q.native(qc, Q.surface_points(qc, [(0.0, 1.62)], bones=["Torso", "Abdomen"], offset=0.01)[0])
-    box = C.cube("vader_chestbox", size=1.0, loc=chest + Vector((0, 0.02, 0.0)), scale=(0.17, 0.035, 0.12),
-                 mat=dark_grey, col=tc)
-    lights = [C.cube(f"vader_light{i}", size=1.0, loc=chest + Vector((-0.05 + 0.05 * i, 0.042, 0.02 - 0.03 * (i == 1))),
-                     scale=(0.028, 0.012, 0.022), mat=FT.emit_mat(f"vader_l{i}", ["#ff3a30", "#36ff6a", "#3a8cff"][i], 7.0),
-                     col=tc) for i in range(3)]
-    _attach(qc, [box, *lights], "Torso", "chest")
-    # shoulder plates
-    for side, k in (("L", 1), ("R", -1)):
-        b = qc.arm.data.bones[f"UpperArm.{side}"]
-        p = qc.arm.matrix_world @ b.head_local
-        sp = C.sphere(f"vader_shoulder.{side}", r=1.0, loc=p + Vector((0, 0.0, 0.05)), scale=(0.13, 0.13, 0.06),
-                      mat=gloss, col=tc)
-        Q.attach_part(qc, sp, "Torso", f"shoulder.{side}")
-    # belt with two silver boxes
-    hip = qc.arm.matrix_world @ qc.arm.data.bones["Abdomen"].head_local
-    belt = C.cylinder("vader_belt", r=1.0, depth=0.07, loc=hip + Vector((0, 0, 0.02)), scale=(0.2, 0.15, 1.0),
-                      mat=dark_grey, col=tc)
-    buckles = [C.cube(f"vader_buckle{s}", size=1.0, loc=hip + Vector((s * 0.08, 0.15, 0.02)), scale=(0.06, 0.02, 0.06),
-                      mat=grey, col=tc) for s in (-1, 1)]
-    _attach(qc, [belt, *buckles], "Abdomen", "belt")
-
-    cape = kit.cape.build_cape(qc, black)
-    black.use_backface_culling = False
-    Q.smooth(qc)
-    Q.smooth(qc, obj=cape)
-    Q.outline(qc.body, 0.010)
-    Q.outline(cape, 0.010)
-    for n in ("vader_helmet", "vader_brow"):
-        Q.outline(bpy.data.objects[n], 0.008)
+    R = max(h.x, h.y, h.z) * 1.22
+    for i, o in enumerate(vader_helmet(c, R, tc) + vader_mask(c, R, tc)):
+        Q.attach_part(qc, o, "Head", f"helmet{i}")
     return qc
 
 

@@ -1,54 +1,54 @@
 {
- "poses:vader:kit.starwars": [
+ "char:vader": [
   [
-   "saber_guard",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_saber_guard.png"
+   "front",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_front.png"
   ],
   [
-   "saber_press",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_saber_press.png"
+   "3/4",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_34.png"
   ],
   [
-   "hand_up",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_hand_up.png"
+   "side",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_side.png"
   ],
   [
-   "look_around",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_look_around.png"
+   "back",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_back.png"
   ],
   [
-   "pull_cord",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_pull_cord.png"
+   "face",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_face.png"
   ],
   [
-   "formal",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_formal.png"
-  ],
-  [
-   "lean_in",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_pose_lean_in.png"
+   "silhouette",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\vader_sil.png"
   ]
  ],
- "poses:luke:kit.starwars": [
+ "char:luke": [
   [
-   "saber_guard",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_pose_saber_guard.png"
+   "front",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_front.png"
   ],
   [
-   "saber_press",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_pose_saber_press.png"
+   "3/4",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_34.png"
   ],
   [
-   "ear_cup",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_pose_ear_cup.png"
+   "side",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_side.png"
   ],
   [
-   "lost",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_pose_lost.png"
+   "back",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_back.png"
   ],
   [
-   "no_scream",
-   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_pose_no_scream.png"
+   "face",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_face.png"
+  ],
+  [
+   "silhouette",
+   "F:\\PoCs\\blender-video\\projects\\vader-vs-luke-duel\\design\\panels\\luke_sil.png"
   ]
  ]
 }
