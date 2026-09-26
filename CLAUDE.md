@@ -47,6 +47,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 ## Important files
 | file | what it is |
 |---|---|
+| `docs/PLATFORM_APIS.md` | plan for publishing + analytics APIs on YouTube, TikTok, Instagram, Facebook: owner setup steps, limits (audits), where secrets live (outside the repo) |
 | `docs/PIPELINE.md` | **the process**: phases, inputs/outputs, gates, lanes, definition of done, `state.json` schema, teams, what exists vs planned |
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
 | `library/catalog.json`, `library/CATALOG.md`, `library/previews/` | **component library**: every character, rig, pose, motion, prop, FX, set, camera move, sound, music track and voice, with source, licence, status and preview |
@@ -114,4 +115,11 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
   2026-09-26: library catalog v1 (182 components, 93 rendered previews, audio waveforms, `library/CATALOG.md`).
   Planned next (owner's list): research lane (events calendar, tech radar,
   asset scouting), pitch PoC tooling, animatic spec + compiler + staging checks, per-team subagents, creator analytics.
-- Ryu vs Ken v40 is ready but not uploaded yet (as far as the repo knows).
+- 2026-09-26: releases v0.4.0 (Batman v21, published) and v0.4.1 (Samurai v6, archived) created; every episode
+  final now has a release.
+- **Ryu vs Ken v40: the owner uploads it on 2026-09-27** (their date, not earlier); then register the post ids.
+- **Gemini (agy) is unavailable until 2026-09-28** (weekly limit used). Until then do listening/research work
+  without it (measure audio yourself, WebSearch for research); do not start agy jobs.
+- Platform APIs: plan in `docs/PLATFORM_APIS.md`, waiting on the owner's developer-app setup (Meta first).
+- Other repos: `video-builder` has 12 uncommitted changes and 3 unpushed commits and `taxi-trial1` has no GitHub
+  remote; this workspace's GitHub access covers only `moamen270/video-blender`, so the owner pushes those.

@@ -15,6 +15,15 @@
       "date": "2026-09-26",
       "status": "archived",
       "note": "early 3D test (v3-v6); never published; its black night sky would FAIL the border check"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "archived",
+      "note": "archived test released as v0.4.1"
     }
-  ]
+  ],
+  "final": {
+    "version": 6,
+    "release": "v0.4.1"
+  }
 }

@@ -4,7 +4,7 @@
   "status": "awaiting-upload",
   "branch": "main",
   "updated": "2026-09-26",
-  "next": "Owner uploads output/v40/final.mp4 to YouTube, TikTok, Instagram and Facebook with output/v40/social.md; then Claude adds the post ids to analytics/posts.json and runs python tools/stats.py at 24 h / 72 h / 7 d.",
+  "next": "Owner uploads on 2026-09-27 (owner's chosen date): output/v40/final.mp4 to YouTube, TikTok, Instagram and Facebook with output/v40/social.md (release v0.3.4 has both). Then Claude adds the post ids to analytics/posts.json and runs python tools/stats.py at 24 h / 72 h / 7 d.",
   "why_now": "Street Fighter live-action film listed for 16 Oct 2026 (verify the date).",
   "deadline": "2026-10-16",
   "gates": {
@@ -167,6 +167,11 @@
       "date": "2026-09-25",
       "decision": "Loop ends on the frame-1 wind-up pose and camera, no flash",
       "why": "owner: a loop continues through the action"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Upload on 2026-09-27, not 2026-09-26",
+      "why": "owner's schedule"
     }
   ],
   "known_issues": [
@@ -208,6 +213,12 @@
       "date": "2026-09-26",
       "status": "awaiting-upload",
       "note": "components catalogued in the library"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "awaiting-upload",
+      "note": "owner scheduled the upload for 2026-09-27"
     }
-  ]
+  ],
+  "upload_date": "2026-09-27"
 }
