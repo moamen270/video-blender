@@ -21,6 +21,14 @@ does those steps (accounts, verification, consent screens), then Claude builds `
 | **YouTube** | Data API v3 `videos.insert` (1 unit/call, 100 uploads/day since 2026-06-01) | YouTube Analytics API (views, watch time, retention, subscribers) for our own channel via OAuth | uploads from an **unaudited** project are forced to **private**; the audit (privacy policy, ToS, use case) takes weeks–months | analytics now; upload as private + owner flips to public (or Claude via API after audit); apply for the audit |
 | **TikTok** | Content Posting API (Direct Post) | Display API video list (views/likes/comments/shares) — limited, no retention | **unaudited apps post only as SELF_ONLY and the whole account must be private** while posting → unusable for a public channel until TikTok audits the app | apply for the audit; until then upload by hand (or a paid, already-audited posting service) |
 
+## Google app: Testing → Production
+- While the Google Auth Platform app is in **Testing**, refresh tokens expire after **7 days** → the YouTube sign-in of
+  2026-09-26 stops working ~2026-10-03; renew with `python tools/youtube_auth.py --relogin` (owner approves).
+- To end that: Branding → Application home page / privacy policy / terms = the GitHub Pages site (`site/`), Authorized
+  domain `moamen270.github.io` (may need Search Console verification) → Audience → **Publish app** (In production).
+  Do **not** upload a logo (that triggers Google's verification review). Unverified production apps show a warning
+  screen at sign-in but tokens no longer expire weekly.
+
 ## Still needed from the owner
 - ~~YouTube OAuth client~~ done 2026-09-26 (signed in as the Dummy Sticky channel `UCPWwluuNVAtYi42L5ilN85Q`; the token is
   rejected if it belongs to another channel). Kept for reference: an **OAuth client** (Desktop app) — Google Cloud console →

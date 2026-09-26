@@ -146,6 +146,10 @@ def youtube_access_token() -> str | None:
     r = http_json("https://oauth2.googleapis.com/token", data={
         "client_id": s["google_client_id"], "client_secret": s["google_client_secret"],
         "refresh_token": t["refresh_token"], "grant_type": "refresh_token"})
+    if not r.get("access_token"):
+        # Google app still in "Testing": refresh tokens die after 7 days (docs/PLATFORM_APIS.md)
+        print("[youtube] sign-in expired or revoked (%s): run  python tools/youtube_auth.py --relogin"
+              % (r.get("error") or "no token"), flush=True)
     return r.get("access_token")
 
 
