@@ -134,3 +134,27 @@ or a second event-tied episode would be pending. Format (keep the field names ex
   - #24 laser-sword duellists and #25 the Trooper: Star Wars parody, a new cast with high build cost.
   - #26 Henchman #3: this is the rejected "character × mundane" shape.
 - **Status:** episode created 2026-09-26 → **dropped** 2026-09-26 (owner: famous characters for now, not our own)
+
+### card: vader-vs-luke-duel
+- **Title:** Vader vs Luke
+- **Premise:** Darth Vader and Luke Skywalker (parody) face off in a lightsaber duel, and the joke lives in the duel between father and son. Phase 1 writes three pitches with different mechanisms.
+- **Cast:** vader, luke
+- **Why now:** evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).
+- **Event:** evergreen
+- **Deadline:** none
+- **Excluded (open episodes):**
+  - ryu-vs-ken-last-hadouken (ryu, ken; fighting-game topic);
+  - batman-unexpected-item (batman, joker);
+  - the rejected "hero vs daily chore" pattern (bank #2, #4, #8–#18, #27; bank #4 was Vader on an IT help desk);
+  - Scorpion vs Sub-Zero: another fighting-game duel right after Ryu vs Ken;
+  - Nintendo/Toei characters (takedown risk).
+- **Library:**
+  - Reuse: the Quaternius base rig (kit.qchar), character/cape (Vader's cape), kit.face, fx/bloom (saber glow), the fight pose/IK system (kit.fight, kit.motion), kit.shots, kit.captions, the voice pipeline (Chatterbox parody clones), and the fireball emissive materials for the blades.
+  - Build: character/vader (helmet, chest box, cape, gloves) and character/luke (black tunic), a prop/lightsaber (hilt plus emissive blade, red/green), and a set (a Death Star corridor or a Bespin-style platform with a bright sky or lit walls, so there is no black border).
+  - Also needed: saber hum and clash sounds from real CC0 recordings (no synth), and voice references for Vader and Luke from the owner.
+- **Numbers:**
+  - Famous characters get the reach: Batman 3D had 5,947 views on day 1 and 6,165 on YouTube by day 2.
+  - Our own casts did worse: The Shapeshifter got 322 on YouTube and Dodgeball/Noodle 456, against Batman Alley at 808 on YouTube with 52.6% watched.
+  - Duels and fights hold viewers best: Batman Alley 52.6%, Jhin 49.1%, Dodgeball 46.6% watched.
+  - Risk: Disney IP (parody, medium risk). Two new characters mean a design gate (G3).
+- **Status:** episode created 2026-09-26

@@ -132,7 +132,7 @@ main context small) come when a phase has a contract and a checker a weaker mode
 | events calendar, tech radar, asset scouting routine | ❌ planned (Research lane) |
 | library catalog with previews + search/check/harvest/gallery (`tools/catalog.py`, `tools/catalog_preview.py`) | ✅ 2026-09-26 (182 items) |
 | asset scouting into the library (Poly Haven, Kenney, Quaternius, CMU mocap…), motion clips, more sets | ❌ planned |
-| pitch PoC tooling (storyboard stills / stickman clip via video-builder) | ❌ planned |
+| pitch PoC tooling: storyboard stills from `poc/storyboard.json` (`tools/storyboard.py`: stand-ins, sabers, sets, overlays, board) | ✅ 2026-09-26 (stickman clip: not needed yet) |
 | animatic spec (`shots.json`) + compiler + staging checks (facing, distance, FX over bodies, frame edges) | ❌ planned — biggest win |
 | per-team subagents, blender-video MCP tools | ❌ planned |
 | publishing + creator analytics via platform APIs (`docs/PLATFORM_APIS.md`) | 🟡 Meta live (FB/IG publish + insights); YouTube live (Analytics + private uploads); TikTok numbers live + drafts to the inbox (sandbox); direct posting pending (review) |

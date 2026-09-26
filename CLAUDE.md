@@ -57,6 +57,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
 | `library/catalog.json`, `library/CATALOG.md`, `library/previews/` | **component library**: every character, rig, pose, motion, prop, FX, set, camera move, sound, music track and voice, with source, licence, status and preview |
 | `tools/catalog.py`, `tools/catalog_preview.py` | library search / check / harvest / gallery; Blender preview renderer |
+| `tools/storyboard.py` | pitch PoC (G1): renders `projects/<p>/poc/storyboard.json` panels (library characters or PoC stand-ins, sabers, sets, text overlays) → `poc/board.jpg` |
 | `tools/board.py`, `tools/new_episode.py`, `templates/episode/` | Kanban board of episodes; new-episode scaffold; phase templates |
 | `README.md` | layout, `make.sh`, live Blender-MCP loop |
 | `.claude/skills/blender-episode/SKILL.md` | **how to make an episode** + skill map (hook-script, character-build, voice-casting, motion-acting, shot-design, sound-design, vfx-sets, episode-review, publish-release) |
@@ -81,6 +82,8 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 Live status is in each `state.json` (`python tools/board.py`); summary:
 | project | status |
 |---|---|
+| `vader-vs-luke-duel` | `pitch` — 3 pitches + storyboard PoC waiting for G1 |
+| `samurai-standoff` | `dropped` at phase 0 (owner: famous characters for now) |
 | `ryu-vs-ken-last-hadouken` | `awaiting-upload` — Street Fighter loop, 18 s, final v40 = release v0.3.4. Owner: "not bad, I like it" |
 | `batman-unexpected-item` | `published` 2026-09-24 — final v21; owner story 0/10, humour 0/10, style 4/10; Facebook flagged a border |
 | `cupid-had-one-job` | `archived` — first pipeline test, v0.1.0 |
@@ -95,6 +98,7 @@ python tools/social.py <p> [--version N]  # regenerate social.md from social.jso
 python tools/stats.py                     # snapshot numbers (APIs: FB/IG insights, YouTube key; TikTok public)
 python tools/publish.py <p> --platform facebook,instagram [--go] [--at ISO]   # dry run without --go
 python tools/board.py                     # episode board: status, next action, DoD gaps
+python tools/storyboard.py <p> [--only A1]   # pitch PoC stills -> projects/<p>/poc/board.jpg
 python tools/new_episode.py <slug> "Title" # scaffold a new episode from templates/episode
 python tools/catalog.py search <text> [--kind K] [--tag T]   # find reusable components (check|harvest|gallery|show)
 /f/blender/blender.exe -b --python tools/catalog_preview.py -- --ids <id,...>   # render a component preview

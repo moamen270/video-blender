@@ -1,0 +1,77 @@
+{
+  "slug": "vader-vs-luke-duel",
+  "title": "Vader vs Luke",
+  "status": "pitch",
+  "branch": "ep/vader-vs-luke-duel",
+  "updated": "2026-09-26",
+  "next": "Owner picks one of pitches A (The Hand), B (The Longest Fall), C (I Am Your WHAT?) or rejects all (gate G1): pitch.md + poc/board.jpg. On approval: write script.md (phase 2).",
+  "why_now": "evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).",
+  "deadline": "",
+  "cast": [
+    "vader",
+    "luke"
+  ],
+  "event": "",
+  "gates": {
+    "G1": {
+      "status": "pending",
+      "date": "",
+      "note": "premise: pitch.md + poc/board.jpg (storyboard stills, stand-ins)"
+    },
+    "G2": {
+      "status": "pending",
+      "date": "",
+      "note": "script"
+    },
+    "G3": {
+      "status": "pending",
+      "date": "",
+      "note": "look of new characters/sets (skipped if all reused)"
+    },
+    "G4": {
+      "status": "pending",
+      "date": "",
+      "note": "animatic: staging and timing"
+    },
+    "G5": {
+      "status": "pending",
+      "date": "",
+      "note": "final"
+    }
+  },
+  "files": {
+    "pitch": "pitch.md",
+    "script": "script.md",
+    "design": "design.md",
+    "lines": "lines.json",
+    "build": "script.py",
+    "social": "social.json"
+  },
+  "final": {
+    "version": null,
+    "release": null
+  },
+  "owner_notes": [],
+  "decisions": [
+    {
+      "date": "2026-09-26",
+      "decision": "famous cast: Vader and Luke (parody)",
+      "why": "owner: famous characters for now; Ryu/Ken and Batman/Joker are open episodes; no event (Ryu vs Ken is the pending event video)"
+    }
+  ],
+  "known_issues": [],
+  "lessons": [],
+  "history": [
+    {
+      "date": "2026-09-26",
+      "status": "idea",
+      "note": "created with tools/new_episode.py"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "pitch",
+      "note": "3 pitches + storyboard PoC (tools/storyboard.py) sent for G1"
+    }
+  ],
+  "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"
+}
