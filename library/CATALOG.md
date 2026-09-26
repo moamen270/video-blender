@@ -131,9 +131,9 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 
 ## Effects
 
-| <img src="previews/fx__fireball.jpg" width="120"> | <img src="previews/fx__maple-leaves.jpg" width="120"> |
-|---|---|
-| **Hadouken fireball**<br>`fx/fireball`<br>approved | **Autumn maple leaves + wind**<br>`fx/maple-leaves`<br>approved |
+| <img src="previews/fx__fireball.jpg" width="120"> | <img src="previews/fx__maple-leaves.jpg" width="120"> | <img src="previews/fx__sakura-petals.jpg" width="120"> |
+|---|---|---|
+| **Hadouken fireball**<br>`fx/fireball`<br>approved | **Autumn maple leaves + wind**<br>`fx/maple-leaves`<br>approved | **Sakura petals (falling)**<br>`fx/sakura-petals`<br>approved |
 
 | id | name | status | what | source | preview |
 |---|---|---|---|---|---|
@@ -145,7 +145,6 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 | `fx/dust` | dust | approved | Dust puffs. | `kit.fx:dust` |  |
 | `fx/helmet-split` | helmet_split | approved | Helmet splits in two. | `kit.fx:helmet_split` |  |
 | `fx/smoke-puff` | Smoke puff | approved | Smoke bomb puff (geometry spheres). | `kit.props:smoke_puff` |  |
-| `fx/petals` | Falling petals | approved | Falling petals for the bamboo stage. | `kit.stage:petals` |  |
 | `fx/portal` | ~~Portal (2D)~~ | deprecated | Swirling 2D portal for cut-out style. | `kit.cutout:Portal` |  |
 | `fx/light-flicker` | Tube-light flicker | approved | Flicker the Gotham Mart tube light over frame ranges. | `kit.sets:flicker` |  |
 

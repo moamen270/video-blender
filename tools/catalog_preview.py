@@ -123,6 +123,12 @@ def build(item: dict) -> bpy.types.Object:
             fb.key(1, (0, 0, 1.0), 0.3)
             post.setup(threshold=0.9, strength=0.55, size=0.35)
             return C.camera("cam_prev", (0.0, 2.4, 1.0), (0, 0, 1.0), lens=50)
+        if r["builder"] == "sakura":
+            from kit import stage
+            look.store_night(target=(0, 0, 2.0))
+            stage.petals(count=400, f0=1, f1=160)
+            bpy.context.scene.frame_set(100)
+            return C.camera("cam_prev", (0.0, -3.4, 2.2), (0, 0.0, 2.2), lens=40)
         if r["builder"] == "leaves":
             fight.sunset_lights()
             fight.Leaves(n=40, size=(0.065, 0.11)).animate(lambda f: 2.0, 1, 48)
@@ -161,7 +167,7 @@ def render(item: dict, force: bool) -> str:
     scene.render.image_settings.file_format = "JPEG"
     scene.render.image_settings.quality = 85
     scene.render.filepath = path
-    if scene.frame_current not in (1, 12):
+    if scene.frame_current not in (1, 12, 100):
         scene.frame_set(1)
     bpy.ops.render.render(write_still=True)
     item["preview"]["image"] = os.path.relpath(path, ROOT).replace("\\", "/")

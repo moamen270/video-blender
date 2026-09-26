@@ -2769,13 +2769,18 @@
    "status": "approved"
   },
   {
-   "id": "fx/petals",
+   "id": "fx/sakura-petals",
    "kind": "fx",
-   "name": "Falling petals",
-   "description": "Falling petals for the bamboo stage.",
+   "name": "Sakura petals (falling)",
+   "description": "Falling pink cherry-blossom (sakura) petals: small toon planes (#f4b6c8, slight glow) drifting and spinning down over a frame range. Used over the moonlit bamboo grove in the samurai duel.",
    "tags": [
+    "sakura",
+    "cherry-blossom",
     "petals",
-    "japan"
+    "pink",
+    "japan",
+    "spring",
+    "ambient"
    ],
    "source": {
     "kit": "kit.stage:petals"
@@ -2785,7 +2790,13 @@
    "used_in": [
     "samurai-duel"
    ],
-   "status": "approved"
+   "status": "approved",
+   "preview": {
+    "recipe": "fx",
+    "builder": "sakura",
+    "image": "library/previews/fx__sakura-petals.jpg"
+   },
+   "notes": "each petal is a plain rectangle (0.04 x 0.03 m), not a petal shape; not loop-exact (unlike the maple leaves). Upgrade candidate: petal-shaped mesh + the Leaves wind/loop logic."
   },
   {
    "id": "fx/portal",
