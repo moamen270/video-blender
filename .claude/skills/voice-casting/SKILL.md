@@ -37,6 +37,12 @@ first, and render only as a clearly marked motion test.
    bagging area"; ellipsis for pauses).
 
 ## Directing lines (every line, not only the big ones)
+- **Never write a word in ALL CAPS in `lines.json`.** Chatterbox spells capitals as letters ("I AM YOUR" came out
+  as "I. A. M." and "WHAT" as "W-H-A-T": owner 2026-09-26). Put the shout in `emotion`, the voiceRef (`*_shout_ref`)
+  and punctuation ("What?!"), never in the case.
+- **Screams:** emotion ≥ 0.9 on an emotional reference made Luke's "NOOO" rasp/noisy (spectral flatness 0.18 vs
+  0.08–0.11 on clean lines). Generate 3–5 variants at emotion 0.5–0.75 and rank them with the noise measure
+  (median spectral flatness of the loud frames; keep ≤ 0.12) before the owner listens.
 - Each line in `lines.json` carries its direction: `emotion` (Chatterbox exaggeration, 0.3 flat → 0.9 manic),
   `speed`, and pauses (ellipsis / `pauseAfter`). Write the intent next to it in the episode log.
 - Split a line where the delivery changes ("I am vengeance. I am the night." → dramatic, higher emotion;

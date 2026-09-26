@@ -53,6 +53,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 | `tools/platforms.py`, `tools/publish.py`, `tools/youtube_auth.py` | API keys/helpers (secrets outside the repo); publish to Facebook/Instagram/YouTube (dry run unless `--go`; only when the owner asks); one-time YouTube sign-in |
 | `site/` | public pages (home, privacy, terms, app icon) at https://moamen270.github.io/video-blender/ — required by the Google and TikTok app reviews |
 | `docs/PLATFORM_APIS.md` | plan for publishing + analytics APIs on YouTube, TikTok, Instagram, Facebook: owner setup steps, limits (audits), where secrets live (outside the repo) |
+| `docs/PROPS.md`, `kit/checks.py` | **prop rules**: a prop's state changes only through its action (saber: holder's thumb; lamp: pull the cord); nobody touches a lit blade; `prop_rules()` checks every build |
 | `docs/PIPELINE.md` | **the process**: phases, inputs/outputs, gates, lanes, definition of done, `state.json` schema, teams, what exists vs planned |
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
 | `library/catalog.json`, `library/CATALOG.md`, `library/previews/` | **component library**: every character, rig, pose, motion, prop, FX, set, camera move, sound, music track and voice, with source, licence, status and preview |

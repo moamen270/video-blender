@@ -13,16 +13,16 @@
   "text": "WHAT?",
   "emotion": 0.8,
   "speed": 1.0,
-  "note": "shouted over the saber noise, honest",
+  "note": "shouted over the saber noise; owner OK with this take (2026-09-26) — keep",
   "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav"
  },
  {
   "id": "v_iamyour",
   "character": "vader",
-  "text": "I AM YOUR—",
+  "text": "I am your!",
   "emotion": 0.85,
   "speed": 1.05,
-  "note": "angry shout, cut off by the clash",
+  "note": "angry shout, cut off by the clash; ALL CAPS made Chatterbox spell letters (owner 2026-09-26): normal case only",
   "voiceRef": "assets/library/voices_ref/vader_shout_ref.wav"
  },
  {
@@ -83,21 +83,57 @@
   "note": "clear, formal, finally heard"
  },
  {
-  "id": "l_no",
-  "character": "luke",
-  "text": "No... NOOOOOOO!",
-  "emotion": 0.95,
-  "speed": 0.95,
-  "note": "the famous scream, growing; needs a shouting reference",
-  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav"
- },
- {
   "id": "v_what",
   "character": "vader",
-  "text": "...WHAT?",
+  "text": "What?!",
   "emotion": 0.8,
   "speed": 1.0,
-  "note": "shouted over the hum; roles swapped",
+  "note": "shouted over the hum; roles swapped; ALL CAPS made Chatterbox spell letters: normal case only",
   "voiceRef": "assets/library/voices_ref/vader_shout_ref.wav"
+ },
+ {
+  "id": "l_no_a",
+  "character": "luke",
+  "text": "No... Noooooo!",
+  "emotion": 0.6,
+  "speed": 0.95,
+  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav",
+  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
+ },
+ {
+  "id": "l_no_b",
+  "character": "luke",
+  "text": "No... Noooooo!",
+  "emotion": 0.75,
+  "speed": 0.95,
+  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav",
+  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
+ },
+ {
+  "id": "l_no_c",
+  "character": "luke",
+  "text": "No... Noooooo!",
+  "emotion": 0.6,
+  "speed": 0.95,
+  "voiceRef": "assets/library/voices_ref/luke_ref.wav",
+  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
+ },
+ {
+  "id": "l_no_d",
+  "character": "luke",
+  "text": "No... Noooooo!",
+  "emotion": 0.75,
+  "speed": 0.95,
+  "voiceRef": "assets/library/voices_ref/luke_ref.wav",
+  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
+ },
+ {
+  "id": "l_no_e",
+  "character": "luke",
+  "text": "No. No! Noooo!",
+  "emotion": 0.5,
+  "speed": 0.95,
+  "voiceRef": "assets/library/voices_ref/luke_shout_ref.wav",
+  "note": "NOOO variant (owner: l_no was very noisy at emotion 0.95)"
  }
 ]

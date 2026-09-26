@@ -187,12 +187,59 @@ class Lightsaber:
             rig.attach(self.root, qc.arm, f"Fist.{side}")
 
     def key(self, frame: int, on: float) -> None:
+        """Low-level blade length key. Scenes use ignite()/retract() (docs/PROPS.md: a state change needs its action)."""
         self.blade.scale = (1, 1, max(on, 0.001) * self.length)
         self.blade.hide_render = on <= 0.001
         self.blade.keyframe_insert("scale", frame=frame)
         for o in self.blade.children:
             o.hide_render = on <= 0.001
             o.keyframe_insert("hide_render", frame=frame)
+
+    # --- actions (docs/PROPS.md) ---------------------------------------------------------------------
+    holder = None
+    side = "R"
+
+    def hold(self, qc: Q.QChar, side: str = "R") -> None:
+        """Put the hilt in the fist (bone-parented at the grip point)."""
+        from kit import rig
+        bpy.context.view_layer.update()
+        self.root.location = qc.arm.matrix_world @ qc.arm.pose.bones[f"Fist.{side}"].tail
+        rig.attach(self.root, qc.arm, f"Fist.{side}")
+        self.holder, self.side = qc, side
+
+    def _thumb(self, frame: int) -> None:
+        """The thumb press: a 2-frame wrist tick on the holder's fist."""
+        if self.holder is None:
+            raise RuntimeError("a saber is switched by its holder: call hold() first (docs/PROPS.md)")
+        pb = self.holder.arm.pose.bones[f"Fist.{self.side}"]
+        pb.rotation_mode = "XYZ"
+        for f, a in ((frame - 3, 0.0), (frame - 1, 9.0), (frame + 1, 0.0)):
+            pb.rotation_euler = (math.radians(a), 0, 0)
+            pb.keyframe_insert("rotation_euler", frame=f)
+
+    def ignite(self, frame: int, frames: int = 5) -> dict:
+        """The holder's thumb press, then the blade grows over `frames`. Returns the sound cue (on `frame`)."""
+        self._thumb(frame)
+        self.key(frame - 1, 0.0)
+        for i in range(1, frames + 1):
+            self.key(frame + i - 1, i / frames)
+        self.events = getattr(self, "events", []) + [("ignite", frame)]
+        return {"frame": frame, "sfx": "saber_ignite"}
+
+    def retract(self, frame: int, frames: int = 4) -> dict:
+        self._thumb(frame)
+        self.key(frame - 1, 1.0)
+        for i in range(1, frames + 1):
+            self.key(frame + i - 1, 1.0 - i / frames)
+        self.events = getattr(self, "events", []) + [("retract", frame)]
+        return {"frame": frame, "sfx": "saber_retract"}
+
+    def core_points(self, n: int = 12) -> list:
+        """World points along the lit blade core at the current frame ([] when off)."""
+        if self.blade.scale.z <= 0.002 or self.blade.hide_render:
+            return []
+        m = self.blade.matrix_world
+        return [m @ Vector((0, 0, (i + 0.5) / n)) for i in range(n)]
 
 
 # ------------------------------------------------------------------ set: a Death Star-style corridor
@@ -301,6 +348,32 @@ class PullLamp:
         em.inputs["Strength"].keyframe_insert("default_value", frame=frame)
         self.light.data.energy = energy if on else 0.0
         self.light.data.keyframe_insert("energy", frame=frame)
+
+    def pull(self, qc: Q.QChar, frame: int, side: str = "R") -> dict:
+        """The only way to switch the lamp (docs/PROPS.md): the fist is on the bead 3 frames before `frame`, pulls it
+        down 8 cm by `frame` (state toggles + click there) and lets go; then the lamp swings. Keys the hand's IK target
+        (kit.fight.prepare must have run; key the reach before this). Returns the sound cue."""
+        bpy.context.scene.frame_set(frame - 3)
+        bpy.context.view_layer.update()
+        bead0 = self.bead.matrix_world.translation.copy()
+        emp = qc.parts[f"ik.{side}"]
+        con = next(c for c in qc.arm.pose.bones[f"LowerArm.{side}"].constraints if c.type == "IK")
+        emp.location = bead0; emp.keyframe_insert("location", frame=frame - 3)
+        con.influence = 1.0; con.keyframe_insert("influence", frame=frame - 3)
+        emp.location = bead0 - Vector((0, 0, 0.08)); emp.keyframe_insert("location", frame=frame)
+        bl = self.bead.location.copy()                     # the bead follows the hand down, then springs back
+        self.bead.keyframe_insert("location", frame=frame - 3)
+        self.bead.location = bl - Vector((0, 0, 0.08)); self.bead.keyframe_insert("location", frame=frame)
+        self.bead.location = bl; self.bead.keyframe_insert("location", frame=frame + 3)
+        self.state = not getattr(self, "state", False)
+        self.key_on(frame - 1, not self.state)
+        self.key_on(frame, self.state)
+        for fc in C.fcurves(self.light.data):
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
+        self.swing(frame)
+        self.events = getattr(self, "events", []) + [("pull", frame, qc.name, side)]
+        return {"frame": frame, "sfx": "pull_cord_click"}
 
     def swing(self, frame: int, amp_deg: float = 14.0, frames: int = 60, period: int = 22) -> None:
         for i in range(0, frames + 1, 2):

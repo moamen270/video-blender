@@ -67,6 +67,62 @@
       "phase": "design",
       "status": "fixed",
       "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "v_what and v_iamyour: sounds like he is spelling letters, can't understand — cause: ALL CAPS text spelled as letters; now normal case (skill rule added)",
+      "phase": "voice",
+      "status": "fixed",
+      "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "l_no and l_no_long: very noisy",
+      "phase": "voice",
+      "status": "open",
+      "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "Vader looks weird",
+      "phase": "design",
+      "status": "open",
+      "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "Can't tell the difference between Ken and Luke",
+      "phase": "design",
+      "status": "open",
+      "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "Both costumes look like pajamas",
+      "phase": "design",
+      "status": "open",
+      "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "Hands are very poor",
+      "phase": "design",
+      "status": "open",
+      "fixed_in": 0
+    },
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "Characters must interact with props: sabers switch on/off; rules: nobody may touch a lit blade (a very bad scene); the lamp turns on/off only by pulling the rope; props that come with actions need usage rules — docs/PROPS.md + Lightsaber.hold/ignite/retract, PullLamp.pull, kit/checks.py prop_rules (tested: catches blade-in-body and lamp-without-hand)",
+      "phase": "design",
+      "status": "fixed",
+      "fixed_in": 0
     }
   ],
   "decisions": [
@@ -79,9 +135,17 @@
       "date": "2026-09-26",
       "decision": "premise C + owner's pull-cord lamp beat in the dark",
       "why": "owner G1; also removes the long dark screen (border/viewer risk)"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "approved as is: the other 10 voice lines, the props (saber, lamp) and the corridor",
+      "why": "owner G3/voice review"
     }
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Saber grip direction in the fist not set yet (blade must leave the thumb side): set in the animatic, prop_rules catches blade-in-body",
+    "Luke NOOO: variants l_no_a/d/e measured clean (flatness 0.081-0.110 vs 0.183 old) — owner picks from voice/fixes_preview.mp3"
+  ],
   "lessons": [],
   "history": [
     {
@@ -113,6 +177,11 @@
       "date": "2026-09-26",
       "status": "design",
       "note": "components built (kit/starwars.py) and shown individually; voices generated (l_no stretched by shout.py)"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "design",
+      "note": "owner G3 notes: props + corridor OK; Vader, Luke, costumes, hands rejected; 2 Vader shouts + Luke NOOO voices bad; prop-interaction rules requested"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"

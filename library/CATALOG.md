@@ -129,8 +129,8 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 | id | name | status | what | source | preview |
 |---|---|---|---|---|---|
 | `prop/katana` | Katana + scabbard | draft | Katana built along the sword bone of the samurai rig. | `kit.samurai:build_katana` |  |
-| `prop/lightsaber` | Lightsaber | draft | Hilt + white core + coloured translucent glow; key(frame, on 0..1) ignites/retracts from the emitter; follows a fist when given a character. | `kit.starwars:Lightsaber` |  |
-| `prop/pull-cord-lamp` | Bare bulb on a pull cord | draft | Hanging flex, socket, bulb (emission keyed), pull cord with bead, warm point light; key_on(frame, on), swing(frame) damped swing. | `kit.starwars:PullLamp` |  |
+| `prop/lightsaber` | Lightsaber | approved | Hilt + white core + coloured translucent glow; key(frame, on 0..1) ignites/retracts from the emitter; follows a fist when given a character. | `kit.starwars:Lightsaber` |  |
+| `prop/pull-cord-lamp` | Bare bulb on a pull cord | approved | Hanging flex, socket, bulb (emission keyed), pull cord with bead, warm point light; key_on(frame, on), swing(frame) damped swing. | `kit.starwars:PullLamp` |  |
 
 ## Effects
 
@@ -161,7 +161,7 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 |---|---|---|---|---|---|
 | `set/meadow` | Cupid meadow | draft | Early studio-core meadow (sky, hills, trees). | `projects/cupid-had-one-job/script.py` |  |
 | `set/garage-2d` | ~~Garage (2D backdrop)~~ | deprecated | Flat 2D garage backdrop for cut-out style. | `kit.cutout:backdrop` |  |
-| `set/death-star-corridor` | Death Star corridor | draft | Grey panelled corridor (floor grating, wall panels, light strips, ceiling lights, octagonal door); corridor_lights() + key_mood(lights, fram | `kit.starwars:death_star_corridor` |  |
+| `set/death-star-corridor` | Death Star corridor | approved | Grey panelled corridor (floor grating, wall panels, light strips, ceiling lights, octagonal door); corridor_lights() + key_mood(lights, fram | `kit.starwars:death_star_corridor` |  |
 
 ## Set parts
 

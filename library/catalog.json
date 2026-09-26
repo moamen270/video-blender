@@ -4395,8 +4395,15 @@
    "used_in": [
     "vader-vs-luke-duel"
    ],
-   "status": "draft",
-   "notes": "G3 sheet projects/vader-vs-luke-duel/design/props_saber.jpg"
+   "status": "approved",
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/props_saber.jpg",
+   "actions": [
+    "hold(qc, side)",
+    "ignite(frame)",
+    "retract(frame)",
+    "clash"
+   ],
+   "rules": "docs/PROPS.md: switched only by its holder (thumb press); nobody touches a lit blade (>= 4 cm from every body, kit/checks.py); blades touch only blades"
   },
   {
    "id": "prop/pull-cord-lamp",
@@ -4417,8 +4424,13 @@
    "used_in": [
     "vader-vs-luke-duel"
    ],
-   "status": "draft",
-   "notes": "G3 sheet projects/vader-vs-luke-duel/design/props_lamp.jpg"
+   "status": "approved",
+   "notes": "G3 sheet projects/vader-vs-luke-duel/design/props_lamp.jpg",
+   "actions": [
+    "pull(qc, frame, side)",
+    "swing(frame)"
+   ],
+   "rules": "docs/PROPS.md: on/off only by pulling the cord, fist on the bead (<= 4 cm) on the switch frame; swings after a pull"
   },
   {
    "id": "set/death-star-corridor",
@@ -4439,7 +4451,7 @@
    "used_in": [
     "vader-vs-luke-duel"
    ],
-   "status": "draft",
+   "status": "approved",
    "notes": "G3 sheet projects/vader-vs-luke-duel/design/set_kit_starwars_death_star_corridor.jpg; helpers corridor_lights, key_mood"
   },
   {
