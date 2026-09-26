@@ -38,7 +38,7 @@ Status values in `state.json` are the phase ids in the first column.
 
 | # | phase (`status`) | team / player | input | output (files in `projects/<slug>/`) | done when / gate |
 |---|---|---|---|---|---|
-| 0 | `idea` | Research — Gemini (web) + Claude | events calendar, analytics, idea bank | idea card in `content/IDEAS.md` (premise, why now, deadline) → `tools/new_episode.py` creates the folder | card has a "why now" |
+| 0 | `idea` | Research — Gemini (web) + Claude | events calendar, analytics, idea bank, **every open episode's `state.json`** | idea card in `content/IDEAS.md` §6 (premise, cast, why now, event, deadline) → `tools/new_episode.py` creates the folder (refuses without a card) | card passes the phase-0 steps below |
 | 1 | `pitch` | Writers — Claude (skill `comedy-pitch`) | idea card, owner taste | `pitch.md` (3 pitches: logline, why funny, punchline written out, first frame, risk) + **pitch PoC** (storyboard stills or a stickman clip with the key line) | **G1 — owner approves one premise** |
 | 2 | `script` | Writers — Claude (skill `hook-script`) | approved pitch | `script.md` (beats with target seconds, hook text, loop/CTA plan, performance direction), `lines.json`, `social.json` draft | **G2 — owner approves the script** |
 | 3 | `design` | Art — Claude / platform | script, library (`tools/catalog.py search`) | `design.md`: cast, set, props, FX, poses/motions needed — each marked *reuse* (catalog id) or *build* (Library lane first, then a catalog entry); turnaround/set stills for new items | all components exist; **G3 — owner approves the look of new characters/sets** (skipped if all reused) |
@@ -50,6 +50,20 @@ Status values in `state.json` are the phase ids in the first column.
 | 9 | `package` | Publishing — scripts (skill `publish-release`) | approved final | `social.json` → `social.md` (4 platforms), GitHub release, cover frame | release assets verified |
 | 10 | `awaiting-upload` → `published` | **Owner uploads**; Claude registers | release, `social.md` | post ids in `analytics/posts.json` | posted on YouTube, TikTok, Instagram, Facebook |
 | 11 | `learn` → `done` | Analytics + retro — Claude | platform numbers, owner notes | `tools/stats.py` rows at 24 h / 72 h / 7 d; lessons → skills/checks; components harvested to the library; branch merged | **Definition of done** (§5) |
+
+### Phase 0 steps (the idea card) — do all of them, in order
+1. `python tools/board.py`: list every episode that is not `done`, `archived` or `dropped`. Its **cast and topic are
+   excluded** (never pitch a cast/topic that was just made or is waiting for upload; each `state.json` has `cast`).
+2. **Events:** check the events calendar (releases, holidays, trends). An event-tied video is wanted when the event is
+   **close** (we can make it and post it in the event's window) and **no other event-tied episode is pending**
+   (`state.json` `event`). Otherwise pick an evergreen idea. Never start an event too early (Halloween in September).
+3. **Idea bank + analytics:** rank candidates in `content/IDEAS.md` by what the numbers say
+   (`analytics/videos.csv`: views, avg watch, % watched), the owner's taste (rejected patterns stay rejected) and
+   the library (`tools/catalog.py search`: what exists vs must be built).
+4. Write the **idea card** in `content/IDEAS.md` §6 (format there): premise, cast, why now, event (or "evergreen"),
+   deadline, excluded casts, library reuse/build, numbers behind the choice.
+5. `python tools/new_episode.py <card-slug> "Title"` (reads the card; refuses without one or on a cast clash),
+   `git checkout -b ep/<slug>`, then phase 1.
 
 Side exits: `dropped` (premise rejected or abandoned — keep the reason), `archived` (old tests).
 

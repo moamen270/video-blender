@@ -22,7 +22,10 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
   (gallery with previews: `library/CATALOG.md`). Reuse what exists; build only what is missing, as a reusable kit
   function, then add its entry to `library/catalog.json`, render its preview and rebuild the gallery. Harvest after
   every video: `python tools/catalog.py harvest` must list 0 uncatalogued components (`state.harvested`).
-- New episode: `python tools/new_episode.py <descriptive-slug> "Title" --why-now "..." --deadline YYYY-MM-DD`
+- New episode = **phase 0 first** (`docs/PIPELINE.md` "Phase 0 steps"): exclude the cast/topic of every open episode
+  (`tools/board.py`), check events (one event-tied episode at a time, only when the event is close), rank the idea bank
+  with the analytics, write the **idea card** in `content/IDEAS.md` §6. Only then
+  `python tools/new_episode.py <card-slug> "Title"` (it refuses without a card or on a cast clash)
   (templates in `templates/episode/`: state.json, pitch.md, script.md, design.md, lines.json, social.json),
   then `git checkout -b ep/<slug>`.
 - Lanes besides episodes: Research (events, trends, tech radar), Library (components), Platform (tools/checks).

@@ -7,6 +7,8 @@
   "next": "Write pitch.md (3 pitches + pitch PoC) and show it to the owner (gate G1).",
   "why_now": "",
   "deadline": "",
+  "cast": [],
+  "event": "",
   "gates": {
     "G1": {"status": "pending", "date": "", "note": "premise"},
     "G2": {"status": "pending", "date": "", "note": "script"},
