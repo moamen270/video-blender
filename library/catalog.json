@@ -4296,7 +4296,7 @@
    "licence": "parody clone (owner voice policy; references never committed)",
    "origin": "vader-vs-luke-duel",
    "used_in": [],
-   "status": "draft",
+   "status": "approved",
    "notes": "used before in video-builder The Shapeshifter; shout ref = spoken lines only (clip_scan)"
   },
   {
@@ -4316,7 +4316,7 @@
    "licence": "parody clone (owner voice policy; references never committed)",
    "origin": "vader-vs-luke-duel",
    "used_in": [],
-   "status": "draft"
+   "status": "approved"
   },
   {
    "id": "character/vader",
@@ -4339,7 +4339,7 @@
    "used_in": [
     "vader-vs-luke-duel"
    ],
-   "status": "draft",
+   "status": "approved",
    "preview": {
     "recipe": "character",
     "cast": "vader",
@@ -4368,7 +4368,7 @@
    "used_in": [
     "vader-vs-luke-duel"
    ],
-   "status": "draft",
+   "status": "approved",
    "preview": {
     "recipe": "character",
     "cast": "luke",

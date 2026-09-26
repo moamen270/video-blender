@@ -27,7 +27,7 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 
 | <img src="previews/character__ronin.jpg" width="120"> | <img src="previews/character__warlord.jpg" width="120"> | <img src="previews/character__vader.jpg" width="120"> | <img src="previews/character__luke.jpg" width="120"> |
 |---|---|---|---|
-| **Ronin (samurai)**<br>`character/ronin`<br>draft | **Warlord (samurai)**<br>`character/warlord`<br>draft | **Darth Vader (parody)**<br>`character/vader`<br>draft | **Luke Skywalker (parody)**<br>`character/luke`<br>draft |
+| **Ronin (samurai)**<br>`character/ronin`<br>draft | **Warlord (samurai)**<br>`character/warlord`<br>draft | **Darth Vader (parody)**<br>`character/vader`<br>approved | **Luke Skywalker (parody)**<br>`character/luke`<br>approved |
 
 
 ## Character parts
@@ -247,5 +247,5 @@ Search: `python tools/catalog.py search <text> [--kind K] [--tag T]`. Status: ap
 | `voice/machine` | machine voice | approved | kokoro voice for machine: Self-checkout: flat British female (the UK 'unexpected item' meme). No reference download. | `machine` |  |
 | `voice/ryu` | ryu voice | approved | chatterbox voice for ryu: Reference: 7 calm dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ryu), 15.1 s, supplied by the ow | `ryu` |  |
 | `voice/ken` | ken voice | approved | chatterbox voice for ken: Reference: 7 confident dialogue lines from Street Fighter X Tekken (Xbox 360, English, Ken), 14.2 s, supplied by t | `ken` |  |
-| `voice/vader` | vader voice | draft | chatterbox voice for Darth Vader (parody): Disney Infinity 3.0 Vader reference (16.1 s) modified rubberband pitch=0.95 formant=shifted; shou | `vader` |  |
-| `voice/luke` | luke voice | draft | chatterbox voice for Luke Skywalker (parody): Disney Infinity 3.0 Luke lines, calm + emotional references, modified rubberband pitch=1.04 fo | `luke` |  |
+| `voice/vader` | vader voice | approved | chatterbox voice for Darth Vader (parody): Disney Infinity 3.0 Vader reference (16.1 s) modified rubberband pitch=0.95 formant=shifted; shou | `vader` |  |
+| `voice/luke` | luke voice | approved | chatterbox voice for Luke Skywalker (parody): Disney Infinity 3.0 Luke lines, calm + emotional references, modified rubberband pitch=1.04 fo | `luke` |  |

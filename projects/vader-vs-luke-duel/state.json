@@ -1,10 +1,10 @@
 {
   "slug": "vader-vs-luke-duel",
   "title": "Luke, I Am Your WHAT?",
-  "status": "design",
+  "status": "voice",
   "branch": "ep/vader-vs-luke-duel",
   "updated": "2026-09-26",
-  "next": "Owner OKs Luke (G3). Then: source real CC0 saber hum/ignite/retract/clash, pull-cord click, bulb buzz, Vader breathing (owner approves each download), then the animatic (G4) with prop_rules checks.",
+  "next": "Sounds: find real CC0 recordings (saber hum/ignite/retract/clash, pull-cord click, bulb buzz, Vader breathing) -> sfx_bank; then the animatic (G4).",
   "why_now": "evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).",
   "deadline": "",
   "cast": [
@@ -24,9 +24,9 @@
       "note": "owner: 'approved' (script.md with the lamp beat, 'Where are you?' kept, role-swap loop ending)"
     },
     "G3": {
-      "status": "pending",
-      "date": "",
-      "note": "Vader approved ('well done'); props + corridor approved; Luke hair done (locks) — waiting for the owner's final OK on Luke. Code-built turnarounds: design/char_vader.jpg, design/char_luke.jpg"
+      "status": "approved",
+      "date": "2026-09-26",
+      "note": "Vader (live-session build), Luke (first Casual_Male hair, brown, fringe lifted), lightsaber, pull-cord lamp, corridor — owner: 'let's use it and proceed'"
     },
     "G4": {
       "status": "pending",
@@ -97,7 +97,7 @@
       "version": 0,
       "note": "Can't tell the difference between Ken and Luke",
       "phase": "design",
-      "status": "open",
+      "status": "fixed",
       "fixed_in": 0
     },
     {
@@ -105,7 +105,7 @@
       "version": 0,
       "note": "Both costumes look like pajamas",
       "phase": "design",
-      "status": "open",
+      "status": "fixed",
       "fixed_in": 0
     },
     {
@@ -113,7 +113,7 @@
       "version": 0,
       "note": "Hands are very poor",
       "phase": "design",
-      "status": "open",
+      "status": "fixed",
       "fixed_in": 0
     },
     {
@@ -178,6 +178,11 @@
       "date": "2026-09-26",
       "decision": "Luke hair = the pack's Casual2_Female hair (spiky swept fringe, long side strands), brown, ponytail cut",
       "why": "owner reference image: 'make the hair just like this' (matched against all 37 pack hairs)"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Luke final hair = the first one (Casual_Male, brown #8a6440, fringe +0.16); G3 approved",
+      "why": "owner"
     }
   ],
   "known_issues": [
@@ -234,6 +239,11 @@
       "date": "2026-09-26",
       "status": "design",
       "note": "luke_hair v3: ray-cast onto the skull, crown volume, side part + swept fringe, sideburns, tapered nape tufts, grooves + darker strand lines; headband geometry removed"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "voice",
+      "note": "G3 approved; voices already locked"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"
