@@ -61,4 +61,4 @@ emissive sabers, and a simple lit corridor/gantry. The stills are made by `tools
 `poc/storyboard.json`, and the output goes to `poc/board.jpg`.
 
 ## Owner decision (G1)
-chosen: … · date: … · notes: …
+chosen: **C — Luke, I Am Your WHAT?** · date: 2026-09-26 · notes: in the dark, Vader: "It's so dark now... wait a minute..." — pulls a hanging lamp's rope, light on — "...that's better." Then continue.

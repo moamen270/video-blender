@@ -1,1 +1,98 @@
-[]
+[
+ {
+  "id": "v_father1",
+  "character": "vader",
+  "text": "Luke... I am your father.",
+  "emotion": 0.5,
+  "speed": 0.85,
+  "note": "grand, slow, the famous delivery"
+ },
+ {
+  "id": "l_what1",
+  "character": "luke",
+  "text": "WHAT?",
+  "emotion": 0.8,
+  "speed": 1.0,
+  "note": "shouted over the saber noise, honest"
+ },
+ {
+  "id": "v_iamyour",
+  "character": "vader",
+  "text": "I AM YOUR—",
+  "emotion": 0.85,
+  "speed": 1.05,
+  "note": "angry shout, cut off by the clash"
+ },
+ {
+  "id": "l_what2",
+  "character": "luke",
+  "text": "You're my WHAT?!",
+  "emotion": 0.85,
+  "speed": 1.05,
+  "note": "shouting, hand to ear"
+ },
+ {
+  "id": "v_father2",
+  "character": "vader",
+  "text": "...I am your father.",
+  "emotion": 0.3,
+  "speed": 0.85,
+  "note": "soft, sincere, in the quiet"
+ },
+ {
+  "id": "l_where",
+  "character": "luke",
+  "text": "...Where are you?",
+  "emotion": 0.3,
+  "speed": 0.95,
+  "note": "small, lost in the dark"
+ },
+ {
+  "id": "v_dark",
+  "character": "vader",
+  "text": "...It's so dark now.",
+  "emotion": 0.2,
+  "speed": 0.9,
+  "note": "flat deadpan"
+ },
+ {
+  "id": "v_wait",
+  "character": "vader",
+  "text": "...Wait a minute.",
+  "emotion": 0.25,
+  "speed": 0.85,
+  "note": "slow realisation"
+ },
+ {
+  "id": "v_better",
+  "character": "vader",
+  "text": "...That's better.",
+  "emotion": 0.25,
+  "speed": 0.9,
+  "note": "satisfied, calm, domestic"
+ },
+ {
+  "id": "v_father3",
+  "character": "vader",
+  "text": "Luke. I am your father.",
+  "emotion": 0.4,
+  "speed": 0.9,
+  "note": "clear, formal, finally heard"
+ },
+ {
+  "id": "l_no",
+  "character": "luke",
+  "text": "No... NOOOOOOO!",
+  "emotion": 0.95,
+  "speed": 0.95,
+  "note": "the famous scream, growing; needs a shouting reference"
+ },
+ {
+  "id": "v_what",
+  "character": "vader",
+  "text": "...WHAT?",
+  "emotion": 0.8,
+  "speed": 1.0,
+  "note": "shouted over the hum; roles swapped"
+ }
+]

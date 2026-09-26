@@ -1,10 +1,10 @@
 {
   "slug": "vader-vs-luke-duel",
-  "title": "Vader vs Luke",
-  "status": "pitch",
+  "title": "Luke, I Am Your WHAT?",
+  "status": "script",
   "branch": "ep/vader-vs-luke-duel",
   "updated": "2026-09-26",
-  "next": "Owner picks one of pitches A (The Hand), B (The Longest Fall), C (I Am Your WHAT?) or rejects all (gate G1): pitch.md + poc/board.jpg. On approval: write script.md (phase 2).",
+  "next": "Owner reviews script.md (gate G2). On approval: design.md (Vader, Luke, lightsaber, corridor, pull-cord lamp) + voice references for Vader/Luke.",
   "why_now": "evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).",
   "deadline": "",
   "cast": [
@@ -14,9 +14,9 @@
   "event": "",
   "gates": {
     "G1": {
-      "status": "pending",
-      "date": "",
-      "note": "premise: pitch.md + poc/board.jpg (storyboard stills, stand-ins)"
+      "status": "approved",
+      "date": "2026-09-26",
+      "note": "owner chose C 'Luke, I Am Your WHAT?' with a change: after the sabers go off it is dark; Vader: 'it's so dark now... wait a minute...' pulls a hanging lamp's rope (light on) '...that's better' — then continue"
     },
     "G2": {
       "status": "pending",
@@ -51,12 +51,26 @@
     "version": null,
     "release": null
   },
-  "owner_notes": [],
+  "owner_notes": [
+    {
+      "date": "2026-09-26",
+      "version": 0,
+      "note": "In the dark part add a lamp with a rope: 'it's so dark now... wait a minute... (turns the light on) ...that's better', then continue",
+      "phase": "pitch",
+      "status": "fixed",
+      "fixed_in": 0
+    }
+  ],
   "decisions": [
     {
       "date": "2026-09-26",
       "decision": "famous cast: Vader and Luke (parody)",
       "why": "owner: famous characters for now; Ryu/Ken and Batman/Joker are open episodes; no event (Ryu vs Ken is the pending event video)"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "premise C + owner's pull-cord lamp beat in the dark",
+      "why": "owner G1; also removes the long dark screen (border/viewer risk)"
     }
   ],
   "known_issues": [],
@@ -71,6 +85,11 @@
       "date": "2026-09-26",
       "status": "pitch",
       "note": "3 pitches + storyboard PoC (tools/storyboard.py) sent for G1"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "script",
+      "note": "G1 approved (C + lamp beat); script.md written for G2"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"

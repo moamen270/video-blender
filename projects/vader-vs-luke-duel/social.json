@@ -1,18 +1,46 @@
 {
-  "name": "Vader vs Luke",
-  "title": "",
-  "hook": "",
-  "description": "",
-  "disclaimer": "A cartoon parody. Characters are comedic impressions (voice impressions, AI-altered); not affiliated with or endorsed by the rights holders.",
+  "name": "Luke, I Am Your WHAT?",
+  "title": "Luke, I am your WHAT? 🔦 Vader vs Luke (parody)",
+  "hook": "Luke, I am your WHAT?",
+  "description": "The biggest reveal in the galaxy… if only Luke could hear it over the lightsabers.\n\nVader tries. Vader shouts. Vader turns the lights on. ∞",
+  "disclaimer": "A cartoon parody. Characters are comedic impressions of Darth Vader and Luke Skywalker (voice impressions, AI-altered); not affiliated with or endorsed by Lucasfilm or Disney.",
   "credits": [],
-  "tags": [],
-  "hashtags": ["#shorts", "#parody", "#comedy", "#dummysticky"],
-  "pinnedComment": "",
-  "coverText": "",
+  "tags": [
+    "star wars",
+    "star wars parody",
+    "darth vader",
+    "luke skywalker",
+    "i am your father",
+    "vader vs luke",
+    "lightsaber",
+    "lightsaber duel",
+    "star wars animation",
+    "3d animation",
+    "blender animation",
+    "funny animation",
+    "animated shorts",
+    "comedy shorts",
+    "loop",
+    "dummy sticky"
+  ],
+  "hashtags": [
+    "#shorts",
+    "#starwars",
+    "#darthvader",
+    "#lukeskywalker",
+    "#iamyourfather",
+    "#parody",
+    "#comedy",
+    "#dummysticky"
+  ],
+  "pinnedComment": "What should Vader have said instead? 👇",
+  "coverText": "LUKE, I AM YOUR WHAT?",
   "checklist": [
     "Turn on the platform's AI / altered-or-synthetic-content label (cloned, modified voices).",
     "Keep the parody / not-affiliated line in the description (voice policy).",
-    "Register the post ids in analytics/posts.json and run python tools/stats.py."
+    "Register the post ids in analytics/posts.json and run python tools/stats.py.",
+    "Keep \"not affiliated with Lucasfilm or Disney\" in the description.",
+    "Cover = frame 1 (blades crossed, the unlit bulb above)."
   ],
   "published": {}
 }
