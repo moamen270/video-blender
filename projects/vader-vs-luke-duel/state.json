@@ -4,7 +4,7 @@
   "status": "design",
   "branch": "ep/vader-vs-luke-duel",
   "updated": "2026-09-26",
-  "next": "Owner reviews each G3 sheet (design.md table) and the voice preview; fix each component from the notes, one by one. Then: sounds (real CC0) and the animatic.",
+  "next": "Mask review with the owner (remaining suggestions 4-7: cheek creases, top edge = helmet V brow, chin tubes, grille recess), then the helmet, then merge them onto the head.",
   "why_now": "evergreen, with no event. Ryu vs Ken (uploading 2026-09-27) is our pending event video. The owner wants famous characters for now. Vader is the most recognisable silhouette at phone size, and the 2026-09 lesson was that villains must read at phone size. A duel is the two-rival shape the owner approved, and a lightsaber duel is a different topic from a fighting game. The characters can come back in a series (Vader, troopers, Luke).",
   "deadline": "",
   "cast": [
@@ -140,6 +140,11 @@
       "date": "2026-09-26",
       "decision": "approved as is: the other 10 voice lines, the props (saber, lamp) and the corridor",
       "why": "owner G3/voice review"
+    },
+    {
+      "date": "2026-09-26",
+      "decision": "Vader rebuilt live with the owner (Blender MCP): plain BaseCharacter + human skin; helmet (vader_helmet, from a motorcycle helmet with the face cut out) and mask (vader_mask, from a respirator + sunglasses) built SEPARATELY, merged later",
+      "why": "owner: 'it's just a helmet and a mask, do each separately then merge them'; owner edited the mask by hand (removed cheek lines; grille, slots, chin tubes placed) — encoded in kit.starwars.vader_mask, verified equal to the live mesh"
     }
   ],
   "known_issues": [
@@ -182,6 +187,11 @@
       "date": "2026-09-26",
       "status": "design",
       "note": "owner G3 notes: props + corridor OK; Vader, Luke, costumes, hands rejected; 2 Vader shouts + Luke NOOO voices bad; prop-interaction rules requested"
+    },
+    {
+      "date": "2026-09-26",
+      "status": "design",
+      "note": "mask fixes 1-3 (smooth edge, flat eyes, seated nose) applied; backups assets/models/vader_mask_*.blend"
     }
   ],
   "idea_card": "content/IDEAS.md#card-vader-vs-luke-duel"

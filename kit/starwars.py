@@ -36,12 +36,281 @@ def _attach(qc, objs, bone, tag):
         Q.attach_part(qc, o, bone, f"{tag}{i}")
 
 
+def _lathe(name, rows, n, keep, mat, col, centre, sx, sy, sz):
+    """Revolve profile rows [(r, z) or callable(phi) -> (r, z)] around Z; phi = 90 deg is the front (+y).
+    keep(i, phi) decides which quads exist (open the face). Returns the object."""
+    import bmesh
+    verts, faces = [], []
+    phis = [2 * math.pi * j / n for j in range(n)]
+    for i, row in enumerate(rows):
+        for phi in phis:
+            r, z = row(phi) if callable(row) else row
+            verts.append(Vector((centre.x + r * sx * math.cos(phi), centre.y + r * sy * math.sin(phi), centre.z + z * sz)))
+    for i in range(len(rows) - 1):
+        for j in range(n):
+            if keep(i, phis[j]) and keep(i, phis[(j + 1) % n]):
+                a, b = i * n + j, i * n + (j + 1) % n
+                faces.append((a, b, b + n, a + n))
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [], faces)
+    bm = bmesh.new(); bm.from_mesh(me)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(me); bm.free()
+    for p in me.polygons:
+        p.use_smooth = True
+    me.materials.append(mat)
+    o = bpy.data.objects.new(name, me)
+    C.link(o, col)
+    m = o.modifiers.new("solid", "SOLIDIFY"); m.thickness = 0.012; m.offset = 1.0
+    return o
+
+
+def _gloss(name: str, hex_: str, rough: float, metal: float = 0.0, coat: float = 0.0) -> bpy.types.Material:
+    """Principled material (glossy plastic / metal) — the helmet look the owner liked in the live session."""
+    m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+    m.use_nodes = True
+    b = next(n for n in m.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    b.inputs["Base Color"].default_value = (*C.hex_rgb(hex_), 1.0)
+    b.inputs["Roughness"].default_value = rough
+    b.inputs["Metallic"].default_value = metal
+    if "Coat Weight" in b.inputs:
+        b.inputs["Coat Weight"].default_value = coat
+    m.diffuse_color = (*C.hex_rgb(hex_), 1.0)
+    return m
+
+
+def vader_helmet(centre, R: float, col=None) -> list:
+    """Darth Vader's helmet (the dome piece only; the faceplate is vader_mask) from the owner's live session
+    (2026-09-26): a motorcycle helmet with the face cut out, shaped to the owner's reference photos: dome with a
+    raised centre ridge, V brow, bell-flared skirt (widest at the sides, near-vertical at the back), open front.
+    R = shell radius (head half-size x 1.22). Front = +y. Returns the objects."""
+    c0 = Vector(centre)
+    paint = _gloss("vh_paint", "#121317", 0.12, coat=1.0)
+    lensm = _gloss("vh_lens", "#050608", 0.03, metal=0.7, coat=1.0)
+    silver = _gloss("vh_silver", "#b9bec7", 0.25, metal=1.0)
+    dgrey = _gloss("vh_dgrey", "#2c2f36", 0.3, metal=0.4)
+    FRONT = math.radians(58)                                # half-width of the face opening
+
+    def d(phi):                                             # angular distance from the front (+y)
+        return abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi)
+
+    def skirt_row(t):                                       # t 0..1 down the skirt
+        def row(phi):
+            side = abs(math.cos(phi))
+            flare = 0.10 + 0.34 * side                      # bell: widest at the sides
+            z_end = -1.02 + 0.10 * side                     # back lowest
+            return (1.03 + flare * t ** 1.6, 0.10 + (z_end - 0.10) * t)
+        return row
+
+    def brow(phi):                                          # the dome's front edge dips into a V at the middle
+        k = max(0.0, 1.0 - d(phi) / FRONT)
+        return (1.03 + 0.05 * k, 0.10 - 0.16 * k)
+
+    dome = [(0.0, 1.00), (0.36, 0.97), (0.64, 0.89), (0.84, 0.74), (0.96, 0.55), (1.02, 0.34), brow]
+    rows = dome + [skirt_row(t) for t in (0.25, 0.5, 0.75, 1.0)]
+    n_dome = len(dome)
+
+    def keep(i, phi):
+        return i < n_dome - 1 or d(phi) > FRONT             # open front below the brow
+
+    shell = _lathe("vh_shell", rows, 72, keep, paint, col, c0, R, R * 1.1, R)
+    shell.modifiers["solid"].thickness = 0.018
+    parts = [shell]
+    # the raised centre ridge over the dome, brow to back
+    ridge_pts = []
+    for a in range(0, 181, 12):
+        t = math.radians(a)
+        ridge_pts.append(c0 + Vector((0, math.cos(t) * R * 1.12, 0.1 * R + math.sin(t) * R * 0.92)))
+    parts.append(C.curve_arc("vh_ridge", ridge_pts[1:-2], bevel=R * 0.07, mat=paint, col=col))
+    return parts
+
+
+def vader_mask(centre, R: float, col=None) -> list:
+    """The faceplate on its own (owner: 'it's just a helmet and a mask, do each separately, then merge them').
+    One curved plate cut to the mask outline (brow edge on top, straight sides, jaw corners, chin), wrapped on a
+    cylinder of radius R and pushed forward toward the mouth (the reference profile), then the details on it:
+    big angled eyes, ribbed nose bridge, slanted cheek lines, triangular grille with slots, two silver chin tubes.
+    Units: R = the helmet's shell radius, so the mask fits the opening. centre = where the helmet's centre would be."""
+    import bmesh
+    c0 = Vector(centre)
+    paint = _gloss("vh_paint", "#121317", 0.12, coat=1.0)
+    lensm = _gloss("vh_lens", "#050608", 0.03, metal=0.7, coat=1.0)
+    silver = _gloss("vh_silver", "#b9bec7", 0.25, metal=1.0)
+    dgrey = _gloss("vh_dgrey", "#2c2f36", 0.3, metal=0.4)
+    outline = [(-0.64, 0.06), (0.0, -0.08), (0.64, 0.06), (0.64, -0.55), (0.46, -0.95), (0.18, -1.10),
+               (-0.18, -1.10), (-0.46, -0.95), (-0.64, -0.55)]           # (x, z) in R, clockwise from top-left
+
+    def inside(x, z):
+        n, ins = len(outline), False
+        for i in range(n):
+            (x1, z1), (x2, z2) = outline[i], outline[(i + 1) % n]
+            if (z1 > z) != (z2 > z) and x < x1 + (z - z1) * (x2 - x1) / (z2 - z1):
+                ins = not ins
+        return ins
+
+    def surf(x, z):                                          # the mask surface: cylinder + forward jut at the mouth
+        y = math.sqrt(max(0.0, 1.0 - x * x)) * 1.02
+        jut = 0.18 * max(0.0, min(1.0, (-z - 0.35) / 0.55))
+        return c0 + Vector((x * R, (y + jut) * R, z * R))
+
+    N = 48
+    xs = [-0.66 + 1.32 * i / N for i in range(N + 1)]
+    zs = [0.08 - 1.20 * j / N for j in range(N + 1)]
+    bm = bmesh.new()
+    grid = {}
+    for i, x in enumerate(xs):
+        for j, z in enumerate(zs):
+            if inside(x, z):
+                grid[i, j] = bm.verts.new(surf(x, z))
+    for i in range(N):
+        for j in range(N):
+            q = [grid.get(k) for k in ((i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1))]
+            if all(q):
+                bm.faces.new(q)
+    def snap(px, pz):                                        # nearest point on the outline (smooth edge, no staircase)
+        best = None
+        pts = [(c0.x + x * R, c0.z + z * R) for x, z in outline]
+        for i in range(len(pts)):
+            (ax, az), (bx, bz) = pts[i], pts[(i + 1) % len(pts)]
+            dx, dz = bx - ax, bz - az
+            t = max(0.0, min(1.0, ((px - ax) * dx + (pz - az) * dz) / (dx * dx + dz * dz)))
+            q = (ax + t * dx, az + t * dz)
+            dd = math.hypot(px - q[0], pz - q[1])
+            if best is None or dd < best[0]:
+                best = (dd, q)
+        return best[1]
+
+    for v in bm.verts:
+        if v.is_boundary:
+            x, z = snap(v.co.x, v.co.z)
+            v.co = surf((x - c0.x) / R, (z - c0.z) / R)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0015)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new("vm_mask")
+    bm.to_mesh(me); bm.free()
+    for p in me.polygons:
+        p.use_smooth = True
+    me.materials.append(paint)
+    mask = bpy.data.objects.new("vm_mask", me)
+    C.link(mask, col)
+    s = mask.modifiers.new("solid", "SOLIDIFY"); s.thickness = 0.02; s.offset = -1.0
+    parts = [mask]
+
+    def on(x, z, out=0.0):                                   # a point on the mask surface, `out` metres in front
+        p = surf(x, z)
+        return p + Vector((0, out, 0))
+
+    for sgn in (-1, 1):                                      # eyes: big angled lenses, outer corners dropping
+        e = C.sphere(f"vm_eye{sgn}", r=1.0, loc=on(sgn * 0.33, -0.18, 0.002), scale=(R * 0.27, 0.006, R * 0.15),
+                     mat=lensm, col=col)                     # flat glass on the plate (owner review: no bug-eye domes)
+        e.rotation_euler = (0, math.radians(sgn * 18), math.radians(sgn * -16))
+        parts.append(e)
+    nd = R * 0.10                                            # nose depth: its back sits 4 mm inside the plate
+    parts.append(C.cube("vm_nose", size=1.0, loc=on(0, -0.30, nd / 2 - 0.004), scale=(R * 0.14, nd, R * 0.36),
+                        mat=paint, col=col))
+    for k in range(4):
+        parts.append(C.cube(f"vm_rib{k}", size=1.0, loc=on(0, -0.30, nd - 0.004 + R * 0.01) + Vector((0, 0, (0.14 - 0.07 * k) * R)),
+                            scale=(R * 0.16, R * 0.02, R * 0.022), mat=dgrey, col=col))
+    # (no painted cheek lines: the owner removed them, 2026-09-26)
+    grille = C.cylinder("vm_grille", r=R * 0.26, depth=R * 0.05, loc=on(0, -0.80, R * 0.02), rot=(-90, 0, 0),
+                        mat=dgrey, col=col, verts=3)
+    grille.location = c0 + Vector((-0.0006, 1.1671 * R, -0.8156 * R))   # the owner's hand edit: placed, bigger, angled
+    grille.rotation_euler = (-4.67, 0.0, 0.04)
+    grille.scale = (1.227, 1.227, 1.227)
+    parts.append(grille)
+    for k in range(-3, 4):
+        parts.append(C.cube(f"vm_slot{k}", size=1.0, loc=on(k * 0.05, -0.74, R * 0.05),
+                            scale=(R * 0.016, R * 0.01, R * 0.15 - abs(k) * R * 0.03), mat=lensm, col=col))
+    for sgn in (-1, 1):
+        parts.append(C.cylinder(f"vm_tube{sgn}", r=R * 0.024, depth=R * 0.20, loc=on(sgn * 0.22, -1.02, R * 0.06),
+                                rot=(90, 0, 0), mat=silver, col=col))
+    # the owner's hand edits in Blender (2026-09-26): slots and chin tubes moved/resized. Offsets in units of R from
+    # the centre; slot scales stored for R = 0.347 and scaled with R. Backup: assets/models/vader_mask_owner_edit_*.blend
+    OWNER = {
+        "vm_slot-3": ((-0.1372, 1.1986, -0.7925), (0.0051, 0.0032, 0.0190)),
+        "vm_slot-2": ((-0.0915, 1.2045, -0.7925), (0.0051, 0.0032, 0.0286)),
+        "vm_slot-1": ((-0.0457, 1.2080, -0.7925), (0.0051, 0.0032, 0.0381)),
+        "vm_slot0": ((0.0, 1.2091, -0.7925), (0.0051, 0.0032, 0.0476)),
+        "vm_slot1": ((0.0457, 1.2080, -0.7925), (0.0051, 0.0032, 0.0381)),
+        "vm_slot2": ((0.0914, 1.2045, -0.7925), (0.0051, 0.0032, 0.0286)),
+        "vm_slot3": ((0.1372, 1.1986, -0.7925), (0.0051, 0.0032, 0.0190)),
+        "vm_tube-1": ((-0.2682, 1.2427, -0.9783), None),
+        "vm_tube1": ((0.2649, 1.2342, -0.9685), None),
+    }
+    for o in parts:
+        if o.name in OWNER:
+            d, s = OWNER[o.name]
+            o.location = c0 + Vector(d) * R
+            if s:
+                o.scale = tuple(v * R / 0.347 for v in s)
+    return parts
+
+
+def _vader_helmet(c: Vector, h: Vector, *, gloss, grey, lens, dark, col) -> list:
+    """The helmet as sculpted surfaces sized to the head bounds (c = centre, h = half size):
+    dome + brow line + a flared skirt that sweeps lower at the back, open in front for the face mask;
+    the mask = a plate that narrows to the chin, slanted triangular lenses, cheek plates, nose ridge, grille."""
+    rx, ry, rz = h.x * 1.08, h.y * 1.1, h.z
+    cc = c + Vector((0, -0.01, 0.02))
+    FRONT = math.radians(40)                       # half-width of the face opening around phi = 90 deg
+
+    def bottom(phi):                                # the skirt's lower edge: deepest at the back, higher at the front
+        s = math.sin(phi)
+        return (1.58, -1.08 - 0.30 * max(0.0, -s) + 0.10 * max(0.0, s))
+
+    dome = [(0.0, 1.10), (0.36, 1.07), (0.63, 0.99), (0.83, 0.85), (0.96, 0.65), (1.03, 0.44), (1.06, 0.26)]
+    skirt = [(1.10, 0.06), (1.18, -0.22), (1.32, -0.55), (1.46, -0.85), bottom]
+    rows = dome + skirt
+    n_dome = len(dome)
+
+    def keep(i, phi):                               # below the brow, leave the front open
+        d = abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi)
+        return i < n_dome - 1 or d > FRONT
+
+    helmet = _lathe("vader_helmet", rows, 64, keep, gloss, col, cc, rx, ry, rz)
+    parts = [helmet]
+    # brow ridge: a thick lip along the front edge of the dome (the "eyebrow" of the helmet)
+    brow = _lathe("vader_brow", [(1.06, 0.30), (1.12, 0.24), (1.06, 0.16)], 64,
+                  lambda i, phi: abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi) < FRONT + 0.25,
+                  gloss, col, cc, rx, ry, rz)
+    parts.append(brow)
+    # face plate: from the brow down to the chin, narrowing (cheeks slope in), dark metal
+    plate_rows = [(1.03, 0.20), (1.03, 0.00), (1.01, -0.30), (0.95, -0.62), (0.80, -0.92), (0.55, -1.08)]
+    plate = _lathe("vader_face", plate_rows, 64,
+                   lambda i, phi: abs((phi - math.pi / 2 + math.pi) % (2 * math.pi) - math.pi) <= FRONT + 0.05,
+                   gloss, col, cc, rx, ry, rz)
+    parts.append(plate)
+    fy = cc.y + ry * 1.03                           # the plate's front, for the details
+    # slanted triangular lenses (a 3-sided prism, point toward the nose and down)
+    glass = L.toon2("vader_lensglass", "#050608", hi_hex="#5f7896", rim_hex="#7d9cc4", rim=1.0)
+    for s in (-1, 1):
+        e = C.cylinder(f"vader_eye{s}", r=h.x * 0.34, depth=0.03, loc=Vector((cc.x + s * rx * 0.33, fy + 0.02, cc.z + rz * 0.02)),
+                       rot=(-90, 0, s * 20), scale=(1.35, 1.0, 0.80), mat=glass, col=col, verts=3)
+        parts.append(e)
+        parts.append(C.sphere(f"vader_glint{s}", r=1.0, loc=Vector((cc.x + s * rx * 0.25, fy + 0.04, cc.z + rz * 0.12)),
+                              scale=(h.x * 0.05, 0.006, rz * 0.035), mat=FT.emit_mat("vader_glint", "#9fb8d8", 1.5), col=col))
+    # nose ridge + cheek plates (grey) + the triangular grille with slits
+    parts.append(C.cube("vader_nose", size=1.0, loc=Vector((cc.x, fy + 0.012, cc.z - rz * 0.22)),
+                        scale=(h.x * 0.13, 0.035, rz * 0.40), mat=dark, col=col))
+    for s in (-1, 1):
+        parts.append(C.cube(f"vader_cheek{s}", size=1.0, loc=Vector((cc.x + s * rx * 0.44, fy - 0.03, cc.z - rz * 0.48)),
+                            rot=(0, 0, s * -28), scale=(h.x * 0.26, 0.03, rz * 0.34), mat=grey, col=col))
+    grille = C.cylinder("vader_grille", r=h.x * 0.30, depth=0.03, loc=Vector((cc.x, fy - 0.01, cc.z - rz * 0.72)),
+                        rot=(-90, 0, 0), scale=(1.0, 1.0, 1.0), mat=grey, col=col, verts=3)
+    parts.append(grille)
+    for k in (-1, 0, 1):
+        parts.append(C.cube(f"vader_slit{k}", size=1.0, loc=Vector((cc.x + k * h.x * 0.09, fy + 0.008, cc.z - rz * 0.68)),
+                            scale=(0.009, 0.01, rz * 0.16), mat=lens, col=col))
+    return parts
+
+
 def build_vader(col: bpy.types.Collection | None = None) -> Q.QChar:
     """Darth Vader parody."""
     qc = Q.load_character("BaseCharacter.blend", "vader", col=col)
     tc = col or (qc.body.users_collection[0] if qc.body.users_collection else None)
     black = L.toon2("vader_black", "#16171c")
-    gloss = L.toon2("vader_gloss", "#22242b")
+    gloss = L.toon2("vader_gloss", "#2a2d35")
     grey = L.toon2("vader_grey", "#7b808a")
     dark_grey = L.toon2("vader_dgrey", "#3a3d45")
     lens = L.toon2("vader_lens", "#0b0c10")
@@ -52,36 +321,9 @@ def build_vader(col: bpy.types.Collection | None = None) -> Q.QChar:
     lo, hi = _head_bounds(qc)
     c, h = (lo + hi) / 2, (hi - lo) / 2
     front = hi.y
-    parts = []
-    # dome: a little bigger than the head, the helmet sits over it
-    parts.append(C.sphere("vader_dome", r=1.0, loc=c + Vector((0, -0.02, 0.04)),
-                          scale=(h.x * 1.12, h.y * 1.14, h.z * 1.04), mat=gloss, col=tc))
-    # the flared skirt: wide at the bottom, open at the front (the face mask fills it)
-    skirt = C.cone("vader_skirt", r1=h.x * 1.42, r2=h.x * 1.02, depth=h.z * 0.9,
-                   loc=Vector((c.x, c.y - 0.04, lo.z + h.z * 0.28)), mat=gloss, col=tc)
-    parts.append(skirt)
-    # eyes: big dark lenses, outer corners dropping (the menacing slant), a small glint so they read as glass
-    for s in (-1, 1):
-        e = C.sphere(f"vader_eye{s}", r=1.0, loc=Vector((c.x + s * h.x * 0.38, front - 0.005, c.z + h.z * 0.08)),
-                     rot=(0, s * 22, 0), scale=(h.x * 0.34, 0.022, h.z * 0.24), mat=lens, col=tc)
-        parts.append(e)
-        parts.append(C.sphere(f"vader_glint{s}", r=1.0, loc=Vector((c.x + s * h.x * 0.30, front + 0.016, c.z + h.z * 0.16)),
-                              scale=(h.x * 0.06, 0.01, h.z * 0.04), mat=L.toon2("vader_glint", "#8d96a8", rim=0.0), col=tc))
-    # cheek plates (grey) and the nose ridge
-    for s in (-1, 1):
-        parts.append(C.cube(f"vader_cheek{s}", size=1.0, loc=Vector((c.x + s * h.x * 0.45, front + 0.01, c.z - h.z * 0.3)),
-                            rot=(0, s * 20, 0), scale=(h.x * 0.34, 0.04, h.z * 0.34), mat=grey, col=tc))
-    parts.append(C.cube("vader_nose", size=1.0, loc=Vector((c.x, front + 0.035, c.z - h.z * 0.12)),
-                        scale=(h.x * 0.16, 0.05, h.z * 0.32), mat=dark_grey, col=tc))
-    # mouth grille: a downward triangle with three slits
-    # a flat triangular plate, point down (a 3-sided cylinder turned to face the front)
-    grille = C.cylinder("vader_grille", r=h.x * 0.36, depth=0.04, loc=Vector((c.x, front + 0.02, c.z - h.z * 0.5)),
-                        rot=(-90, 0, 0), mat=grey, col=tc, verts=3)
-    parts.append(grille)
-    for k in (-1, 0, 1):
-        parts.append(C.cube(f"vader_slit{k}", size=1.0, loc=Vector((c.x + k * h.x * 0.12, front + 0.058, c.z - h.z * 0.52)),
-                            scale=(0.012, 0.01, h.z * 0.2), mat=lens, col=tc))
+    parts = _vader_helmet(c, h, gloss=gloss, grey=grey, lens=lens, dark=dark_grey, col=tc)
     _attach(qc, parts, "Head", "helmet")
+    qc.arm.pose.bones["Head"].scale = (0.72, 0.72, 0.72)   # smaller head (the helmet follows): less chibi, more menace
 
     # chest box with lights, found on the chest surface (Batman's emblem position)
     chest = Q.native(qc, Q.surface_points(qc, [(0.0, 1.62)], bones=["Torso", "Abdomen"], offset=0.01)[0])
@@ -112,7 +354,7 @@ def build_vader(col: bpy.types.Collection | None = None) -> Q.QChar:
     Q.smooth(qc, obj=cape)
     Q.outline(qc.body, 0.010)
     Q.outline(cape, 0.010)
-    for n in ("vader_dome", "vader_skirt"):
+    for n in ("vader_helmet", "vader_brow"):
         Q.outline(bpy.data.objects[n], 0.008)
     return qc
 
