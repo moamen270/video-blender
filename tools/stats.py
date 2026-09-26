@@ -8,7 +8,9 @@ Sources (best available per platform; tools/platforms.py, keys in %USERPROFILE%/
   reactions, followers gained. Fallback: public Reels page (views only, rounded).
 - Instagram: Graph API media insights — views, reach, likes, comments, shares, saves, avg watch time.
   Fallback: public Reels page (views, likes, comments).
-- YouTube: Data API key — exact views, likes, comments (retention/watch time need OAuth + Analytics API: not yet).
+- YouTube: Data API key — exact, fresh views/likes/comments; YouTube Analytics (OAuth, tools/youtube_auth.py) —
+  avg view duration, % watched, retention curve (3 s + completion), shares, subscribers gained (lags 2-3 days).
+  YouTube retention is audienceWatchRatio: it can exceed 100 % (rewatches of the opening).
   Fallback: yt-dlp.
 - TikTok: public profile via yt-dlp (needs `pip install curl_cffi`); no API access yet.
 Raw API answers (incl. the full Facebook retention curve) go to analytics/raw/<date>.json.
@@ -133,7 +135,14 @@ def main():
         fb, raw["facebook"] = facebook_api()
     else:
         ig, fb = instagram_public("dummysticky"), facebook_public("DummySticky")
-    yt = PF.youtube_videos([v["youtube"] for v in posts["videos"] if v.get("youtube")])
+    yt_ids = [v["youtube"] for v in posts["videos"] if v.get("youtube")]
+    yt = PF.youtube_videos(yt_ids)
+    yta, raw["youtube_analytics"] = PF.youtube_analytics(yt_ids)
+    for vid, extra in yta.items():
+        if vid in yt:
+            yt[vid].update({k: v for k, v in extra.items() if v is not None})
+            yt[vid]["source"] = "youtube-data-api + youtube-analytics"
+            yt[vid]["avg_pct"] = extra.get("avg_pct")
     tt = tiktok_all("dummysticky")
     rows = []
     for v in posts["videos"]:
@@ -141,7 +150,7 @@ def main():
         got = {"youtube": yt.get(v["youtube"]) or youtube_public(v["youtube"]), "tiktok": tt.get(v["tiktok"], {}),
                "instagram": ig.get(v["instagram"], {}), "facebook": fb.get(v["facebook"], {})}
         for plat, s in got.items():
-            extra = "; ".join(f"{k} {s[k]}" for k in ("reach", "replays") if s.get(k) is not None)
+            extra = "; ".join(f"{k} {s[k]}" for k in ("reach", "replays", "avg_pct") if s.get(k) is not None)
             note = f"uploaded {v['uploaded']}; {s.get('source', 'no data')}" + (f"; {extra}" if extra else "")
             rows.append({"date": today.isoformat(), "slug": v["slug"], "version": v["version"], "platform": plat,
                          "checkpoint": f"day {age}", "hook_text": v["hook"], "notes": note,

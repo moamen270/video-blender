@@ -1,4 +1,4 @@
-"""Publish an episode's final video to Facebook and Instagram through the Meta APIs (docs/PLATFORM_APIS.md).
+"""Publish an episode's final video to Facebook, Instagram (Meta APIs) and YouTube (Data API) — docs/PLATFORM_APIS.md.
 
     python tools/publish.py <episode> --platform facebook,instagram            # DRY RUN: show what would be posted
     python tools/publish.py <episode> --platform instagram --container-only    # upload + process on Instagram, do NOT publish
@@ -10,8 +10,11 @@ Texts: social.json via tools/social.py captions() (Facebook = facebook text, Ins
 the pinned-comment question is posted as the first comment (pinning is done in the app).
 After publishing: post ids go to analytics/posts.json and the episode's state.json (definition of done 1).
 Only the owner decides WHEN something is published: never run with --go unless the owner asked for it.
-YouTube (OAuth needed) and TikTok (audit needed) are not supported yet.
-The AI / altered-content label is not exposed by these APIs: turn it on in the app after posting.
+YouTube (--platform youtube): uploaded with the OAuth token (tools/youtube_auth.py) as PRIVATE — Google keeps uploads
+from unaudited API projects private; the owner switches it to Public in YouTube Studio. The AI disclosure is set by the
+API (status.containsSyntheticMedia). The pinned comment is not posted on YouTube (needs another scope): add it in Studio.
+TikTok is not supported (its API needs TikTok's audit).
+Facebook/Instagram do not expose the AI / altered-content label: turn it on in the app after posting.
 """
 from __future__ import annotations
 
@@ -86,6 +89,33 @@ def facebook(video: str, text: str, comment: str, *, go: bool, at: str | None) -
             **({"scheduled": at} if at else {})}
 
 
+def youtube(video: str, texts: dict) -> dict:
+    """Resumable upload to YouTube (private until the project passes Google's audit)."""
+    tok = PF.youtube_access_token()
+    if not tok:
+        return {"error": "no YouTube token: python tools/youtube_auth.py"}
+    meta = {"snippet": {"title": texts["yt_title"], "description": texts["yt_desc"], "categoryId": "23",
+                        "tags": [t.strip() for t in texts["yt_tags"].split(",") if t.strip()]},
+            "status": {"privacyStatus": "private", "selfDeclaredMadeForKids": False, "containsSyntheticMedia": True}}
+    size = os.path.getsize(video)
+    init = urllib.request.Request(
+        "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+        data=json.dumps(meta).encode(), method="POST",
+        headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json; charset=UTF-8",
+                 "X-Upload-Content-Type": "video/mp4", "X-Upload-Content-Length": str(size)})
+    try:
+        with urllib.request.urlopen(init, timeout=60) as r:
+            loc = r.headers["Location"]
+        put = urllib.request.Request(loc, data=open(video, "rb").read(), method="PUT",
+                                     headers={"Authorization": f"Bearer {tok}", "Content-Type": "video/mp4"})
+        with urllib.request.urlopen(put, timeout=900) as r:
+            v = json.load(r)
+    except urllib.error.HTTPError as e:
+        return {"error": e.read().decode("utf-8", "ignore")[:300]}
+    return {"post_id": v["id"], "url": f"https://www.youtube.com/shorts/{v['id']}",
+            "state": v.get("status", {}).get("privacyStatus"), "note": "private: switch to Public in YouTube Studio"}
+
+
 def record(ep: str, st: dict, version: int, results: dict, day: str) -> None:
     """Register the posts in analytics/posts.json and the episode's state.json."""
     pp = os.path.join(ROOT, "analytics", "posts.json"); posts = json.load(open(pp, encoding="utf-8"))
@@ -123,12 +153,14 @@ def main():
     texts = SO.captions(json.load(open(os.path.join(pdir, "social.json"), encoding="utf-8")),
                         json.load(open(os.path.join(ROOT, "brand.json"), encoding="utf-8")))
     plats = [p.strip() for p in a.platform.split(",") if p.strip()]
-    if not PF.meta_ready():
+    if {"facebook", "instagram"} & set(plats) and not PF.meta_ready():
         sys.exit("Meta keys missing in %USERPROFILE%/.dummysticky/secrets.json")
     print(f"[publish] {a.episode} v{version}: {os.path.getsize(video) / 1e6:.1f} MB -> {', '.join(plats)}"
           f"{'' if a.go else ' (DRY RUN: nothing is published without --go)'}")
     for p in plats:
-        print(f"--- {p} text ---\n{texts[p]}\n--- first comment: {texts['pinned']}")
+        body = (f"TITLE: {texts['yt_title']}\n{texts['yt_desc']}\nTAGS: {texts['yt_tags']}\n(private upload, AI disclosure on)"
+                if p == "youtube" else texts.get(p, "(not supported)"))
+        print(f"--- {p} text ---\n{body}\n--- first comment: {texts['pinned']}")
     if not a.go and not a.container_only:
         return
     results = {}
@@ -137,6 +169,8 @@ def main():
             results[p] = instagram(video, texts["instagram"], texts["pinned"], go=a.go, container_only=a.container_only)
         elif p == "facebook" and a.go:
             results[p] = facebook(video, texts["facebook"], texts["pinned"], go=True, at=a.at)
+        elif p == "youtube" and a.go:
+            results[p] = youtube(video, texts)
         else:
             results[p] = {"error": f"{p}: not supported yet (YouTube needs OAuth, TikTok needs an audit)"}
         print(f"[publish] {p}: {results[p]}")

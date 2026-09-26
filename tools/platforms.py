@@ -84,3 +84,122 @@ def youtube_videos(ids: list[str]) -> dict:
         out[it["id"]] = {"views": int(st.get("viewCount", 0)), "likes": int(st.get("likeCount", 0)),
                          "comments": int(st.get("commentCount", 0)), "source": "youtube-data-api"}
     return out
+
+
+# ---- YouTube OAuth (uploads + YouTube Analytics) -------------------------------------------------------------------
+YT_SCOPES = ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtube.readonly",
+             "https://www.googleapis.com/auth/yt-analytics.readonly"]
+YT_TOKEN = os.path.join(os.path.dirname(SECRETS), "youtube_token.json")
+
+
+def youtube_login(port: int = 8765, timeout_s: int = 600) -> bool:
+    """One-time desktop OAuth: opens the browser, the owner approves, the refresh token is saved to youtube_token.json."""
+    import http.server, secrets as pysecrets, threading, webbrowser
+    s = secrets()
+    redirect = f"http://127.0.0.1:{port}/"
+    state = pysecrets.token_urlsafe(16)
+    url = "https://accounts.google.com/o/oauth2/v2/auth?" + urllib.parse.urlencode({
+        "client_id": s["google_client_id"], "redirect_uri": redirect, "response_type": "code",
+        "scope": " ".join(YT_SCOPES), "access_type": "offline", "prompt": "consent", "state": state})
+    got = {}
+
+    class H(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            if q.get("state", [""])[0] == state:
+                got.update({k: v[0] for k, v in q.items()})
+            self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8"); self.end_headers()
+            ok = "code" in got
+            self.wfile.write(("<h2>Dummy Sticky: YouTube access " + ("granted. You can close this tab." if ok else
+                              "was not granted.") + "</h2>").encode())
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.HTTPServer(("127.0.0.1", port), H)
+    srv.timeout = 5
+    print("[youtube] opening the browser for approval (if it does not open, visit):\n" + url, flush=True)
+    threading.Timer(1.0, lambda: webbrowser.open(url)).start()
+    import time as _t
+    end = _t.time() + timeout_s
+    while "code" not in got and "error" not in got and _t.time() < end:
+        srv.handle_request()
+    srv.server_close()
+    if "code" not in got:
+        print("[youtube] no approval:", got.get("error", "timeout"), flush=True)
+        return False
+    tok = http_json("https://oauth2.googleapis.com/token", data={
+        "code": got["code"], "client_id": s["google_client_id"], "client_secret": s["google_client_secret"],
+        "redirect_uri": redirect, "grant_type": "authorization_code"})
+    if "refresh_token" not in tok:
+        print("[youtube] token exchange failed:", tok.get("error") or sorted(tok), flush=True)
+        return False
+    json.dump({"refresh_token": tok["refresh_token"], "scope": tok.get("scope")}, open(YT_TOKEN, "w"), indent=1)
+    print("[youtube] access granted; refresh token saved", flush=True)
+    return True
+
+
+def youtube_access_token() -> str | None:
+    if not os.path.exists(YT_TOKEN):
+        return None
+    s, t = secrets(), json.load(open(YT_TOKEN))
+    r = http_json("https://oauth2.googleapis.com/token", data={
+        "client_id": s["google_client_id"], "client_secret": s["google_client_secret"],
+        "refresh_token": t["refresh_token"], "grant_type": "refresh_token"})
+    return r.get("access_token")
+
+
+def youtube_get(url: str, params: dict) -> dict:
+    tok = youtube_access_token()
+    if not tok:
+        return {"error": "no YouTube OAuth token (python tools/youtube_auth.py)"}
+    req = urllib.request.Request(url + "?" + urllib.parse.urlencode(params), headers={"Authorization": f"Bearer {tok}"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.load(r)
+    except urllib.error.HTTPError as e:
+        try:
+            err = json.loads(e.read() or b"{}").get("error", {})
+        except ValueError:
+            err = {}
+        return {"error": (err.get("message") if isinstance(err, dict) else str(err)) or f"HTTP {e.code}"}
+
+
+YT_ANALYTICS = "https://youtubeanalytics.googleapis.com/v2/reports"
+
+
+def youtube_analytics(ids: list[str], start: str = "2026-09-01", end: str | None = None) -> tuple[dict, dict]:
+    """Per-video YouTube Analytics (OAuth): avg view duration/percentage, shares, subscribers gained, retention curve.
+    Analytics lags 2-3 days, so new videos are missing at first. Returns (values by id, raw answers)."""
+    import datetime as _dt
+    end = end or _dt.date.today().isoformat()
+    base = {"ids": "channel==MINE", "startDate": start, "endDate": end}
+    r = youtube_get(YT_ANALYTICS, {**base, "dimensions": "video", "sort": "-views", "maxResults": 200,
+                                   "metrics": "views,estimatedMinutesWatched,averageViewDuration,averageViewPercentage,"
+                                              "likes,shares,subscribersGained"})
+    if "error" in r:
+        return {}, {"error": r["error"]}
+    cols = [h["name"] for h in r.get("columnHeaders", [])]
+    out, raw = {}, {}
+    lengths = {}
+    key = secrets().get("youtube_api_key")
+    if key and ids:
+        d = http_json("https://www.googleapis.com/youtube/v3/videos", {"part": "contentDetails", "id": ",".join(ids), "key": key})
+        import re as _re
+        for it in d.get("items", []):
+            m = _re.fullmatch(r"PT(?:(\d+)M)?(?:(\d+)S)?", it["contentDetails"]["duration"])
+            lengths[it["id"]] = int(m.group(1) or 0) * 60 + int(m.group(2) or 0) if m else None
+    for row in r.get("rows", []):
+        v = dict(zip(cols, row))
+        if v["video"] not in ids:
+            continue
+        curve = youtube_get(YT_ANALYTICS, {**base, "dimensions": "elapsedVideoTimeRatio", "metrics": "audienceWatchRatio",
+                                           "filters": f"video=={v['video']}"}).get("rows", [])
+        length = lengths.get(v["video"])
+        at = lambda ratio: min(curve, key=lambda p: abs(p[0] - ratio))[1] if curve else None  # noqa: E731
+        out[v["video"]] = {"avg_watch_s": v["averageViewDuration"], "avg_pct": round(v["averageViewPercentage"], 1),
+                           "shares": v["shares"], "followers_gained": v["subscribersGained"],
+                           "retention_3s_pct": round(100 * at(3 / length), 1) if curve and length else None,
+                           "completion_pct": round(100 * at(1.0), 1) if curve else None}
+        raw[v["video"]] = {"report": v, "length_s": length, "retention": curve}
+    return out, raw

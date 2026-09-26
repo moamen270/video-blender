@@ -3,7 +3,7 @@
 Goal (owner): Claude publishes videos and pulls numbers/analytics on YouTube, TikTok, Instagram and Facebook through
 official APIs, instead of the owner uploading by hand and `tools/stats.py` reading public pages.
 Status (2026-09-26): **Meta is live** (Facebook + Instagram: publish + insights, system-user token that does not
-expire); **YouTube: public stats only** (an API key; uploads and Analytics need an OAuth client); **TikTok: nothing**
+expire); **YouTube live** (API key for fresh public numbers + OAuth to the Dummy Sticky channel: YouTube Analytics and private uploads; `tools/youtube_auth.py`); **TikTok: nothing**
 (public page only). Tools: `tools/platforms.py` (secrets + API helpers), `tools/stats.py` (API-first numbers),
 `tools/publish.py` (Facebook/Instagram publishing, dry run by default). Tested: stats for all 6 videos; an Instagram
 upload processed to FINISHED without publishing. Facebook publishing is written but has not posted yet.
@@ -21,7 +21,8 @@ does those steps (accounts, verification, consent screens), then Claude builds `
 | **TikTok** | Content Posting API (Direct Post) | Display API video list (views/likes/comments/shares) — limited, no retention | **unaudited apps post only as SELF_ONLY and the whole account must be private** while posting → unusable for a public channel until TikTok audits the app | apply for the audit; until then upload by hand (or a paid, already-audited posting service) |
 
 ## Still needed from the owner
-- **YouTube uploads + analytics (retention, watch time):** an **OAuth client** (Desktop app) — Google Cloud console →
+- ~~YouTube OAuth client~~ done 2026-09-26 (signed in as the Dummy Sticky channel `UCPWwluuNVAtYi42L5ilN85Q`; the token is
+  rejected if it belongs to another channel). Kept for reference: an **OAuth client** (Desktop app) — Google Cloud console →
   the same project → APIs: YouTube Data API v3 + YouTube Analytics API → OAuth consent screen (owner as test user) →
   Credentials → OAuth client ID → Desktop → download `client_secret.json` into `%USERPROFILE%\.dummysticky\`.
   (The API key alone can only read public numbers.)

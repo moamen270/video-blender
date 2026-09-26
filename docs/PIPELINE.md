@@ -119,4 +119,4 @@ main context small) come when a phase has a contract and a checker a weaker mode
 | pitch PoC tooling (storyboard stills / stickman clip via video-builder) | ❌ planned |
 | animatic spec (`shots.json`) + compiler + staging checks (facing, distance, FX over bodies, frame edges) | ❌ planned — biggest win |
 | per-team subagents, blender-video MCP tools | ❌ planned |
-| publishing + creator analytics via platform APIs (`docs/PLATFORM_APIS.md`) | 🟡 Meta live (FB/IG publish + insights); YouTube public stats; YouTube OAuth + TikTok pending |
+| publishing + creator analytics via platform APIs (`docs/PLATFORM_APIS.md`) | 🟡 Meta live (FB/IG publish + insights); YouTube live (Analytics + private uploads); TikTok pending (audit) |

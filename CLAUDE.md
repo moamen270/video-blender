@@ -47,7 +47,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 ## Important files
 | file | what it is |
 |---|---|
-| `tools/platforms.py`, `tools/publish.py` | API keys/helpers (secrets outside the repo); publish to Facebook/Instagram (dry run unless `--go`; only when the owner asks) |
+| `tools/platforms.py`, `tools/publish.py`, `tools/youtube_auth.py` | API keys/helpers (secrets outside the repo); publish to Facebook/Instagram/YouTube (dry run unless `--go`; only when the owner asks); one-time YouTube sign-in |
 | `docs/PLATFORM_APIS.md` | plan for publishing + analytics APIs on YouTube, TikTok, Instagram, Facebook: owner setup steps, limits (audits), where secrets live (outside the repo) |
 | `docs/PIPELINE.md` | **the process**: phases, inputs/outputs, gates, lanes, definition of done, `state.json` schema, teams, what exists vs planned |
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
@@ -123,7 +123,8 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
 - **Gemini (agy) is unavailable until 2026-09-28** (weekly limit used). Until then do listening/research work
   without it (measure audio yourself, WebSearch for research); do not start agy jobs.
 - 2026-09-26: **Meta API live** (FB + IG publish and insights: avg watch, retention curve, reach, followers);
-  **YouTube API key** (public stats only; OAuth client still needed for uploads/analytics); TikTok not yet.
+  **YouTube** (API key + OAuth to the Dummy Sticky channel: Analytics — avg view duration, % watched, retention —
+  and uploads, which stay private until Google's audit); TikTok not yet.
   Keys in `%USERPROFILE%\.dummysticky\secrets.json` — never commit, print or store them in memory.
   Publishing with `--go` only when the owner says so (Ryu vs Ken: the owner uploads on 2026-09-27).
 - Other repos: `video-builder` has 12 uncommitted changes and 3 unpushed commits and `taxi-trial1` has no GitHub
