@@ -47,6 +47,7 @@ Phases (the `status` in `state.json`), each with fixed input/output files and an
 ## Important files
 | file | what it is |
 |---|---|
+| `tools/platforms.py`, `tools/publish.py` | API keys/helpers (secrets outside the repo); publish to Facebook/Instagram (dry run unless `--go`; only when the owner asks) |
 | `docs/PLATFORM_APIS.md` | plan for publishing + analytics APIs on YouTube, TikTok, Instagram, Facebook: owner setup steps, limits (audits), where secrets live (outside the repo) |
 | `docs/PIPELINE.md` | **the process**: phases, inputs/outputs, gates, lanes, definition of done, `state.json` schema, teams, what exists vs planned |
 | `projects/<slug>/state.json` | per-episode handoff + memory: status, gates, owner notes, decisions, known issues, next action |
@@ -87,7 +88,8 @@ Live status is in each `state.json` (`python tools/board.py`); summary:
 uv run --project F:/PoCs/video-builder/py python tools/voice.py --project <p>   # voices (cached)
 sh tools/make.sh <p> preview|final        # -> projects/<p>/output/v<next>/
 python tools/social.py <p> [--version N]  # regenerate social.md from social.json
-python tools/stats.py                     # snapshot numbers for every video in analytics/posts.json
+python tools/stats.py                     # snapshot numbers (APIs: FB/IG insights, YouTube key; TikTok public)
+python tools/publish.py <p> --platform facebook,instagram [--go] [--at ISO]   # dry run without --go
 python tools/board.py                     # episode board: status, next action, DoD gaps
 python tools/new_episode.py <slug> "Title" # scaffold a new episode from templates/episode
 python tools/catalog.py search <text> [--kind K] [--tag T]   # find reusable components (check|harvest|gallery|show)
@@ -120,6 +122,9 @@ Blender: `F:/blender/blender.exe` (5.2). A final render ≈ 6 min (GTX 1660 Supe
 - **Ryu vs Ken v40: the owner uploads it on 2026-09-27** (their date, not earlier); then register the post ids.
 - **Gemini (agy) is unavailable until 2026-09-28** (weekly limit used). Until then do listening/research work
   without it (measure audio yourself, WebSearch for research); do not start agy jobs.
-- Platform APIs: plan in `docs/PLATFORM_APIS.md`, waiting on the owner's developer-app setup (Meta first).
+- 2026-09-26: **Meta API live** (FB + IG publish and insights: avg watch, retention curve, reach, followers);
+  **YouTube API key** (public stats only; OAuth client still needed for uploads/analytics); TikTok not yet.
+  Keys in `%USERPROFILE%\.dummysticky\secrets.json` — never commit, print or store them in memory.
+  Publishing with `--go` only when the owner says so (Ryu vs Ken: the owner uploads on 2026-09-27).
 - Other repos: `video-builder` has 12 uncommitted changes and 3 unpushed commits and `taxi-trial1` has no GitHub
   remote; this workspace's GitHub access covers only `moamen270/video-blender`, so the owner pushes those.

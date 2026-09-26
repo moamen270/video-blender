@@ -42,6 +42,12 @@ A GitHub release alone is a milestone, not done. Until the owner has uploaded, t
 - Credits: music (Kevin MacLeod, CC BY 4.0 line), any CC BY asset.
 - One pinned-comment question.
 
+## Publishing by API (Facebook, Instagram)
+- `python tools/publish.py <p> --platform facebook,instagram` shows exactly what would be posted (dry run);
+  `--go` publishes, `--at <ISO>` schedules on Facebook. Only when the owner asked for it and chose the time.
+- It records the post ids in `analytics/posts.json` and `state.json`; turn on the AI label in each app afterwards.
+- YouTube (needs the OAuth client) and TikTok (needs the audit) are still manual. Details: `docs/PLATFORM_APIS.md`.
+
 ## After upload
 - Add the video to `analytics/posts.json` (post id per platform) as soon as it is uploaded, then run
   `python tools/stats.py` at 24 h / 72 h / 7 d (it also reports posts it finds that are not registered).

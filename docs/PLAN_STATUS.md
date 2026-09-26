@@ -41,7 +41,7 @@ Each factor has a skill with its rules (see the skill map in `.claude/skills/ble
 | | | auto `social.md` (all 4 platforms, `tools/social.py`) | ✅ 2026-09-25 |
 | | | definition of done = published + merged + analytics (skill `publish-release`) | ✅ rule written 2026-09-25 |
 | × | Analytics | public numbers for all 4 platforms (`tools/stats.py`, `analytics/posts.json`) | ✅ 2026-09-25 (6 videos backfilled) |
-| | | retention / avg watch / completion (creator APIs) | ❌ |
+| | | retention / avg watch / completion (creator APIs) | 🟡 Facebook + Instagram via Meta API (2026-09-26); YouTube/TikTok pending |
 | × | Episode compiler | spec → episode | ❌ |
 
 ## Process (docs/PIPELINE.md)

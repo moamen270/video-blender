@@ -58,7 +58,8 @@ def seconds_of(mp4):
         return 0.0
 
 
-def markdown(s, brand, version, seconds, url=None):
+def captions(s, brand):
+    """Per-platform texts from social.json + brand.json (shared by social.md and tools/publish.py)."""
     hook = s.get("hook") or s["description"].strip().splitlines()[0]
     hashtags = uniq(s.get("hashtags", []) + brand.get("defaultHashtags", []))
     links = brand.get("links", {})
@@ -76,6 +77,14 @@ def markdown(s, brand, version, seconds, url=None):
                TT_CAPTION_MAX)
     ig = clamp("\n\n".join([hook, full, " ".join(hashtags)]), IG_CAPTION_MAX)
     fb = "\n\n".join([hook] + ([s["disclaimer"].strip()] if s.get("disclaimer") else []) + [" ".join(hashtags[:8])])
+    return {"hook": hook, "yt_title": yt_title, "yt_desc": yt_desc, "yt_tags": yt_tags, "tiktok": tt,
+            "instagram": ig, "facebook": fb, "pinned": s.get("pinnedComment", "")}
+
+
+def markdown(s, brand, version, seconds, url=None):
+    c = captions(s, brand)
+    hook, yt_title, yt_desc, yt_tags, tt, ig, fb = (c[k] for k in ("hook", "yt_title", "yt_desc", "yt_tags", "tiktok",
+                                                                  "instagram", "facebook"))
 
     md = [f'# {s.get("name", s["title"])} — v{version} ({seconds:.1f} s)', ""]
     if url:

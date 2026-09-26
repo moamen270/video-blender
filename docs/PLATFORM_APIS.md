@@ -2,7 +2,13 @@
 
 Goal (owner): Claude publishes videos and pulls numbers/analytics on YouTube, TikTok, Instagram and Facebook through
 official APIs, instead of the owner uploading by hand and `tools/stats.py` reading public pages.
-Status: **plan — nothing is set up yet.** Each platform needs a developer app and an owner login first; the owner
+Status (2026-09-26): **Meta is live** (Facebook + Instagram: publish + insights, system-user token that does not
+expire); **YouTube: public stats only** (an API key; uploads and Analytics need an OAuth client); **TikTok: nothing**
+(public page only). Tools: `tools/platforms.py` (secrets + API helpers), `tools/stats.py` (API-first numbers),
+`tools/publish.py` (Facebook/Instagram publishing, dry run by default). Tested: stats for all 6 videos; an Instagram
+upload processed to FINISHED without publishing. Facebook publishing is written but has not posted yet.
+
+Earlier plan text: Each platform needs a developer app and an owner login first; the owner
 does those steps (accounts, verification, consent screens), then Claude builds `tools/publish.py` and upgrades
 `tools/stats.py`. Facts below were checked on 2026-09-26 (sources at the end); re-check them during setup.
 
@@ -13,6 +19,14 @@ does those steps (accounts, verification, consent screens), then Claude builds `
 | **Instagram** (Business/Creator linked to the Page) | Graph API media container → publish (Reels) | media insights (plays, likes, saves, shares) | same app as Facebook, own account in dev mode; account must be Business/Creator linked to the FB Page; some sources say Reel insights need ≥ 1,000 followers (we have 6) — verify | with Facebook (one Meta app) |
 | **YouTube** | Data API v3 `videos.insert` (1 unit/call, 100 uploads/day since 2026-06-01) | YouTube Analytics API (views, watch time, retention, subscribers) for our own channel via OAuth | uploads from an **unaudited** project are forced to **private**; the audit (privacy policy, ToS, use case) takes weeks–months | analytics now; upload as private + owner flips to public (or Claude via API after audit); apply for the audit |
 | **TikTok** | Content Posting API (Direct Post) | Display API video list (views/likes/comments/shares) — limited, no retention | **unaudited apps post only as SELF_ONLY and the whole account must be private** while posting → unusable for a public channel until TikTok audits the app | apply for the audit; until then upload by hand (or a paid, already-audited posting service) |
+
+## Still needed from the owner
+- **YouTube uploads + analytics (retention, watch time):** an **OAuth client** (Desktop app) — Google Cloud console →
+  the same project → APIs: YouTube Data API v3 + YouTube Analytics API → OAuth consent screen (owner as test user) →
+  Credentials → OAuth client ID → Desktop → download `client_secret.json` into `%USERPROFILE%\.dummysticky\`.
+  (The API key alone can only read public numbers.)
+- **TikTok:** developer app + Direct Post audit (below).
+- In the apps: turn on the AI/altered-content label after each API post (not exposed by the APIs).
 
 ## What the owner does (once)
 1. **Meta (Facebook + Instagram)**
