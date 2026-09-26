@@ -161,8 +161,11 @@ def main():
         for k in sorted(set(found) - known[p]): print(f"[stats] NEW {p} post not in posts.json: {k}")
     w = csv.DictWriter(sys.stdout, COLS); w.writeheader(); w.writerows(rows)
     if not a.dry:
-        with open(os.path.join(ROOT, "analytics", "videos.csv"), "a", newline="", encoding="utf-8") as f:
-            csv.DictWriter(f, COLS).writerows(rows)
+        path = os.path.join(ROOT, "analytics", "videos.csv")
+        new = {(r["date"], r["slug"], r["platform"]) for r in rows}   # a re-run on the same day replaces that day's rows
+        old = [r for r in csv.DictReader(open(path, encoding="utf-8")) if (r["date"], r["slug"], r["platform"]) not in new]
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, COLS); w.writeheader(); w.writerows(old + rows)
         os.makedirs(os.path.join(ROOT, "analytics", "raw"), exist_ok=True)
         json.dump(raw, open(os.path.join(ROOT, "analytics", "raw", f"{today.isoformat()}.json"), "w", encoding="utf-8"),
                   indent=1, ensure_ascii=False)
