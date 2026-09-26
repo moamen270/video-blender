@@ -21,6 +21,13 @@ does those steps (accounts, verification, consent screens), then Claude builds `
 | **YouTube** | Data API v3 `videos.insert` (1 unit/call, 100 uploads/day since 2026-06-01) | YouTube Analytics API (views, watch time, retention, subscribers) for our own channel via OAuth | uploads from an **unaudited** project are forced to **private**; the audit (privacy policy, ToS, use case) takes weeks–months | analytics now; upload as private + owner flips to public (or Claude via API after audit); apply for the audit |
 | **TikTok** | Content Posting API (Direct Post) | Display API video list (views/likes/comments/shares) — limited, no retention | **unaudited apps post only as SELF_ONLY and the whole account must be private** while posting → unusable for a public channel until TikTok audits the app | apply for the audit; until then upload by hand (or a paid, already-audited posting service) |
 
+## Public site (live 2026-09-26, GitHub Pages from `site/`)
+- Home: https://moamen270.github.io/video-blender/
+- Privacy policy: https://moamen270.github.io/video-blender/privacy.html
+- Terms of service: https://moamen270.github.io/video-blender/terms.html
+- App icon: https://moamen270.github.io/video-blender/app-icon-1024.png
+Any change under `site/` on `main` redeploys (`.github/workflows/pages.yml`).
+
 ## Google app: Testing → Production
 - While the Google Auth Platform app is in **Testing**, refresh tokens expire after **7 days** → the YouTube sign-in of
   2026-09-26 stops working ~2026-10-03; renew with `python tools/youtube_auth.py --relogin` (owner approves).
